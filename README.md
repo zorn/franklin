@@ -14,6 +14,16 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
+## Browsing Product Documentation 
+
+This project uses `ex_doc` to help render inline module/function documentation as well as project guides.
+
+To render the current docs and open the root index page run:
+
+```
+$ mix docs; open doc/index.html
+```
+
 ## Learn more
 
   * Official website: https://www.phoenixframework.org/
