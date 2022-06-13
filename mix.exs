@@ -10,7 +10,13 @@ defmodule Franklin.MixProject do
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+
+      # ExDoc Related Configuration
+      name: "Franklin",
+      source_url: "https://github.com/zorn/franklin",
+      homepage_url: "https://github.com/zorn/franklin",
+      docs: docs()
     ]
   end
 
@@ -51,8 +57,29 @@ defmodule Franklin.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
 
-      # To help us build the HTML documentation.
+      # To help build the HTML documentation.
       {:ex_doc, "~> 0.27", only: :dev, runtime: false}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "Franklin",
+      extra_section: "GUIDES",
+      extras: guides(),
+      groups_for_extras: groups_for_extras()
+    ]
+  end
+
+  defp guides do
+    [
+      "guides/testing_values.md"
+    ]
+  end
+
+  defp groups_for_extras do
+    [
+      Guides: ~r/guides\/[^\/]+\.md/
     ]
   end
 
