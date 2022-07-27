@@ -47,6 +47,18 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :franklin, Franklin.CommandedApplication,
+  event_store: [
+    adapter: Commanded.EventStore.Adapters.EventStore,
+    event_store: Franklin.EventStore
+  ],
+  pubsub: :local,
+  registry: :local
+
+config :commanded_ecto_projections, repo: Franklin.Repo
+
+config :franklin, event_stores: [Franklin.EventStore]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

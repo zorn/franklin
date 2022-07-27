@@ -26,7 +26,7 @@ defmodule Franklin.MixProject do
   def application do
     [
       mod: {Franklin.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :eventstore, :crypto]
     ]
   end
 
@@ -58,7 +58,13 @@ defmodule Franklin.MixProject do
       {:telemetry_poller, "~> 1.0"},
 
       # To help build the HTML documentation.
-      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false},
+
+      # Commanded is the CQRS library we are building on.
+      {:commanded, "~> 1.3"},
+      {:commanded_eventstore_adapter, "~> 1.2"},
+      {:cors_plug, "~> 3.0"},
+      {:commanded_ecto_projections, "~> 1.2"}
     ]
   end
 

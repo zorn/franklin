@@ -15,9 +15,11 @@ defmodule Franklin.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Franklin.PubSub},
       # Start the Endpoint (http/https)
-      FranklinWeb.Endpoint
-      # Start a worker by calling: Franklin.Worker.start_link(arg)
-      # {Franklin.Worker, arg}
+      FranklinWeb.Endpoint,
+      # Start the Commanded Application
+      Franklin.CommandedApplication,
+      # Start the supervisor for Post projections
+      Franklin.Posts.Supervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
