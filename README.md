@@ -14,6 +14,12 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
+## Reset Local Databases.
+
+As a CQRS / Event Source codebase we have two databases, the event store database and the projections database. If you want to reset these use the following command:
+
+    $ mix event_store.drop; mix event_store.create; mix event_store.init; mix ecto.reset
+
 ## Browsing Product Documentation 
 
 This project uses `ex_doc` to help render inline module/function documentation as well as project guides.
