@@ -20,6 +20,12 @@ defmodule FranklinWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/admin", FranklinWeb.Admin do
+    live "/posts", PostIndexLive, :index
+    live "/posts/new", PostEditorLive, :new
+    live "/posts/:id/edit", PostEditorLive, :edit
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", FranklinWeb do
   #   pipe_through :api
