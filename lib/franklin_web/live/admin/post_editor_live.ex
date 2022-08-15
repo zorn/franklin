@@ -1,6 +1,8 @@
 defmodule FranklinWeb.Admin.PostEditorLive do
   use FranklinWeb, :live_view
 
+  import Ecto.Changeset
+
   alias FranklinWeb.Admin.PostEditorLive.PostForm
 
   def mount(_params, _session, socket) do
@@ -13,12 +15,23 @@ defmodule FranklinWeb.Admin.PostEditorLive do
     |> ok()
   end
 
-  def handle_event("save_form", %{"form" => form_params}, socket) do
+  def handle_event("save_form", %{"post_form" => form_params}, socket) do
     IO.inspect(form_params, label: "save_form")
-    {:noreply, socket}
+
+    case apply_action(PostForm.changeset(%PostForm{}, form_params), :validate) do
+      {:error, changeset} ->
+        socket
+        |> assign(changeset: changeset)
+        |> noreply()
+
+      {:ok, _} ->
+        # Make the `CreatePost` command, dispatch it, then wait for an event to signal it is projected, then do a redirect.
+
+        {:noreply, socket}
+    end
   end
 
-  def handle_event("change_form", %{"form" => form_params}, socket) do
+  def handle_event("change_form", %{"post_form" => form_params}, socket) do
     IO.inspect(form_params, label: "change_form")
     # TODO: Not sure WHY/HOW I need to implement this. The docs say:
     # The LiveView must implement the phx-change event and store the input values
@@ -52,4 +65,5 @@ defmodule FranklinWeb.Admin.PostEditorLive do
   end
 
   defp ok(socket), do: {:ok, socket}
+  defp noreply(socket), do: {:noreply, socket}
 end
