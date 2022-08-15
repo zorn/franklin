@@ -20,6 +20,9 @@ As a CQRS / Event Source codebase we have two databases, the event store databas
 
     $ mix event_store.drop; mix event_store.create; mix event_store.init; mix ecto.reset
 
+    $ MIX_ENV=test mix event_store.drop; MIX_ENV=test mix event_store.create; MIX_ENV=test mix event_store.init; MIX_ENV=test mix ecto.reset
+
+
 ## Browsing Product Documentation 
 
 This project uses `ex_doc` to help render inline module/function documentation as well as project guides.

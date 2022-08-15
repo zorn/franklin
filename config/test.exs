@@ -13,6 +13,14 @@ config :franklin, Franklin.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
+config :franklin, Franklin.EventStore,
+  serializer: Commanded.Serialization.JsonSerializer,
+  username: "postgres",
+  password: "postgres",
+  database: "franklin_event_store_test",
+  hostname: "localhost",
+  pool_size: 10
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :franklin, FranklinWeb.Endpoint,
