@@ -21,6 +21,8 @@ defmodule FranklinWeb.Router do
   end
 
   scope "/admin", FranklinWeb.Admin do
+    pipe_through :browser
+
     live "/posts", PostIndexLive, :index
     live "/posts/new", PostEditorLive, :new
   end
