@@ -3,8 +3,8 @@ defmodule FranklinWeb.Admin.PostEditorLive.PostForm do
   import Ecto.Changeset
 
   embedded_schema do
-    field :title
-    field :published_at
+    field :title, :string
+    field :published_at, :utc_datetime
   end
 
   @spec changeset(%__MODULE__{}, map()) :: Ecto.Changeset.t()
