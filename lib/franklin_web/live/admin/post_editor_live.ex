@@ -3,10 +3,12 @@ defmodule FranklinWeb.Admin.PostEditorLive do
 
   import Ecto.Changeset
 
+  alias Franklin.Posts
   alias FranklinWeb.Admin.PostEditorLive.PostForm
 
   def mount(_params, _session, socket) do
-    changeset = PostForm.changeset(%PostForm{}, %{})
+    changeset =
+      PostForm.changeset(%PostForm{}, %{"title" => "hello world", "published_at" => "someday"})
 
     IO.inspect(changeset)
 
@@ -20,14 +22,35 @@ defmodule FranklinWeb.Admin.PostEditorLive do
 
     case apply_action(PostForm.changeset(%PostForm{}, form_params), :validate) do
       {:error, changeset} ->
+        IO.inspect(changeset, label: "changeset")
+
         socket
         |> assign(changeset: changeset)
         |> noreply()
 
-      {:ok, _} ->
+      {:ok, changeset} ->
         # Make the `CreatePost` command, dispatch it, then wait for an event to signal it is projected, then do a redirect.
+        # I don't think we want to make a command here.
+        # Commands should be a hidden implimentation of the core
+        # We can't send the core this changeset though since that is a UI detail
+        uuid = Ecto.UUID.generate()
+        title = nil
 
-        {:noreply, socket}
+        # for now we'll do a raw datetime value and later we will parse the string into a datetime
+        published_at = DateTime.utc_now()
+        # published_at = Ecto.Changeset.fetch_field!(changeset, :published_at)
+
+        case Posts.create_post(uuid, title, published_at) do
+          {:ok, uuid} ->
+            # Start delayed listening for post_created event and then redirect to detail page
+
+            {:noreply, socket}
+
+          {:error, reason} ->
+            # ideally any validation errors were captured by the form-specific changeset. if the command failed for validation or other reasons maybe we just display that in a generic flash error message?
+
+            {:noreply, socket}
+        end
     end
   end
 

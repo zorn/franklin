@@ -15,7 +15,9 @@ config :franklin, FranklinWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: FranklinWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Franklin.PubSub,
-  live_view: [signing_salt: "ACCBZ9OX"]
+  live_view: [signing_salt: "ACCBZ9OX"],
+  reloadable_compilers:
+    [:phoenix, :domo_compiler] ++ Mix.compilers() ++ [:domo_phoenix_hot_reload]
 
 # Configures the mailer
 #
@@ -58,6 +60,12 @@ config :franklin, Franklin.CommandedApplication,
 config :commanded_ecto_projections, repo: Franklin.Repo
 
 config :franklin, event_stores: [Franklin.EventStore]
+
+# Disable verification of Commands and Events default values during compile time
+# because fields are overwritten in Accounts context, Manager, and Projector
+# anyway.
+# https://github.com/IvanRublev/Domo#configuration
+config :domo, :skip_defaults, true
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

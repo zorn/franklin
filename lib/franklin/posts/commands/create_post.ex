@@ -1,4 +1,15 @@
 defmodule Franklin.Posts.Commands.CreatePost do
+  use Domo
+
+  alias Franklin.Posts.Validations
+
+  @type t :: %__MODULE__{
+          published_at: DateTime.t(),
+          title: Validations.title(),
+          # should we call this field id? or identity?
+          uuid: Ecto.UUID.t()
+        }
+
   defstruct [
     :published_at,
     :title,

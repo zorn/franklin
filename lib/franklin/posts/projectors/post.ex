@@ -2,9 +2,7 @@ defmodule Franklin.Posts.Projectors.Post do
   use Commanded.Projections.Ecto,
     # Register a name for the handler's subscription in the event store
     name: "Posts.Projectors.Post",
-    application: Franklin.CommandedApplication,
-    # Ensure the database operation completes before allowing the command to be considered completed.
-    consistency: :strong
+    application: Franklin.CommandedApplication
 
   alias Franklin.Repo
   alias Franklin.Posts.Events.PostCreated
@@ -47,4 +45,26 @@ defmodule Franklin.Posts.Projectors.Post do
       post -> Ecto.Multi.update(multi, :Post, Post.update_changeset(post, %{title: title}))
     end
   end)
+
+  @impl Commanded.Projections.Ecto
+  def after_update(event, _metadata, _changes) do
+    broadcast_event_completion(event)
+    :ok
+  end
+
+  defp broadcast_event_completion(%{uuid: uuid} = event) do
+    # FIXME: Should we broadcast anything more than the UUID?
+    # FIXME: Should there be a more firm contract on the shape
+    # of the broadcast payload?
+    Phoenix.PubSub.broadcast(
+      Franklin.PubSub,
+      "posts:#{uuid}",
+      {broadcast_name(event), %{uuid: uuid}}
+    )
+  end
+
+  defp broadcast_name(%PostCreated{}), do: :post_created
+  defp broadcast_name(%PostDeleted{}), do: :post_deleted
+  defp broadcast_name(%PostTitleUpdated{}), do: :post_title_updated
+  defp broadcast_name(%PostPublishedAtUpdated{}), do: :post_published_at_updated
 end
