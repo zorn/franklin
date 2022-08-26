@@ -14,8 +14,6 @@ defmodule Franklin.Posts do
 
   import Ecto.Query
 
-  require Logger
-
   alias Franklin.CommandedApplication
   alias Franklin.Posts.Commands.CreatePost
   alias Franklin.Posts.Projections.Post
