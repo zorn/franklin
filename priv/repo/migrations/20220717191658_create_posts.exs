@@ -3,7 +3,7 @@ defmodule Franklin.Repo.Migrations.CreatePosts do
 
   def change do
     create table(:posts, primary_key: false) do
-      add :uuid, :uuid, primary_key: true
+      add :id, :uuid, primary_key: true
       add :title, :string
       add :published_at, :utc_datetime
       timestamps()

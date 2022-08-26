@@ -1,6 +1,6 @@
 defmodule Franklin.Posts.Events.PostDeleted do
   @derive Jason.Encoder
   defstruct [
-    :uuid
+    :id
   ]
 end

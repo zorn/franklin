@@ -1,5 +1,5 @@
 defmodule Franklin.Posts.Commands.DeletePost do
   defstruct [
-    :uuid
+    :id
   ]
 end

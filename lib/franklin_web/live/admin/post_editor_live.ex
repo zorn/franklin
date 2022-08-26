@@ -28,7 +28,7 @@ defmodule FranklinWeb.Admin.PostEditorLive do
         |> assign(changeset: changeset)
         |> noreply()
 
-      {:ok, changeset} ->
+      {:ok, _changeset} ->
         # Make the `CreatePost` command, dispatch it, then wait for an event to signal it is projected, then do a redirect.
         # I don't think we want to make a command here.
         # Commands should be a hidden implimentation of the core
@@ -40,13 +40,19 @@ defmodule FranklinWeb.Admin.PostEditorLive do
         published_at = DateTime.utc_now()
         # published_at = Ecto.Changeset.fetch_field!(changeset, :published_at)
 
-        case Posts.create_post(uuid, title, published_at) do
-          {:ok, uuid} ->
+        attrs = %{
+          id: uuid,
+          published_at: published_at,
+          title: title
+        }
+
+        case Posts.create_post(attrs) do
+          {:ok, _uuid} ->
             # Start delayed listening for post_created event and then redirect to detail page
 
             {:noreply, socket}
 
-          {:error, reason} ->
+          {:error, _errors} ->
             # ideally any validation errors were captured by the form-specific changeset. if the command failed for validation or other reasons maybe we just display that in a generic flash error message?
 
             {:noreply, socket}
