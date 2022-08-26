@@ -2,8 +2,7 @@ defmodule Franklin.Posts.Projections.Post do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @primary_key {:uuid, :binary_id, autogenerate: false}
-  @derive {Phoenix.Param, key: :uuid}
+  @primary_key {:id, :binary_id, autogenerate: false}
 
   schema "posts" do
     field :title, :string

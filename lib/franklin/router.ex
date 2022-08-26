@@ -10,7 +10,7 @@ defmodule Franklin.Router do
   alias Franklin.Posts.Commands.DeletePost
   alias Franklin.Posts.Commands.UpdatePost
 
-  dispatch([CreatePost], to: PostAggregate, identity: :uuid)
-  dispatch([DeletePost], to: PostAggregate, identity: :uuid)
-  dispatch([UpdatePost], to: PostAggregate, identity: :uuid)
+  dispatch([CreatePost], to: PostAggregate, identity: :id)
+  dispatch([DeletePost], to: PostAggregate, identity: :id)
+  dispatch([UpdatePost], to: PostAggregate, identity: :id)
 end

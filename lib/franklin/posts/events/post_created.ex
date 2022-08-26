@@ -3,7 +3,7 @@ defmodule Franklin.Posts.Events.PostCreated do
   defstruct [
     :published_at,
     :title,
-    :uuid
+    :id
   ]
 end
 

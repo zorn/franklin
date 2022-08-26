@@ -2,7 +2,7 @@ defmodule Franklin.Posts.Aggregates.Post do
   defstruct [
     :published_at,
     :title,
-    :uuid
+    :id
   ]
 
   alias Franklin.Posts.Aggregates.Post
@@ -14,27 +14,27 @@ defmodule Franklin.Posts.Aggregates.Post do
   alias Franklin.Posts.Events.PostPublishedAtUpdated
   alias Franklin.Posts.Events.PostTitleUpdated
 
-  def execute(%Post{uuid: nil}, %CreatePost{} = create) do
+  def execute(%Post{id: nil}, %CreatePost{} = create) do
     %PostCreated{
       published_at: create.published_at,
       title: create.title,
-      uuid: create.uuid
+      id: create.id
     }
   end
 
-  def execute(%Post{uuid: uuid}, %DeletePost{uuid: uuid}) do
-    %PostDeleted{uuid: uuid}
+  def execute(%Post{id: id}, %DeletePost{id: id}) do
+    %PostDeleted{id: id}
   end
 
   # TODO: validate
   def execute(%Post{} = post, %UpdatePost{} = update) do
     title_command =
       if post.title != update.title and not is_nil(update.title),
-        do: %PostTitleUpdated{uuid: post.uuid, title: update.title}
+        do: %PostTitleUpdated{id: post.id, title: update.title}
 
     published_at_command =
       if post.published_at != update.published_at and not is_nil(update.published_at),
-        do: %PostPublishedAtUpdated{uuid: post.uuid, published_at: update.published_at}
+        do: %PostPublishedAtUpdated{id: post.id, published_at: update.published_at}
 
     [title_command, published_at_command] |> filter_commands()
   end
@@ -44,11 +44,11 @@ defmodule Franklin.Posts.Aggregates.Post do
       post
       | published_at: created.published_at,
         title: created.title,
-        uuid: created.uuid
+        id: created.id
     }
   end
 
-  def apply(%Post{uuid: uuid}, %PostDeleted{uuid: uuid}) do
+  def apply(%Post{id: id}, %PostDeleted{id: id}) do
     nil
   end
 

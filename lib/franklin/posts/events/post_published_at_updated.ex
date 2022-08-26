@@ -2,7 +2,7 @@ defmodule Franklin.Posts.Events.PostPublishedAtUpdated do
   @derive Jason.Encoder
   defstruct [
     :published_at,
-    :uuid
+    :id
   ]
 end
 

@@ -32,7 +32,7 @@ defmodule FranklinWeb.ConnCase do
   end
 
   setup tags do
-    Franklin.DataCase.setup_sandbox(tags)
+    Franklin.DataCase.setup_stores(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

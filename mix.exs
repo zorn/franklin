@@ -64,7 +64,10 @@ defmodule Franklin.MixProject do
       {:commanded, "~> 1.3"},
       {:commanded_eventstore_adapter, "~> 1.2"},
       {:cors_plug, "~> 3.0"},
-      {:commanded_ecto_projections, "~> 1.2"}
+      {:commanded_ecto_projections, "~> 1.2"},
+
+      # To help us build with TDD
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end
 
