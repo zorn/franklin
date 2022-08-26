@@ -3,15 +3,7 @@ defmodule Franklin.Posts.Validations do
   Shared types and preconditions for `Post`-related values.
   """
 
-  import Domo
   import Ecto.Changeset
-
-  @type title :: String.t()
-  precond title:
-            &if(String.length(&1) > 5,
-              do: :ok,
-              else: {:error, "title can only be 5 characters in length"}
-            )
 
   def validate_id(changeset) do
     validate_required(changeset, :id)

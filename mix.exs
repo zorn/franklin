@@ -7,11 +7,10 @@ defmodule Franklin.MixProject do
       version: "0.1.0",
       elixir: "~> 1.13.4",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:gettext, :domo_compiler] ++ Mix.compilers() ++ [:domo_phoenix_hot_reload],
+      compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      test_coverage: [ignore_modules: [~r/\.TypeEnsurer$/]],
 
       # ExDoc Related Configuration
       name: "Franklin",
@@ -66,9 +65,6 @@ defmodule Franklin.MixProject do
       {:commanded_eventstore_adapter, "~> 1.2"},
       {:cors_plug, "~> 3.0"},
       {:commanded_ecto_projections, "~> 1.2"},
-
-      # We use Domo to help with command validations.
-      {:domo, "~> 1.5"},
 
       # To help us build with TDD
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}

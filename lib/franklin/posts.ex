@@ -20,7 +20,6 @@ defmodule Franklin.Posts do
   alias Franklin.Posts.Commands.CreatePost
   alias Franklin.Posts.Projections.Post
   alias Franklin.Repo
-  alias Franklin.Posts.Validations
 
   @type create_attrs :: %{
           optional(:id) => Ecto.UUID.t(),
