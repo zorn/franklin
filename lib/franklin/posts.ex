@@ -27,8 +27,34 @@ defmodule Franklin.Posts do
 
   @type error_list :: %{atom() => list(String.t())}
 
-  def subscribe() do
-    # TODO
+  @doc """
+  A process calling this function will be subscribed to the post-id specific topic
+  """
+  @spec subscribe(Ecto.UUID.t()) :: :ok
+  def subscribe(post_id) do
+    :ok = Phoenix.PubSub.subscribe(Franklin.PubSub, topic(post_id))
+  end
+
+  @doc """
+  Broadcast the given `event_name` and `payload` to the topic name associated
+  with the given `post_id`.
+
+  Generally speaking, we do not expect other modules outside of the
+  `Franklin.Posts` submodules to call this function. It is provided here so as
+  to live next to the sister `subscribe/0` function, which is shared knowledge as well as to document the expected events and payload shape to help consumer who want to subscribe and react to these events
+
+  ## Allowed Event Names:
+
+    * `:post_created`
+    * `:post_deleted`
+    * `:post_updated`
+  """
+  def broadcast_post_event(post_id, event_name, payload) do
+    Phoenix.PubSub.broadcast(
+      Franklin.PubSub,
+      "posts:#{id}",
+      {topic(post_id), %{id: id}}
+    )
   end
 
   @doc """
@@ -97,5 +123,9 @@ defmodule Franklin.Posts do
   def list_posts() do
     query = from p in Post, order_by: [desc: p.published_at]
     Repo.all(query)
+  end
+
+  defp topic(post_id) do
+    "posts:#{post_id}"
   end
 end

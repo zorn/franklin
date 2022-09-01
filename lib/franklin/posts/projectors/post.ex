@@ -56,15 +56,13 @@ defmodule Franklin.Posts.Projectors.Post do
     # FIXME: Should we broadcast anything more than the UUID?
     # FIXME: Should there be a more firm contract on the shape
     # of the broadcast payload?
-    Phoenix.PubSub.broadcast(
-      Franklin.PubSub,
-      "posts:#{id}",
-      {broadcast_name(event), %{id: id}}
-    )
+    Franklin.Posts.broadcast_post_event(id, broadcast_name(event), %{id: id})
   end
 
   defp broadcast_name(%PostCreated{}), do: :post_created
   defp broadcast_name(%PostDeleted{}), do: :post_deleted
+
+  # FIXME: Seems excessive to post unique event names for each attribute, are we sure `after_update` would be called for each event? or is that called after the multi is applies/saved?
   defp broadcast_name(%PostTitleUpdated{}), do: :post_title_updated
   defp broadcast_name(%PostPublishedAtUpdated{}), do: :post_published_at_updated
 end
