@@ -31,7 +31,7 @@ defmodule FranklinWeb.Admin.PostEditorLive do
       {:ok, _changeset} ->
         # Make the `CreatePost` command, dispatch it, then wait for an event to signal it is projected, then do a redirect.
         # I don't think we want to make a command here.
-        # Commands should be a hidden implimentation of the core
+        # Commands should be a hidden implementation of the core
         # We can't send the core this changeset though since that is a UI detail
         uuid = Ecto.UUID.generate()
         title = nil
