@@ -8,11 +8,7 @@ defmodule Franklin.PostsTest do
     setup :generate_identity_and_subscribe
 
     test "successful with valid arguments", %{uuid: uuid} do
-      attrs = %{
-        id: uuid,
-        published_at: ~U[2022-08-20 13:30:00Z],
-        title: "hello world"
-      }
+      attrs = valid_create_post_attrs(uuid)
 
       assert {:ok, ^uuid} = Posts.create_post(attrs)
 
@@ -57,15 +53,32 @@ defmodule Franklin.PostsTest do
       assert "should be at most 50 character(s)" in errors.title
     end
 
-    # test "failure with invalid published at", %{uuid: uuid} do
-    #   assert {:ok, nil} = Posts.create_post(uuid, "hello", nil)
-    # end
+    test "failure with invalid published at", %{uuid: uuid} do
+      attrs = %{
+        id: uuid,
+        published_at: nil,
+        title: "a valid title"
+      }
+
+      assert {:error, errors} = Posts.create_post(attrs)
+      assert "can't be blank" in errors.published_at
+    end
+
+    # TODO: Add a test that verifies expected outcome for a command dispatch error.
   end
 
   defp generate_identity_and_subscribe(_) do
     uuid = Ecto.UUID.generate()
     Phoenix.PubSub.subscribe(Franklin.PubSub, "posts:#{uuid}")
     %{uuid: uuid}
+  end
+
+  defp valid_create_post_attrs(uuid) do
+    %{
+      id: uuid,
+      published_at: ~U[2022-08-20 13:30:00Z],
+      title: "hello world"
+    }
   end
 
   # test "demo" do
