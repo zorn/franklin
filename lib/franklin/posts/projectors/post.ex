@@ -11,6 +11,15 @@ defmodule Franklin.Posts.Projectors.Post do
   alias Franklin.Posts.Events.PostTitleUpdated
   alias Franklin.Posts.Projections.Post
 
+  @doc """
+  Returns the PubSub topic name relative to the passed in `post_id` uuid value.
+  """
+  # FIXME: We should consider adding a formal boundary to prevent modules
+  # outside the `Franklin.Posts` scope from calling this function.
+  def topic(post_id) do
+    "posts:#{post_id}"
+  end
+
   project(%PostCreated{} = created, _, fn multi ->
     # Should this use a changeset for validation?
     Ecto.Multi.insert(multi, :post, %Post{
@@ -48,21 +57,26 @@ defmodule Franklin.Posts.Projectors.Post do
 
   @impl Commanded.Projections.Ecto
   def after_update(event, _metadata, _changes) do
-    broadcast_event_completion(event)
-    :ok
+    # FIXME: Should we match :ok here or should we maybe capture the possible error and fail broadcasting silently?
+    :ok = broadcast_event_completion(event)
   end
 
   defp broadcast_event_completion(%{id: id} = event) do
     # FIXME: Should we broadcast anything more than the UUID?
     # FIXME: Should there be a more firm contract on the shape
     # of the broadcast payload?
-    Franklin.Posts.broadcast_post_event(id, broadcast_name(event), %{id: id})
+    Phoenix.PubSub.broadcast(
+      Franklin.PubSub,
+      topic(id),
+      {broadcast_name(event), %{id: id}}
+    )
   end
 
   defp broadcast_name(%PostCreated{}), do: :post_created
-  defp broadcast_name(%PostDeleted{}), do: :post_deleted
 
   # FIXME: Seems excessive to post unique event names for each attribute, are we sure `after_update` would be called for each event? or is that called after the multi is applies/saved?
-  defp broadcast_name(%PostTitleUpdated{}), do: :post_title_updated
-  defp broadcast_name(%PostPublishedAtUpdated{}), do: :post_published_at_updated
+  # FIXME: Commenting out until we fully build out update and delete
+  # defp broadcast_name(%PostDeleted{}), do: :post_deleted
+  # defp broadcast_name(%PostTitleUpdated{}), do: :post_title_updated
+  # defp broadcast_name(%PostPublishedAtUpdated{}), do: :post_published_at_updated
 end

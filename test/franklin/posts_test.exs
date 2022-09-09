@@ -4,6 +4,25 @@ defmodule Franklin.PostsTest do
   alias Franklin.Posts
   alias Franklin.Posts.Projections.Post
 
+  describe "subscribe/1" do
+    test "returns :ok when any UUID is passed in" do
+      assert :ok = Posts.subscribe(Ecto.UUID.generate())
+    end
+
+    test "calling process does not receive `post_created` event notification without a previous call to `subscribe/1`" do
+      uuid = Ecto.UUID.generate()
+      {:ok, _} = Posts.create_post(valid_create_post_attrs(uuid))
+      refute_receive {:post_created, %{id: ^uuid}}
+    end
+
+    test "calling process does receive `post_created` event notification after previous call to `subscribe/1`" do
+      uuid = Ecto.UUID.generate()
+      :ok = Posts.subscribe(uuid)
+      {:ok, _} = Posts.create_post(valid_create_post_attrs(uuid))
+      assert_receive {:post_created, %{id: ^uuid}}
+    end
+  end
+
   describe "create_post/3" do
     setup :generate_identity_and_subscribe
 
