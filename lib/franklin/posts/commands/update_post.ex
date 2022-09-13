@@ -44,10 +44,8 @@ defmodule Franklin.Posts.Commands.UpdatePost do
   @doc """
   Attempts to create a new `UpdatePost` command using the given attributes.
 
-  If a valid command can be created `{:ok, command}` is returned.
-
-  If a valid command can not be created `{:error, errors}` is returned. See the
-  `errors()` typedoc for details.
+  Returns `{:ok, command}` when successful and `{:error, errors}` if there was a
+  problem. See the `errors()` typedoc for details.
   """
   @spec new(command_attrs()) :: {:ok, __MODULE__.t()} | {:error, errors()}
   def new(command_attrs) do
