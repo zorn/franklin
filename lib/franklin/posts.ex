@@ -124,9 +124,13 @@ defmodule Franklin.Posts do
 
   This topic will receive the following messages:
 
-  * `{:post_created, %{id: uuid}}` - published after a `Post` has been
-    created and module-specific projections are complete, thus
-    enabling functions such as `get_post/1` to be successful.
+  * `{:post_created, %{id: uuid}}` - published after a `Post` has been created
+    and module-specific projections are complete, thus enabling functions such
+    as `get_post/1` to be successful.
+  * `{:post_title_updated, %{id: uuid}}` - published after a title change event
+    has been persisted.
+  * `{:post_published_at_updated, %{id: uuid}}` - published after a published_at
+    change event has been persisted.
   """
   @spec subscribe(Ecto.UUID.t()) :: :ok
   def subscribe(post_id) do
