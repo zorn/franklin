@@ -17,21 +17,32 @@ defmodule Franklin.Posts do
   alias Franklin.Posts.Projections.Post
   alias Franklin.Repo
 
-  @typedoc "Attribute map structure relative to the `create_post/1` function."
+  @typedoc """
+  A map structure containing attribute specific error details.
+
+  ## Example:
+
+  > %{
+  >   id: ["is invalid"],
+  >   published_at: ["can't be blank"],
+  >   title: ["should be at least 3 character(s)"]
+  > }
+
+  """
+  @type errors :: %{atom() => list(String.t())}
+
+  @typedoc "Attribute map type relative to the `create_post/1` function."
   @type create_attrs :: %{
           optional(:id) => Ecto.UUID.t(),
           required(:published_at) => DateTime.t(),
           required(:title) => String.t()
         }
 
-  @typedoc "A map structure containing field level error details."
-  @type errors :: %{atom() => list(String.t())}
-
   @doc """
   Attempts to create a new `Post` entity using the given attributes.
 
   Returns `{:ok, uuid}` when successful and `{:error, errors}` if
-  there was a problem.
+  there was a problem. See the `errors()` typedoc for details.
 
   ## Attributes
 
@@ -43,26 +54,50 @@ defmodule Franklin.Posts do
 
   Note: The current `title` validations are primarily in place for code
   demonstration and will be deleted eventually.
-
-  The `errors` of an `{:error, errors}` response is a map where each attribute of concern is an atom-based key and the value is a list of strings describing the error.
-
-  ## Example:
-
-    > iex> Posts.create_post(%{id: 123, published_at: nil, title: "yo"})
-    > %{
-    >   id: ["is invalid"],
-    >   published_at: ["can't be blank"],
-    >   title: ["should be at least 3 character(s)"]
-    > }
   """
   @spec create_post(create_attrs()) :: {:ok, Ecto.UUID.t()} | {:error, errors()}
   def create_post(attrs) do
     case Franklin.Posts.Commands.CreatePost.new(attrs) do
-      {:ok, command} ->
-        dispatch_command(command)
+      {:ok, command} -> dispatch_command(command)
+      {:error, errors} -> {:error, errors}
+    end
+  end
 
-      {:error, errors} ->
-        {:error, errors}
+  @typedoc "Attribute map type relative to the `update_post/2` function."
+  @type update_attrs :: %{
+          optional(:published_at) => DateTime.t(),
+          optional(:title) => String.t()
+        }
+
+  @doc """
+  Attempts to update the given `Post` entity using the given attributes.
+
+  Returns `{:ok, uuid}` when successful and `{:error, errors}` if there was a
+  problem. See the `errors()` typedoc for details.
+
+  ## Attributes
+
+    * `title` - A string value between 3 and 50 characters in length.
+    * `published_at` - A `DateTime` value representing the public-facing
+       published date of the `Post`.
+
+  Any other attributes provided will be silently ignored.
+
+  If the attribute map is empty you will still get back a successful `:ok`
+  response though no update messages will be broadcasted, nor will any `Post`
+  projects be changes since there was nothing to update.
+  """
+  @spec update_post(Post.t(), update_attrs()) :: {:ok, Ecto.UUID.t()} | {:error, errors()}
+  def update_post(%Post{} = post, attrs) do
+    command_attrs =
+      attrs
+      |> Map.put(:id, post.id)
+      |> Map.put_new(:title, post.title)
+      |> Map.put_new(:published_at, post.published_at)
+
+    case Franklin.Posts.Commands.UpdatePost.new(command_attrs) do
+      {:ok, command} -> dispatch_command(command)
+      {:error, errors} -> {:error, errors}
     end
   end
 
@@ -89,9 +124,13 @@ defmodule Franklin.Posts do
 
   This topic will receive the following messages:
 
-  * `{:post_created, %{id: uuid}}` - published after a `Post` has been
-    created and module-specific projections are complete, thus
-    enabling functions such as `get_post/1` to be successful.
+  * `{:post_created, %{id: uuid}}` - published after a `Post` has been created
+    and module-specific projections are complete, thus enabling functions such
+    as `get_post/1` to be successful.
+  * `{:post_title_updated, %{id: uuid}}` - published after a title change event
+    has been persisted.
+  * `{:post_published_at_updated, %{id: uuid}}` - published after a published_at
+    change event has been persisted.
   """
   @spec subscribe(Ecto.UUID.t()) :: :ok
   def subscribe(post_id) do

@@ -23,7 +23,7 @@ defmodule Franklin.PostsTest do
     end
   end
 
-  describe "create_post/3" do
+  describe "create_post/1" do
     setup :generate_identity_and_subscribe
 
     test "successful with valid arguments", %{uuid: uuid} do
@@ -31,7 +31,6 @@ defmodule Franklin.PostsTest do
 
       assert {:ok, ^uuid} = Posts.create_post(attrs)
 
-      # TODO: Should we move the verification of the pubsub to something else? Feels like scope creep for this single test
       assert_receive {:post_created, %{id: ^uuid}}
 
       assert %Post{
@@ -86,10 +85,89 @@ defmodule Franklin.PostsTest do
     # TODO: Add a test that verifies expected outcome for a command dispatch error.
   end
 
+  describe "update_post/2" do
+    setup :generate_identity_and_subscribe
+    setup :create_test_post
+
+    test "successfully can update title", %{uuid: uuid, test_post: test_post} do
+      assert {:ok, ^uuid} = Posts.update_post(test_post, %{title: "new title"})
+      assert_receive {:post_title_updated, %{id: ^uuid}}
+      assert %Post{id: ^uuid, title: "new title"} = Posts.get_post(uuid)
+    end
+
+    test "successfully can update published_at", %{uuid: uuid, test_post: test_post} do
+      assert {:ok, ^uuid} =
+               Posts.update_post(test_post, %{
+                 published_at: ~U[2019-08-20 13:30:00Z]
+               })
+
+      assert_receive {:post_published_at_updated, %{id: ^uuid}}
+
+      assert %Post{
+               id: ^uuid,
+               published_at: ~U[2019-08-20 13:30:00Z]
+             } = Posts.get_post(uuid)
+    end
+
+    test "successfully can update title and published_at at the same time, resulting in multiple broadcasts",
+         %{uuid: uuid, test_post: test_post} do
+      assert {:ok, ^uuid} =
+               Posts.update_post(test_post, %{
+                 title: "new title",
+                 published_at: ~U[2019-08-20 13:30:00Z]
+               })
+
+      assert_receive {:post_title_updated, %{id: ^uuid}}
+      assert_receive {:post_published_at_updated, %{id: ^uuid}}
+
+      assert %Post{
+               id: ^uuid,
+               title: "new title",
+               published_at: ~U[2019-08-20 13:30:00Z]
+             } = Posts.get_post(uuid)
+    end
+
+    test "validate that when given an empty attribute map a success response is returned but no events are created, messages broadcasted or projections altered",
+         %{uuid: uuid, test_post: test_post} do
+      assert {:ok, ^uuid} = Posts.update_post(test_post, %{})
+      refute_receive {:post_title_updated, %{id: ^uuid}}
+      refute_receive {:post_published_at_updated, %{id: ^uuid}}
+      assert test_post == Posts.get_post(uuid)
+    end
+
+    test "validate that when given unexpected attributes a success response is returned but no events are created, messages broadcasted or projections altered",
+         %{uuid: uuid, test_post: test_post} do
+      assert {:ok, ^uuid} = Posts.update_post(test_post, %{promoted: true})
+
+      refute_receive {:post_title_updated, %{id: ^uuid}}
+      refute_receive {:post_published_at_updated, %{id: ^uuid}}
+
+      assert test_post == Posts.get_post(uuid)
+    end
+
+    test "validate that you can not override the id of the existing post",
+         %{uuid: uuid, test_post: test_post} do
+      new_uuid = Ecto.UUID.generate()
+      assert {:ok, ^uuid} = Posts.update_post(test_post, %{id: new_uuid})
+
+      refute_receive {:post_title_updated, %{id: ^uuid}}
+      refute_receive {:post_published_at_updated, %{id: ^uuid}}
+
+      assert test_post == Posts.get_post(uuid)
+      assert nil == Posts.get_post(new_uuid)
+    end
+  end
+
   defp generate_identity_and_subscribe(_) do
     uuid = Ecto.UUID.generate()
     Phoenix.PubSub.subscribe(Franklin.PubSub, "posts:#{uuid}")
     %{uuid: uuid}
+  end
+
+  defp create_test_post(%{uuid: uuid} = _context) do
+    {:ok, _} = Posts.create_post(valid_create_post_attrs(uuid))
+    assert_receive {:post_created, %{id: ^uuid}}
+    %{uuid: uuid, test_post: Posts.get_post(uuid)}
   end
 
   defp valid_create_post_attrs(uuid) do
@@ -99,20 +177,4 @@ defmodule Franklin.PostsTest do
       title: "hello world"
     }
   end
-
-  # test "demo" do
-  #   # FIXME: Should use Elixir UUID over Ecto.UUID?
-  #   uuid = Ecto.UUID.generate()
-
-  #   # Start listening for pubsub event related to this identity
-  #   Phoenix.PubSub.subscribe(Franklin.PubSub, "posts:#{uuid}")
-
-  #   # issue command to create post
-  #   assert {:ok, ^uuid} = Posts.create_post(uuid, "hello", DateTime.utc_now())
-
-  #   # by the end of the test we should have (within a timeout) been told the projectors are all done.
-  #   assert_receive {:post_updated, %{uuid: ^uuid}}
-
-  #   assert [%Post{uuid: ^uuid, title: "hello"}] = Franklin.Posts.list_posts()
-  # end
 end
