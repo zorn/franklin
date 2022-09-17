@@ -24,7 +24,8 @@ defmodule FranklinWeb.Router do
     pipe_through :browser
 
     live "/posts", PostIndexLive, :index
-    live "/posts/new", PostEditorLive, :new
+    live "/posts/editor/new", PostEditorLive, :new
+    live "/posts/editor/:id", PostEditorLive, :edit
     live "/posts/:id", PostDetailsLive, :details
   end
 
