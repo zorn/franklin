@@ -14,7 +14,7 @@ defmodule FranklinWeb.Admin.PostIndexLive do
     <p>Hello index!</p>
 
     <%= for post <- @posts do %>
-      <p> <%= post.title %> published: <%= IO.inspect(post.published_at) %></p>
+      <p> <%= link post.title, to: Routes.post_details_path(@socket, :details, post.id) %> published: <%= IO.inspect(post.published_at) %></p>
     <% end %>
     """
   end

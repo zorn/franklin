@@ -25,6 +25,7 @@ defmodule FranklinWeb.Router do
 
     live "/posts", PostIndexLive, :index
     live "/posts/new", PostEditorLive, :new
+    live "/posts/:id", PostDetailsLive, :details
   end
 
   # Other scopes may use custom stacks.
