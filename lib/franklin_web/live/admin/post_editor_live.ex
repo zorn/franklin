@@ -13,35 +13,25 @@ defmodule FranklinWeb.Admin.PostEditorLive do
 
   @type socket :: Phoenix.LiveView.Socket.t()
 
-  defguard is_not_nil(x) when not is_nil(x)
-
-  @doc """
-  Mounts and configures the LiveView appropriately depending on if we are
-  editing an existing `Post` or creating a new one.
-  """
-  def mount(%{"id" => id} = _params, _session, socket) do
+  def mount(params, _session, socket) do
     socket
-    |> assign(post: Posts.get_post(id))
+    |> assign_post(params)
     |> assign_form()
     |> assign_form_changeset()
-    |> setup_subscription(id)
+    |> setup_subscription(params)
     |> ok()
   end
 
-  def mount(_params, _session, socket) do
-    socket
-    |> assign(post: %Post{})
-    |> assign_form()
-    |> assign_form_changeset()
-    |> setup_subscription(Ecto.UUID.generate())
-    |> ok()
+  defp assign_post(socket, %{"id" => id}) do
+    assign(socket, post: Posts.get_post(id))
+  end
+
+  defp assign_post(socket, _) do
+    assign(socket, post: %Post{})
   end
 
   @spec assign_form(socket) :: socket
   defp assign_form(%{assigns: %{post: post}} = socket) do
-    # FIXME: Maybe rename this to be `form_data` to help express the noun more and differentiate from the form/1 test helper?
-    # `form` represents the independent value type of the web form. It will
-    # default to the current attributes of the `post`.
     assign(socket, form: %Form{title: post.title, published_at: post.published_at})
   end
 
@@ -55,12 +45,17 @@ defmodule FranklinWeb.Admin.PostEditorLive do
     assign(socket, form_changeset: Form.changeset(form, %{}))
   end
 
-  @spec setup_subscription(socket, Ecto.UUID.t()) :: socket
-  defp setup_subscription(socket, id) do
+  # `subscription_id` represents the id of the post we are current editing or
+  # the id of the post we are attempting to create.
+  @spec setup_subscription(socket, map() | nil) :: socket
+  defp setup_subscription(socket, %{"id" => id}) do
     Posts.subscribe(id)
-    # `subscription_id` represents the id of the `Post` being edited. If the
-    # editor is current being used to create a new `Post` than it will hold the
-    # uuid value that will be assigned to the new `Post` upon submit.
+    assign(socket, subscription_id: id)
+  end
+
+  defp setup_subscription(socket, _) do
+    id = Ecto.UUID.generate()
+    Posts.subscribe(id)
     assign(socket, subscription_id: id)
   end
 
@@ -77,17 +72,17 @@ defmodule FranklinWeb.Admin.PostEditorLive do
   end
 
   @spec do_save(Post.t(), Form.t(), socket) :: {:noreply, socket}
-  defp do_save(%Post{id: nil}, form, socket) do
-    # Run save action to create a new post.
+  defp do_save(%Post{id: nil}, form, %{assigns: %{subscription_id: subscription_id}} = socket) do
     create_attrs = %{
-      id: socket.assigns.subscription_id,
+      id: subscription_id,
       published_at: form.published_at,
       title: form.title
     }
 
     case Posts.create_post(create_attrs) do
-      {:ok, _post_id} ->
+      {:ok, ^subscription_id} ->
         # FIXME: Enter a state where the form is still disabled while we wait for redirect.
+        # https://github.com/zorn/franklin/issues/20
         {:noreply, socket}
 
       {:error, _errors} ->
@@ -97,22 +92,21 @@ defmodule FranklinWeb.Admin.PostEditorLive do
     end
   end
 
-  defp do_save(%Post{id: id} = post, form, socket) when is_not_nil(id) do
-    # Run save action to update an existing post.
+  defp do_save(%Post{id: id} = post, form, socket) do
     update_attrs = %{
       published_at: form.published_at,
       title: form.title
     }
 
     case Posts.update_post(post, update_attrs) do
-      {:ok, _post_id} ->
+      {:ok, ^id} ->
         # FIXME: Enter a state where the form is still disabled while we wait for redirect.
+        # https://github.com/zorn/franklin/issues/20
         {:noreply, socket}
 
       {:error, _errors} ->
         # FIXME: Present flash-style error with generic failure message (since
         # the user likely can not recover at this point).
-
         {:noreply, put_flash(socket, :error, "Could not save changes.")}
     end
   end
@@ -129,6 +123,7 @@ defmodule FranklinWeb.Admin.PostEditorLive do
     # this event and not something else. An ultimate fix would involve
     # researching if other CQRS apps published attribute-specific messages or
     # something else.
+    # https://github.com/zorn/franklin/issues/21
     socket
     |> redirect(to: Routes.post_details_path(socket, :details, id))
     |> noreply()
