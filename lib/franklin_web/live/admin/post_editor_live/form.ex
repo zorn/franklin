@@ -1,4 +1,8 @@
-defmodule FranklinWeb.Admin.PostEditorLive.PostForm do
+defmodule FranklinWeb.Admin.PostEditorLive.Form do
+  @moduledoc """
+  Defines the structure of the post editor form submission.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

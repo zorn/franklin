@@ -1,90 +1,145 @@
 defmodule FranklinWeb.Admin.PostEditorLive do
+  @moduledoc """
+  Presents a form to an admin allowing them to create or edit a `Post` entity.
+  """
+
   use FranklinWeb, :live_view
 
   import Ecto.Changeset
 
   alias Franklin.Posts
-  alias FranklinWeb.Admin.PostEditorLive.PostForm
+  alias Franklin.Posts.Projections.Post
+  alias FranklinWeb.Admin.PostEditorLive.Form
 
-  def mount(_params, _session, socket) do
-    changeset =
-      PostForm.changeset(%PostForm{}, %{"title" => "hello world", "published_at" => "someday"})
+  @type socket :: Phoenix.LiveView.Socket.t()
 
-    IO.inspect(changeset)
-
+  def mount(params, _session, socket) do
     socket
-    |> assign(changeset: changeset)
+    |> assign_post(params)
+    |> assign_form()
+    |> assign_form_changeset()
+    |> setup_subscription(params)
     |> ok()
   end
 
-  def handle_event("save_form", %{"post_form" => form_params}, socket) do
-    IO.inspect(form_params, label: "save_form")
+  defp assign_post(socket, %{"id" => id}) do
+    assign(socket, post: Posts.get_post(id))
+  end
 
-    case apply_action(PostForm.changeset(%PostForm{}, form_params), :validate) do
-      {:error, changeset} ->
-        IO.inspect(changeset, label: "changeset")
+  defp assign_post(socket, _) do
+    assign(socket, post: %Post{})
+  end
 
+  @spec assign_form(socket) :: socket
+  defp assign_form(%{assigns: %{post: post}} = socket) do
+    assign(socket, form: %Form{title: post.title, published_at: post.published_at})
+  end
+
+  @spec assign_form_changeset(socket) :: socket
+  defp assign_form_changeset(%{assigns: %{form: form, post: %Post{id: nil}}} = socket) do
+    # When not editing an existing `Post` we'll default to a `published_at` value of now.
+    assign(socket, form_changeset: Form.changeset(form, %{published_at: DateTime.utc_now()}))
+  end
+
+  defp assign_form_changeset(%{assigns: %{form: form}} = socket) do
+    assign(socket, form_changeset: Form.changeset(form, %{}))
+  end
+
+  # `subscription_id` represents the id of the post we are current editing or
+  # the id of the post we are attempting to create.
+  @spec setup_subscription(socket, map() | nil) :: socket
+  defp setup_subscription(socket, %{"id" => id}) do
+    Posts.subscribe(id)
+    assign(socket, subscription_id: id)
+  end
+
+  defp setup_subscription(socket, _) do
+    id = Ecto.UUID.generate()
+    Posts.subscribe(id)
+    assign(socket, subscription_id: id)
+  end
+
+  def handle_event("save_form", %{"form" => form_params}, socket) do
+    case apply_action(Form.changeset(socket.assigns.form, form_params), :validate) do
+      {:ok, %Form{} = validated_form} ->
+        do_save(socket.assigns.post, validated_form, socket)
+
+      {:error, form_changeset} ->
         socket
-        |> assign(changeset: changeset)
+        |> assign(form_changeset: form_changeset)
         |> noreply()
-
-      {:ok, _changeset} ->
-        # Make the `CreatePost` command, dispatch it, then wait for an event to signal it is projected, then do a redirect.
-        # I don't think we want to make a command here.
-        # Commands should be a hidden implementation of the core
-        # We can't send the core this changeset though since that is a UI detail
-        uuid = Ecto.UUID.generate()
-        title = nil
-
-        # for now we'll do a raw datetime value and later we will parse the string into a datetime
-        published_at = DateTime.utc_now()
-        # published_at = Ecto.Changeset.fetch_field!(changeset, :published_at)
-
-        attrs = %{
-          id: uuid,
-          published_at: published_at,
-          title: title
-        }
-
-        case Posts.create_post(attrs) do
-          {:ok, _uuid} ->
-            # Start delayed listening for post_created event and then redirect to detail page
-
-            {:noreply, socket}
-
-          {:error, _errors} ->
-            # ideally any validation errors were captured by the form-specific changeset. if the command failed for validation or other reasons maybe we just display that in a generic flash error message?
-
-            {:noreply, socket}
-        end
     end
   end
 
-  def handle_event("change_form", %{"post_form" => form_params}, socket) do
-    IO.inspect(form_params, label: "change_form")
-    # TODO: Not sure WHY/HOW I need to implement this. The docs say:
-    # The LiveView must implement the phx-change event and store the input values
-    # as they arrive on change. This is important because, if an unrelated change
-    # happens on the page, LiveView should re-render the inputs with their updated
-    # values. Without phx-change, the inputs would otherwise be cleared.
-    # Alternatively, you can use phx-update="ignore" on the form to discard any
-    # updates.
-    # https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.Helpers.html#form/1
-    {:noreply, socket}
+  @spec do_save(Post.t(), Form.t(), socket) :: {:noreply, socket}
+  defp do_save(%Post{id: nil}, form, %{assigns: %{subscription_id: subscription_id}} = socket) do
+    create_attrs = %{
+      id: subscription_id,
+      published_at: form.published_at,
+      title: form.title
+    }
+
+    case Posts.create_post(create_attrs) do
+      {:ok, ^subscription_id} ->
+        # FIXME: Enter a state where the form is still disabled while we wait for redirect.
+        # https://github.com/zorn/franklin/issues/20
+        {:noreply, socket}
+
+      {:error, _errors} ->
+        # FIXME: Present flash-style error with generic failure message (since
+        # the user likely can not recover at this point).
+        {:noreply, put_flash(socket, :error, "Could not create post.")}
+    end
   end
 
+  defp do_save(%Post{id: id} = post, form, socket) do
+    update_attrs = %{
+      published_at: form.published_at,
+      title: form.title
+    }
+
+    case Posts.update_post(post, update_attrs) do
+      {:ok, ^id} ->
+        # FIXME: Enter a state where the form is still disabled while we wait for redirect.
+        # https://github.com/zorn/franklin/issues/20
+        {:noreply, socket}
+
+      {:error, _errors} ->
+        # FIXME: Present flash-style error with generic failure message (since
+        # the user likely can not recover at this point).
+        {:noreply, put_flash(socket, :error, "Could not save changes.")}
+    end
+  end
+
+  def handle_info({:post_created, %{id: id}}, socket) do
+    socket
+    |> redirect(to: Routes.post_details_path(socket, :details, id))
+    |> noreply()
+  end
+
+  def handle_info({:post_title_updated, %{id: id}}, socket) do
+    # FIXME: This is a sus implementation because there are multiple messages
+    # related to post updates. It is questionable if we should redirect after
+    # this event and not something else. An ultimate fix would involve
+    # researching if other CQRS apps published attribute-specific messages or
+    # something else.
+    # https://github.com/zorn/franklin/issues/21
+    socket
+    |> redirect(to: Routes.post_details_path(socket, :details, id))
+    |> noreply()
+  end
+
+  @spec render(map()) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
-    <p>Hello post editor!</p>
-
-    <.form let={f} for={@changeset} phx-change="change_form" phx-submit="save_form">
+    <.form let={f} for={@form_changeset} id="new-post" phx-submit="save_form">
 
       <%= label f, :title %>
       <%= text_input f, :title %>
       <%= error_tag f, :title %>
 
       <%= label f, :published_at %>
-      <%= text_input f, :published_at %>
+      <%= datetime_local_input f, :published_at %>
       <%= error_tag f, :published_at %>
 
       <%= submit "Save" %>
@@ -93,6 +148,9 @@ defmodule FranklinWeb.Admin.PostEditorLive do
     """
   end
 
+  @spec ok(socket) :: {:ok, socket}
   defp ok(socket), do: {:ok, socket}
+
+  @spec noreply(socket) :: {:noreply, socket}
   defp noreply(socket), do: {:noreply, socket}
 end
