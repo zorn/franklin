@@ -1,4 +1,4 @@
-defmodule FranklinWeb.Admin.PostEditorLive.PostForm do
+defmodule FranklinWeb.Admin.PostEditorLive.Form do
   use Ecto.Schema
   import Ecto.Changeset
 

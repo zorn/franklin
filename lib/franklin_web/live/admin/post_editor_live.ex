@@ -1,95 +1,119 @@
 defmodule FranklinWeb.Admin.PostEditorLive do
+  @moduledoc """
+  Presents a form to an admin allowing them to create or edit a `Post` entity.
+  """
+
   use FranklinWeb, :live_view
 
   import Ecto.Changeset
 
   alias Franklin.Posts
-  alias FranklinWeb.Admin.PostEditorLive.PostForm
   alias Franklin.Posts.Projections.Post
+  alias FranklinWeb.Admin.PostEditorLive.Form
+
+  @type socket :: Phoenix.LiveView.Socket.t()
 
   defguard is_not_nil(x) when not is_nil(x)
 
+  @doc """
+  Mounts and configures the LiveView appropriately depending on if we are
+  editing an existing `Post` or creating a new one.
+  """
   def mount(%{"id" => id} = _params, _session, socket) do
-    post = Posts.get_post(id)
-    Posts.subscribe(post.id)
-
-    # FIXME: We might want to save this "form" value on the socket for a more
-    # consistent changeset creation code late.
-    post_form = %PostForm{title: post.title, published_at: post.published_at}
-
     socket
-    |> assign(post: post)
-    |> assign(changeset: PostForm.changeset(post_form, %{}))
+    |> assign(post: Posts.get_post(id))
+    |> assign_form()
+    |> assign_form_changeset()
+    |> setup_subscription(id)
     |> ok()
   end
 
   def mount(_params, _session, socket) do
-    new_post_uuid = Ecto.UUID.generate()
-    Posts.subscribe(new_post_uuid)
-
-    changeset =
-      PostForm.changeset(%PostForm{}, %{
-        id: new_post_uuid,
-        published_at: DateTime.utc_now()
-      })
-
     socket
-    |> assign(new_post_uuid: new_post_uuid)
-    |> assign(changeset: changeset)
+    |> assign(post: %Post{})
+    |> assign_form()
+    |> assign_form_changeset()
+    |> setup_subscription(Ecto.UUID.generate())
     |> ok()
   end
 
-  def handle_event("save_form", %{"post_form" => form_params}, socket) do
-    IO.inspect(form_params, label: "save_form")
+  @spec assign_form(socket) :: socket
+  defp assign_form(%{assigns: %{post: post}} = socket) do
+    # FIXME: Maybe rename this to be `form_data` to help express the noun more and differentiate from the form/1 test helper?
+    # `form` represents the independent value type of the web form. It will
+    # default to the current attributes of the `post`.
+    assign(socket, form: %Form{title: post.title, published_at: post.published_at})
+  end
 
-    post = Map.get(socket.assigns, :post, %Post{})
+  @spec assign_form_changeset(socket) :: socket
+  defp assign_form_changeset(%{assigns: %{form: form, post: %Post{id: nil}}} = socket) do
+    # When not editing an existing `Post` we'll default to a `published_at` value of now.
+    assign(socket, form_changeset: Form.changeset(form, %{published_at: DateTime.utc_now()}))
+  end
 
-    case apply_action(PostForm.changeset(%PostForm{}, form_params), :validate) do
-      {:error, changeset} ->
+  defp assign_form_changeset(%{assigns: %{form: form}} = socket) do
+    assign(socket, form_changeset: Form.changeset(form, %{}))
+  end
+
+  @spec setup_subscription(socket, Ecto.UUID.t()) :: socket
+  defp setup_subscription(socket, id) do
+    Posts.subscribe(id)
+    # `subscription_id` represents the id of the `Post` being edited. If the
+    # editor is current being used to create a new `Post` than it will hold the
+    # uuid value that will be assigned to the new `Post` upon submit.
+    assign(socket, subscription_id: id)
+  end
+
+  def handle_event("save_form", %{"form" => form_params}, socket) do
+    case apply_action(Form.changeset(socket.assigns.form, form_params), :validate) do
+      {:ok, %Form{} = validated_form} ->
+        do_save(socket.assigns.post, validated_form, socket)
+
+      {:error, form_changeset} ->
         socket
-        |> assign(changeset: changeset)
+        |> assign(form_changeset: form_changeset)
         |> noreply()
-
-      {:ok, validated_params} ->
-        save_post(post, validated_params, socket)
     end
   end
 
-  # Not sure I like how repetitive this code is between create and update.
-  defp save_post(%Post{id: nil} = _post, validated_params, socket) do
-    attrs = %{
-      id: socket.assigns.new_post_uuid,
-      published_at: validated_params.published_at,
-      title: validated_params.title
+  @spec do_save(Post.t(), Form.t(), socket) :: {:noreply, socket}
+  defp do_save(%Post{id: nil}, form, socket) do
+    # Run save action to create a new post.
+    create_attrs = %{
+      id: socket.assigns.subscription_id,
+      published_at: form.published_at,
+      title: form.title
     }
 
-    case Posts.create_post(attrs) do
+    case Posts.create_post(create_attrs) do
       {:ok, _post_id} ->
-        # FIXME: Enter a state where the form is frozen, and we are waiting for the redirect?
+        # FIXME: Enter a state where the form is still disabled while we wait for redirect.
         {:noreply, socket}
 
       {:error, _errors} ->
-        # ideally any validation errors were captured by the form-specific changeset. if the command failed for validation or other reasons maybe we just display that in a generic flash error message?
-
-        {:noreply, socket}
+        # FIXME: Present flash-style error with generic failure message (since
+        # the user likely can not recover at this point).
+        {:noreply, put_flash(socket, :error, "Could not create post.")}
     end
   end
 
-  defp save_post(%Post{id: id} = post, validated_params, socket) when is_not_nil(id) do
-    attrs = %{
-      published_at: validated_params.published_at,
-      title: validated_params.title
+  defp do_save(%Post{id: id} = post, form, socket) when is_not_nil(id) do
+    # Run save action to update an existing post.
+    update_attrs = %{
+      published_at: form.published_at,
+      title: form.title
     }
 
-    case Posts.update_post(post, attrs) do
+    case Posts.update_post(post, update_attrs) do
       {:ok, _post_id} ->
-        # FIXME: Enter a state where the form is frozen, and we are waiting for the redirect?
+        # FIXME: Enter a state where the form is still disabled while we wait for redirect.
         {:noreply, socket}
 
-      {:error, errors} ->
-        # ideally any validation errors were captured by the form-specific changeset. if the command failed for validation or other reasons maybe we just display that in a generic flash error message?
+      {:error, _errors} ->
+        # FIXME: Present flash-style error with generic failure message (since
+        # the user likely can not recover at this point).
 
-        {:noreply, socket}
+        {:noreply, put_flash(socket, :error, "Could not save changes.")}
     end
   end
 
@@ -110,9 +134,10 @@ defmodule FranklinWeb.Admin.PostEditorLive do
     |> noreply()
   end
 
+  @spec render(map()) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
-    <.form let={f} for={@changeset} phx-submit="save_form">
+    <.form let={f} for={@form_changeset} id="new-post" phx-submit="save_form">
 
       <%= label f, :title %>
       <%= text_input f, :title %>
@@ -128,6 +153,9 @@ defmodule FranklinWeb.Admin.PostEditorLive do
     """
   end
 
+  @spec ok(socket) :: {:ok, socket}
   defp ok(socket), do: {:ok, socket}
+
+  @spec noreply(socket) :: {:noreply, socket}
   defp noreply(socket), do: {:noreply, socket}
 end
