@@ -37,6 +37,12 @@ defmodule FranklinWeb.Admin.PostEditorLiveTest do
     assert has_element?(view, query_selector_for_error_feedback(:published_at), "can't be blank")
   end
 
+  # Future test ideas:
+  #
+  # A test to validate the error flash message when `Posts.update_post/2` or
+  # `Posts.create_post/1` returns the error tuple. Not sure how easy it would be
+  # to stage that kind of behavior.
+
   defp query_selector_for_error_feedback(field_name) do
     "span[phx-feedback-for='form[#{field_name}]']"
   end
