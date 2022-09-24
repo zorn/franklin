@@ -4,7 +4,7 @@ defmodule Franklin.PostsTest do
   alias Franklin.Posts
   alias Franklin.Posts.Projections.Post
 
-  describe inspect(&Posts.subscribe/1) do
+  describe fut(&Posts.subscribe_typo/1) do
     test "returns :ok when any UUID is passed in" do
       assert :ok = Posts.subscribe(Ecto.UUID.generate())
     end
@@ -23,7 +23,7 @@ defmodule Franklin.PostsTest do
     end
   end
 
-  describe inspect(&Posts.create_post/1) do
+  describe fut(&Posts.create_post/1) do
     setup :generate_identity_and_subscribe
 
     test "successful with valid arguments", %{uuid: uuid} do
@@ -85,7 +85,7 @@ defmodule Franklin.PostsTest do
     # TODO: Add a test that verifies expected outcome for a command dispatch error.
   end
 
-  describe inspect(&Posts.update_post/2) do
+  describe fut(&Posts.update_post/2) do
     setup :generate_identity_and_subscribe
     setup :create_test_post
 

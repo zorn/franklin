@@ -25,6 +25,7 @@ defmodule Franklin.DataCase do
       import Ecto.Query
       import Franklin.DataCase
       import Commanded.Assertions.EventAssertions
+      import Franklin.SmartDescribe
     end
   end
 
