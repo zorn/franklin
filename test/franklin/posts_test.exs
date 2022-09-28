@@ -4,7 +4,7 @@ defmodule Franklin.PostsTest do
   alias Franklin.Posts
   alias Franklin.Posts.Projections.Post
 
-  describe fut(&Posts.subscribe_typo/1) do
+  describe fut(&Posts.subscribe/1) do
     test "returns :ok when any UUID is passed in" do
       assert :ok = Posts.subscribe(Ecto.UUID.generate())
     end
