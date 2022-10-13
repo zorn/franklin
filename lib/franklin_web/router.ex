@@ -1,5 +1,6 @@
 defmodule FranklinWeb.Router do
   use FranklinWeb, :router
+  import PhxLiveStorybook.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -14,10 +15,15 @@ defmodule FranklinWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/" do
+    storybook_assets()
+  end
+  
   scope "/", FranklinWeb do
     pipe_through :browser
 
     get "/", PageController, :index
+    live_storybook "/storybook", backend_module: FranklinWeb.Storybook
   end
 
   scope "/admin", FranklinWeb.Admin do

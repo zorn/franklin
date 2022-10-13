@@ -70,7 +70,10 @@ defmodule Franklin.MixProject do
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
 
       # For frontend styling.
-      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev}
+      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
+
+      # For component management
+      {:phx_live_storybook, "~> 0.4.0"}
     ]
   end
 

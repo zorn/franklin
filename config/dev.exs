@@ -35,7 +35,8 @@ config :franklin, FranklinWeb.Endpoint,
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]},
+    storybook_tailwind: {Tailwind, :install_and_run, [:storybook, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -69,7 +70,8 @@ config :franklin, FranklinWeb.Endpoint,
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
       ~r"lib/franklin_web/(live|views)/.*(ex)$",
-      ~r"lib/franklin_web/templates/.*(eex)$"
+      ~r"lib/franklin_web/templates/.*(eex)$",
+      ~r"storybook/.*(exs)$"
     ]
   ]
 
