@@ -3,5 +3,6 @@
         "CQRS",
         "mikezornek",
         "struct"
-    ]
+    ],
+    "tailwindCSS.experimental.configFile": "./assets/tailwind.config.js"
 }
