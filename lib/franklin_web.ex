@@ -98,6 +98,13 @@ defmodule FranklinWeb do
       import FranklinWeb.ErrorHelpers
       import FranklinWeb.Gettext
       alias FranklinWeb.Router.Helpers, as: Routes
+
+      import FranklinWeb.Components.Avatar
+      import FranklinWeb.Components.ContentPreview
+      import FranklinWeb.Components.NamePlate
+      import FranklinWeb.Components.Navigation
+      import FranklinWeb.Components.NowSummary
+      import FranklinWeb.Components.SocialCard
     end
   end
 

@@ -69,7 +69,7 @@ config :franklin, FranklinWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/franklin_web/(live|views)/.*(ex)$",
+      ~r"lib/franklin_web/(live|components|views)/.*(ex)$",
       ~r"lib/franklin_web/templates/.*(eex)$",
       ~r"storybook/.*(exs)$"
     ]
