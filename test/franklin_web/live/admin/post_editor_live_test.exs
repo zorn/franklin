@@ -6,6 +6,10 @@ defmodule FranklinWeb.Admin.PostEditorLiveTest do
   alias Franklin.Posts
   alias Franklin.Posts.Projections.Post
 
+  setup %{conn: conn} do
+    %{conn: add_authentication(conn, "zorn", "Pass1234")}
+  end
+
   test "user can submit new post", %{conn: conn} do
     {:ok, view, _html} = live(conn, Routes.post_editor_path(conn, :new))
 
@@ -45,5 +49,9 @@ defmodule FranklinWeb.Admin.PostEditorLiveTest do
 
   defp query_selector_for_error_feedback(field_name) do
     "span[phx-feedback-for='form[#{field_name}]']"
+  end
+
+  defp add_authentication(conn, username, password) do
+    put_req_header(conn, "authorization", "Basic " <> Base.encode64("#{username}:#{password}"))
   end
 end
