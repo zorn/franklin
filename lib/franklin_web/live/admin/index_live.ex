@@ -1,5 +1,5 @@
 defmodule FranklinWeb.Admin.IndexLive do
-  use FranklinWeb, :live_view
+  use FranklinWeb, :admin_live_view
 
   def mount(_params, _session, socket) do
     {:ok, socket}
