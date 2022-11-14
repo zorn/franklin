@@ -22,12 +22,12 @@ defmodule FranklinWeb.Router do
   scope "/" do
     storybook_assets()
   end
-  
+
   scope "/", FranklinWeb do
     pipe_through :browser
 
     live "/", HomeLive, :index
-    live_storybook "/storybook", backend_module: FranklinWeb.Storybook
+    live_storybook("/storybook", backend_module: FranklinWeb.Storybook)
   end
 
   scope "/admin", FranklinWeb.Admin do
