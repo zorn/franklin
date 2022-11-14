@@ -16,20 +16,20 @@ defmodule FranklinWeb.AdminUserStories.RequireAuthentication do
   test "success: with valid credentials I can view the admin area", %{conn: conn} do
     conn
     |> add_authentication("zorn", "Pass1234")
-    |> get(Routes.admin_index_path(conn, :index))
+    |> get("/admin")
     |> assert_html_response(200, "Welcome to the Admin area.")
   end
 
   test "failure: with invalid credentials I can not view the admin area", %{conn: conn} do
     conn
     |> add_authentication("hacker", "badsecret")
-    |> get(Routes.admin_index_path(conn, :index))
+    |> get("/admin")
     |> assert_response(401)
   end
 
   test "failure: with missing credentials I can not view the admin area", %{conn: conn} do
     conn
-    |> get(Routes.admin_index_path(conn, :index))
+    |> get("/admin")
     |> assert_response(401)
   end
 
