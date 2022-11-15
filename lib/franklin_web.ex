@@ -45,7 +45,7 @@ defmodule FranklinWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {FranklinWeb.LayoutView, "live.html"}
+        layout: {FranklinWeb.LayoutView, :live}
 
       unquote(view_helpers())
     end
