@@ -2,6 +2,7 @@ defmodule Franklin.Articles do
   import Ecto.Query
 
   alias Franklin.Articles.Article
+  alias Franklin.Repo
 
   @typedoc """
   A map structure containing attribute specific error details.
