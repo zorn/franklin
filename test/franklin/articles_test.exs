@@ -6,7 +6,7 @@ defmodule Franklin.ArticlesTest do
   describe "create_article/1" do
     test "successful with minimum valid arguments" do
       min_attrs = %{title: "t", body: "b", published_at: sample_published_at()}
-      assert {:ok, uuid} = Articles.create_article(min_attrs)
+      assert {:ok, _uuid} = Articles.create_article(min_attrs)
 
       # Since we don't have the `uuid` before calling `create_article/1` we
       # can't subscribe to verify pub_sub notifications. We'll verify that more
