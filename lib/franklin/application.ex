@@ -18,8 +18,9 @@ defmodule Franklin.Application do
       FranklinWeb.Endpoint,
       # Start the Commanded Application
       Franklin.CommandedApplication,
-      # Start the supervisor for Post projections
-      Franklin.Posts.Supervisor
+      # Start the supervisors for Projections
+      Franklin.Posts.Supervisor,
+      Franklin.Articles.Supervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

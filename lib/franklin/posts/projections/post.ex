@@ -12,7 +12,6 @@ defmodule Franklin.Posts.Projections.Post do
   end
 
   def update_changeset(post, attrs \\ %{}) do
-    post
-    |> cast(attrs, [:title, :published_at])
+    cast(post, attrs, [:title, :published_at])
   end
 end

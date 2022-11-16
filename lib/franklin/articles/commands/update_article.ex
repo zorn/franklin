@@ -1,6 +1,6 @@
-defmodule Franklin.Articles.Commands.CreateArticle do
+defmodule Franklin.Articles.Commands.UpdateArticle do
   @moduledoc """
-  A command to represent the user-semantic intent of create a new `Article` entity.
+  A command to represent the user-semantic intent of updating an existing `Article` entity.
   """
 
   use Ecto.Schema
@@ -34,30 +34,27 @@ defmodule Franklin.Articles.Commands.CreateArticle do
 
   @type attrs :: %{
           required(:body) => String.t(),
-          optional(:id) => Ecto.UUID.t(),
+          required(:id) => Ecto.UUID.t(),
           required(:published_at) => DateTime.t(),
           required(:title) => String.t()
         }
 
   @doc """
-  Attempts to return a `CreateArticle` command using the passed in attributes.
+  Attempts to return a `UpdateArticle` command using the passed in attributes.
 
   If the attributes are valid, returns: `{:ok, command}`. If the attributes are
   invalid, returns: `{:error, validation_error_map}`.
   """
   @spec new(attrs()) :: {:ok, __MODULE__.t()} | {:error, ValidationErrorMap.t()}
   def new(attrs) do
-    # `id` is optional, if not present, generate one.
-    attrs = Map.put_new(attrs, :id, Ecto.UUID.generate())
-
     case apply_action(changeset(%__MODULE__{}, attrs), :validate) do
       {:ok, command} -> {:ok, command}
       {:error, changeset} -> {:error, ValidationErrorMap.new(changeset)}
     end
   end
 
-  defp changeset(article, attrs) do
-    article
+  defp changeset(user, attrs) do
+    user
     |> cast(attrs, @attribute_fields)
     |> validate_body()
     |> validate_id()

@@ -1,5 +1,6 @@
 defmodule Franklin.Articles do
   import Ecto.Query
+  import Franklin.Articles.Projector, only: [topic: 1]
 
   alias Franklin.Articles.Article
   alias Franklin.Repo
@@ -38,7 +39,7 @@ defmodule Franklin.Articles do
 
     * `id` - (optional) An `Ecto.UUID` value that will be used as the
        identity of this post. Will be generated if not provided.
-    * `title` - A plain-text string value no more that 256 characters in length.
+    * `title` - A plain-text string value using 1 to 255 characters in length.
     * `body` - A Markdown-flavored string value no more that 100 MBs in length.
     * `published_at` - A `DateTime` value representing the public-facing
        published date of the `Post`.
@@ -60,8 +61,23 @@ defmodule Franklin.Articles do
   end
 
   def list_articles() do
-    query = from a in Article, order_by: [desc: a.published_at]
+    query = from(a in Article, order_by: [desc: a.published_at])
     Repo.all(query)
+  end
+
+  @doc """
+  Subscribes the calling process to a `Phoenix.PubSub` topic relative to the
+  passed in `article_id`.
+
+  This topic will receive the following messages:
+
+  * `{:article_created, %{id: uuid}}`
+  * `{:article_title_updated, %{id: uuid}}`
+  * `{:article_published_at_updated, %{id: uuid}}`
+  """
+  @spec subscribe(Ecto.UUID.t()) :: :ok | {:error, term()}
+  def subscribe(article_id) do
+    Phoenix.PubSub.subscribe(Franklin.PubSub, topic(article_id))
   end
 
   defp dispatch_command(command) do

@@ -31,7 +31,7 @@ defmodule Franklin.Articles.Validations do
   def validate_title(changeset) do
     changeset
     |> validate_required(:title)
-    |> validate_length(:title, min: 3, max: 50)
+    |> validate_length(:title, min: 1, max: 255)
   end
 
   @doc """
