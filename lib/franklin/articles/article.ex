@@ -7,6 +7,13 @@ defmodule Franklin.Articles.Article do
 
   use Ecto.Schema
 
+  @type t :: %__MODULE__{
+          body: String.t(),
+          id: Ecto.UUID.t(),
+          published_at: DateTime.t(),
+          title: String.t()
+        }
+
   @primary_key {:id, :binary_id, autogenerate: false}
 
   schema "articles" do
