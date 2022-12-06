@@ -35,6 +35,12 @@ defmodule FranklinWeb.Router do
 
     live "/", IndexLive, :index, as: :admin_index
 
+    scope "/articles", Articles do
+      live "/", IndexLive, :index, as: :admin_article_index
+      live "/editor/new", EditorLive, :new, as: :admin_article_editor
+      live "/editor/:id", EditorLive, :edit, as: :admin_article_editor
+    end
+
     live "/posts", PostIndexLive, :index
     live "/posts/editor/new", PostEditorLive, :new
     live "/posts/editor/:id", PostEditorLive, :edit

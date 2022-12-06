@@ -12,6 +12,15 @@
 
 alias Franklin.CommandedApplication
 alias Franklin.Posts.Commands.CreatePost
+alias Franklin.Articles.Commands.CreateArticle
+
+sample_article_markdown = """
+
+## Headline Two
+
+A [link](https://mikezornek.com)!
+
+"""
 
 # Make some default posts.
 %CreatePost{
@@ -25,5 +34,21 @@ alias Franklin.Posts.Commands.CreatePost
   id: Ecto.UUID.generate(),
   title: "Hello, world two!",
   published_at: ~U[2022-07-12 09:00:00Z]
+}
+|> CommandedApplication.dispatch()
+
+%CreateArticle{
+  id: Ecto.UUID.generate(),
+  title: "Sample Article One",
+  body: sample_article_markdown,
+  published_at: ~U[2022-07-13 09:00:00Z]
+}
+|> CommandedApplication.dispatch()
+
+%CreateArticle{
+  id: Ecto.UUID.generate(),
+  title: "Sample Article Two",
+  body: sample_article_markdown,
+  published_at: ~U[2022-07-14 09:00:00Z]
 }
 |> CommandedApplication.dispatch()
