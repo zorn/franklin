@@ -1,31 +1,61 @@
 # Franklin
 
-A custom blog system written in Elixir and Phoenix to power mikezornek.com.
+Franklin is a custom blog application that will (in the future) power MikeZornek.com. .
+
+Franklin is written in [Elixir], [Phoenix], and [LiveView] and is an intentionally over-engineered blog application. It uses an event-sourced / CQRS core (via [commanded]) along side modern component-based UI presentation. It aims to make even the simple things overly complex in the spirit of personal education towards these architecture decisions.
+
+[Elixir]: https://elixir-lang.org/
+[Phoenix]: https://www.phoenixframework.org/
+[LiveView]: https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html
+[commanded]: https://github.com/commanded/commanded
+
+Franklin currently remains in a very hacky state and many things are incomplete or only partial implemented. A rough timeline of things to come:
+
+## Current Goal: Technical Preview One (Dec 25)
+
+* Basic article publishing with title, markdown-formatted body, and basic page metadata.
+* The ability to host static pages at root urls.
+* An RSS feed for recent content.
+* Basic frontend design layout.
+* Basic admin design layout.
+* Stretch: Some helpful GitHub Action CI testing.
+
+## Next Goals: Technical Preview Two
+
+* The ability to customize page slugs.
+* The ability to upload images and other assets to be used by blog articles.
+* TBD
+
+## Technical Preview Three
+
+* The ability to import the current MikeZornek.com blog archive.
+* TBD
 
 ## Running Locally
 
-To start your Phoenix server:
+To get the project dependencies and setup the two local databases (one is an event store, the other is the typical Ecto repo storing event projections) use:
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+```
+$ mix setup
+```
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+To launch the Phoenix server (which will host the site at <http://localhost:4000>) attached to an iex session use:
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+```
+$ iex -S mix phx.server
+```
 
-## Reset Local Databases.
+If you ever want to reset the two local databases, include local dev seeds, use:
 
-As a CQRS / Event Source codebase we have two databases, the event store database and the projections database. If you want to reset these use the following command:
+```
+$ mix reset_databases
+```
 
-    $ mix event_store.drop; mix event_store.create; mix event_store.init; mix ecto.reset
+To run the full test suite use:
 
-    $ MIX_ENV=test mix event_store.drop; MIX_ENV=test mix event_store.create; MIX_ENV=test mix event_store.init; MIX_ENV=test mix ecto.reset
-
-
-## Browsing Product Documentation 
-
-This project uses `ex_doc` to help render inline module/function documentation as well as project guides.
+```
+$ mix test
+```
 
 To render the current docs and open the root index page run:
 
@@ -33,10 +63,6 @@ To render the current docs and open the root index page run:
 $ mix docs; open doc/index.html
 ```
 
-## Learn more
+***
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+For more info on these mix commands see the `aliases` private function inside of [`mix.exs`](https://github.com/zorn/franklin/blob/main/mix.exs).
