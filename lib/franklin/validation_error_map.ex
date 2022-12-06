@@ -7,12 +7,12 @@ defmodule Franklin.ValidationErrorMap do
 
   ## Example:
 
-  > iex> format_errors(changeset)
-  > %{
-  >   id: ["is invalid"],
-  >   published_at: ["can't be blank"],
-  >   title: ["should be at least 3 character(s)"]
-  > }
+      iex> new(changeset)
+      %Franklin.ValidationErrorMap{
+        id: ["is invalid"],
+        published_at: ["can't be blank"],
+        title: ["should be at least 3 character(s)"]
+      }
   """
   @spec new(Ecto.Changeset.t()) :: t()
   def new(changeset) do
