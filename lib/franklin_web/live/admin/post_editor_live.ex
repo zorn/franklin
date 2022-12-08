@@ -132,18 +132,16 @@ defmodule FranklinWeb.Admin.PostEditorLive do
   @spec render(map()) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
-    <.form let={f} for={@form_changeset} id="new-post" phx-submit="save_form">
+    <.form :let={f} for={@form_changeset} id="new-post" phx-submit="save_form">
+      <%= label(f, :title) %>
+      <%= text_input(f, :title) %>
+      <%= error_tag(f, :title) %>
 
-      <%= label f, :title %>
-      <%= text_input f, :title %>
-      <%= error_tag f, :title %>
+      <%= label(f, :published_at) %>
+      <%= datetime_local_input(f, :published_at) %>
+      <%= error_tag(f, :published_at) %>
 
-      <%= label f, :published_at %>
-      <%= datetime_local_input f, :published_at %>
-      <%= error_tag f, :published_at %>
-
-      <%= submit "Save" %>
-
+      <%= submit("Save") %>
     </.form>
     """
   end
