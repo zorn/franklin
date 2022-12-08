@@ -9,12 +9,16 @@ defmodule FranklinWeb.Admin.PostIndexLive do
 
   def render(assigns) do
     ~H"""
-    <p><%= link "New Post", to: Routes.post_editor_path(@socket, :new) %></p>
+    <p><%= link("New Post", to: Routes.post_editor_path(@socket, :new)) %></p>
 
     <p>Hello index!</p>
 
     <%= for post <- @posts do %>
-      <p> <%= link post.title, to: Routes.post_details_path(@socket, :details, post.id) %> published: <%= IO.inspect(post.published_at) %></p>
+      <p>
+        <%= link(post.title, to: Routes.post_details_path(@socket, :details, post.id)) %> published: <%= IO.inspect(
+          post.published_at
+        ) %>
+      </p>
     <% end %>
     """
   end
