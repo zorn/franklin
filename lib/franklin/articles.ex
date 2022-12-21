@@ -1,6 +1,5 @@
 defmodule Franklin.Articles do
   import Ecto.Query
-  import Franklin.Articles.Projector, only: [topic: 1]
 
   alias Franklin.Articles.Article
   alias Franklin.Repo
@@ -68,7 +67,43 @@ defmodule Franklin.Articles do
   """
   @spec subscribe(Ecto.UUID.t()) :: :ok | {:error, term()}
   def subscribe(article_id) do
-    Phoenix.PubSub.subscribe(Franklin.PubSub, topic(article_id))
+    Phoenix.PubSub.subscribe(Franklin.PubSub, Franklin.Articles.Projector.topic(article_id))
+  end
+
+  @typedoc "Attribute map type relative to the `update_article/2` function."
+  @type update_attrs :: %{
+          optional(:body) => String.t(),
+          optional(:published_at) => DateTime.t(),
+          optional(:title) => String.t()
+        }
+
+  @doc """
+  Attempts to update the given `Article` entity.
+
+  Returns `{:ok, uuid}` when successful and `{:error, validation_error_map}` if
+  there was a problem.
+
+  ## Attributes
+
+    * `:body` - A Markdown-flavored string value no more that 100 MBs in length.
+    * `published_at` - A `DateTime` value representing the public-facing
+       published date of the article.
+    * `:title` - A plain-text string value using 1 to 255 characters in length.
+  """
+  @spec update_article(Article.t(), update_attrs()) ::
+          {:ok, Ecto.UUID.t()} | {:error, ValidationErrorMap.t()}
+  def update_article(%Article{} = article, attrs) do
+    command_attrs =
+      attrs
+      |> Map.put(:id, article.id)
+      |> Map.put_new(:body, article.body)
+      |> Map.put_new(:published_at, article.published_at)
+      |> Map.put_new(:title, article.title)
+
+    case Franklin.Articles.Commands.UpdateArticle.new(command_attrs) do
+      {:ok, command} -> dispatch_command(command)
+      {:error, errors} -> {:error, errors}
+    end
   end
 
   defp dispatch_command(command) do
