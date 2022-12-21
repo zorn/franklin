@@ -36,7 +36,4 @@ defmodule FranklinWeb.Admin.Articles.IndexLive do
 
   @spec ok(Socket.t()) :: {:ok, Socket.t()}
   defp ok(socket), do: {:ok, socket}
-
-  @spec noreply(Socket.t()) :: {:noreply, Socket.t()}
-  defp noreply(socket), do: {:noreply, socket}
 end
