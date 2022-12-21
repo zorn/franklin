@@ -46,7 +46,7 @@ defmodule Franklin.Articles do
     Repo.get(Article, id)
   end
 
-  @typedoc """
+  @doc """
   # Returns a list of `Article` entities sorted by `:published_at` descending.
   """
   def list_articles() do
