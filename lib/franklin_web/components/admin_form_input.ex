@@ -7,7 +7,7 @@ defmodule FranklinWeb.Components.AdminFormInput do
     assigns
     |> assign(field: nil)
     |> assign_new(:name, fn ->
-      name = Phoenix.HTML.Form.input_name(f, field)
+      _name = Phoenix.HTML.Form.input_name(f, field)
       # if assigns.multiple, do: name <> "[]", else: name
     end)
     |> assign_new(:id, fn -> Phoenix.HTML.Form.input_id(f, field) end)
