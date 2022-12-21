@@ -2,9 +2,9 @@ defmodule Franklin.Articles do
   import Ecto.Query
   import Franklin.Articles.Projector, only: [topic: 1]
 
-  alias Franklin.ValidationErrorMap
   alias Franklin.Articles.Article
   alias Franklin.Repo
+  alias Franklin.ValidationErrorMap
 
   @typedoc "Attribute map type relative to the `create_article/1` function."
   @type create_attrs :: %{
