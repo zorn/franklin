@@ -117,6 +117,7 @@ defmodule FranklinWeb do
       import FranklinWeb.Components.AdminSidebar
       import FranklinWeb.Components.AdminSidebarButton
       import FranklinWeb.Components.AdminSimpleTable
+      import FranklinWeb.Components.Button
 
       import FranklinWeb.Components.AdminFormError
       import FranklinWeb.Components.AdminFormInput

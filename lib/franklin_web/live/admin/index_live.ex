@@ -8,6 +8,8 @@ defmodule FranklinWeb.Admin.IndexLive do
   def render(assigns) do
     ~H"""
     <p id="welcome-message">Welcome to the Admin area.</p>
+
+    <.button label="hello" />
     """
   end
 end
