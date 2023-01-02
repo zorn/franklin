@@ -6,10 +6,7 @@ defmodule FranklinWeb.Components.AdminFormInput do
   def admin_form_input(%{field: {f, field}} = assigns) do
     assigns
     |> assign(field: nil)
-    |> assign_new(:name, fn ->
-      _name = Phoenix.HTML.Form.input_name(f, field)
-      # if assigns.multiple, do: name <> "[]", else: name
-    end)
+    |> assign_new(:name, fn -> Phoenix.HTML.Form.input_name(f, field) end)
     |> assign_new(:id, fn -> Phoenix.HTML.Form.input_id(f, field) end)
     |> assign_new(:value, fn -> Phoenix.HTML.Form.input_value(f, field) end)
     |> assign_new(:errors, fn -> translate_errors(f.errors || [], field) end)
@@ -19,15 +16,20 @@ defmodule FranklinWeb.Components.AdminFormInput do
   def admin_form_input(assigns) do
     ~H"""
     <div>
-      <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+      <.label for={@id}>
+        <%= @label %>
+      </.label>
+
       <div class="mt-1">
         <input
-          type="email"
-          name="email"
-          id="email"
-          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          placeholder="you@example.com"
-          aria-describedby="email-description"
+          type={@type}
+          name={@name}
+          id={@id || @name}
+          value={@value}
+          class={[
+            input_border(@errors),
+            "block w-full rounded-md  shadow-sm   sm:text-sm"
+          ]}
         />
       </div>
       <p class="mt-2 text-sm text-gray-500" id="email-description">We'll only use this for spam.</p>
@@ -65,6 +67,26 @@ defmodule FranklinWeb.Components.AdminFormInput do
       </div>
       <.admin_form_error :for={msg <- @errors}><%= msg %></.admin_form_error>
     </div>
+    """
+  end
+
+  defp input_border([] = _errors),
+    do: "border-indigo-300 focus:border-indigo-400 focus:ring-indigo-800/5"
+
+  defp input_border([_ | _] = _errors),
+    do: "border-red-400 focus:border-red-400 focus:ring-red-400/10"
+
+  @doc """
+  Renders a label.
+  """
+  attr :for, :string, default: nil
+  slot(:inner_block, required: true)
+
+  def label(assigns) do
+    ~H"""
+    <label for={@for} class="block text-sm font-medium text-gray-700">
+      <%= render_slot(@inner_block) %>
+    </label>
     """
   end
 
