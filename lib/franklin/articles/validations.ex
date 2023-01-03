@@ -42,6 +42,6 @@ defmodule Franklin.Articles.Validations do
   def validate_body(changeset) do
     changeset
     |> validate_required(:body)
-    |> validate_length(:body, count: :bytes, max: 100_000_000)
+    |> validate_length(:body, max: 30_000)
   end
 end
