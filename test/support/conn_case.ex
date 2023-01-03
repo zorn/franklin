@@ -20,9 +20,11 @@ defmodule FranklinWeb.ConnCase do
   using do
     quote do
       # Import conveniences for testing with connections
-      import Plug.Conn
-      import Phoenix.ConnTest
+      import Franklin.WaitForPassing
       import FranklinWeb.ConnCase
+      import Phoenix.ConnTest
+      import Phoenix.LiveViewTest
+      import Plug.Conn
 
       alias FranklinWeb.Router.Helpers, as: Routes
 
