@@ -117,6 +117,17 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     end
   end
 
+  def handle_info({:article_created, %{id: _id}}, socket) do
+    # FIXME: This is a sus implementation because there are multiple messages
+    # related to article creation and updates. It is questionable if we should
+    # redirect after this event and not something else. An ultimate fix would
+    # involve researching if other CQRS apps published attribute-specific
+    # messages or something else. https://github.com/zorn/franklin/issues/21
+    socket
+    |> redirect(to: "/admin/articles")
+    |> noreply()
+  end
+
   def render(assigns) do
     ~H"""
     <h2 class="text-xl font-bold my-4">Article Editor</h2>
