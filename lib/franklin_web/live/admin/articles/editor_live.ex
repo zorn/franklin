@@ -66,7 +66,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
 
     case Ecto.Changeset.apply_action(changeset, :validate) do
       {:ok, %ArticleForm{} = validated_form} ->
-        do_save(socket.assigns.post, validated_form, socket)
+        do_save(socket.assigns.article, validated_form, socket)
 
       {:error, form_changeset} ->
         socket
@@ -93,7 +93,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
       {:error, _errors} ->
         # FIXME: Present flash-style error with generic failure message (since
         # the user likely can not recover at this point).
-        {:noreply, put_flash(socket, :error, "Could not create post.")}
+        {:noreply, put_flash(socket, :error, "Could not create article.")}
     end
   end
 
