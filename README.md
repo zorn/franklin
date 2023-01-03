@@ -11,7 +11,7 @@ Franklin is written in [Elixir], [Phoenix], and [LiveView] and is an intentional
 
 Franklin currently remains in a very hacky state and many things are incomplete or only partial implemented. A rough timeline of things to come:
 
-## Current Goal: Technical Preview One (Dec 25)
+## Current Goal: Technical Preview One (January 8th)
 
 * Basic article publishing with title, markdown-formatted body, and basic page metadata.
 * The ability to host static pages at root urls.
