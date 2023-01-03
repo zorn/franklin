@@ -5,6 +5,15 @@ defmodule Franklin.Router do
 
   use Commanded.Commands.Router
 
+  alias Franklin.Articles.ArticleAggregate
+  alias Franklin.Articles.Commands.CreateArticle
+  alias Franklin.Articles.Commands.DeleteArticle
+  alias Franklin.Articles.Commands.UpdateArticle
+
+  dispatch([CreateArticle], to: ArticleAggregate, identity: :id)
+  dispatch([DeleteArticle], to: ArticleAggregate, identity: :id)
+  dispatch([UpdateArticle], to: ArticleAggregate, identity: :id)
+
   alias Franklin.Posts.Aggregates.Post, as: PostAggregate
   alias Franklin.Posts.Commands.CreatePost
   alias Franklin.Posts.Commands.DeletePost

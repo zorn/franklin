@@ -51,6 +51,15 @@ defmodule FranklinWeb do
     end
   end
 
+  def admin_live_view do
+    quote do
+      use Phoenix.LiveView,
+        layout: {FranklinWeb.LayoutView, :live_admin}
+
+      unquote(view_helpers())
+    end
+  end
+
   def live_component do
     quote do
       use Phoenix.LiveComponent
@@ -105,6 +114,13 @@ defmodule FranklinWeb do
       import FranklinWeb.Components.Navigation
       import FranklinWeb.Components.NowSummary
       import FranklinWeb.Components.SocialCard
+      import FranklinWeb.Components.AdminSidebar
+      import FranklinWeb.Components.AdminSidebarButton
+      import FranklinWeb.Components.AdminSimpleTable
+      import FranklinWeb.Components.Button
+
+      import FranklinWeb.Components.AdminFormError
+      import FranklinWeb.Components.AdminFormInput
     end
   end
 

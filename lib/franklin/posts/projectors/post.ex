@@ -30,7 +30,7 @@ defmodule Franklin.Posts.Projectors.Post do
   end)
 
   project(%PostDeleted{id: id}, _, fn multi ->
-    Ecto.Multi.delete(multi, :Post, fn _ -> %Post{id: id} end)
+    Ecto.Multi.delete(multi, :post, fn _ -> %Post{id: id} end)
   end)
 
   project(%PostPublishedAtUpdated{id: id, published_at: published_at}, _, fn multi ->
@@ -42,7 +42,7 @@ defmodule Franklin.Posts.Projectors.Post do
       post ->
         Ecto.Multi.update(
           multi,
-          :Post,
+          :post,
           Post.update_changeset(post, %{published_at: published_at})
         )
     end
@@ -51,7 +51,7 @@ defmodule Franklin.Posts.Projectors.Post do
   project(%PostTitleUpdated{id: id, title: title}, _, fn multi ->
     case Repo.get(Post, id) do
       nil -> multi
-      post -> Ecto.Multi.update(multi, :Post, Post.update_changeset(post, %{title: title}))
+      post -> Ecto.Multi.update(multi, :post, Post.update_changeset(post, %{title: title}))
     end
   end)
 

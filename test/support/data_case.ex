@@ -52,15 +52,16 @@ defmodule Franklin.DataCase do
       # Clear the in memory event store.
       Commanded.EventStore.Adapters.InMemory.reset!(Franklin.CommandedApplication)
 
-      # Stop the Ecto sandbox.
-      Ecto.Adapters.SQL.Sandbox.stop_owner(pid)
-
       # Stop the app in full. The reason why the app must be stopped and then
       # started between resetting the event store is to ensure all Commanded
       # application processes are restarted with their initial state to prevent
-      # state from one test affecting another. FIXME: How does this impact async
-      # tests? I think the InMemory store is global so probably yes. :(
+      # state from one test affecting another.
+      # FIXME: How does this impact async tests?
+      # I think the InMemory store is global so probably yes. :(
       :ok = Application.stop(:franklin)
+
+      # Stop the Ecto sandbox.
+      Ecto.Adapters.SQL.Sandbox.stop_owner(pid)
     end)
   end
 

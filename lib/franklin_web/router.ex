@@ -15,6 +15,10 @@ defmodule FranklinWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug FranklinWeb.BasicAuth, username: "zorn"
+  end
+
   scope "/" do
     storybook_assets()
   end
@@ -27,7 +31,15 @@ defmodule FranklinWeb.Router do
   end
 
   scope "/admin", FranklinWeb.Admin do
-    pipe_through :browser
+    pipe_through [:browser, :auth]
+
+    live "/", IndexLive, :index, as: :admin_index
+
+    scope "/articles", Articles do
+      live "/", IndexLive, :index, as: :admin_article_index
+      live "/editor/new", EditorLive, :new, as: :admin_article_editor
+      live "/editor/:id", EditorLive, :edit, as: :admin_article_editor
+    end
 
     live "/posts", PostIndexLive, :index
     live "/posts/editor/new", PostEditorLive, :new
