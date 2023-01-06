@@ -1,8 +1,6 @@
 defmodule FranklinWeb.Admin.PostEditorLiveTest do
   use FranklinWeb.ConnCase
 
-  import Phoenix.LiveViewTest
-
   alias Franklin.Posts
   alias Franklin.Posts.Projections.Post
 

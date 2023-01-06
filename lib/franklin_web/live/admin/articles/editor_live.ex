@@ -66,7 +66,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
 
     case Ecto.Changeset.apply_action(changeset, :validate) do
       {:ok, %ArticleForm{} = validated_form} ->
-        do_save(socket.assigns.post, validated_form, socket)
+        do_save(socket.assigns.article, validated_form, socket)
 
       {:error, form_changeset} ->
         socket
@@ -93,7 +93,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
       {:error, _errors} ->
         # FIXME: Present flash-style error with generic failure message (since
         # the user likely can not recover at this point).
-        {:noreply, put_flash(socket, :error, "Could not create post.")}
+        {:noreply, put_flash(socket, :error, "Could not create article.")}
     end
   end
 
@@ -117,26 +117,61 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     end
   end
 
+  def handle_info({:article_created, %{id: _id}}, socket) do
+    # FIXME: This is a sus implementation because there are multiple messages
+    # related to article creation and updates. It is questionable if we should
+    # redirect after this event and not something else. An ultimate fix would
+    # involve researching if other CQRS apps published attribute-specific
+    # messages or something else. https://github.com/zorn/franklin/issues/21
+    socket
+    |> redirect(to: "/admin/articles")
+    |> noreply()
+  end
+
   def render(assigns) do
     ~H"""
     <h2 class="text-xl font-bold my-4">Article Editor</h2>
 
-    <.form :let={f} for={@form_changeset} id="new-post" phx-submit="save_form">
-      <.admin_form_input field={{f, :title}} type="text" label="Title" />
+    <.form :let={f} for={@form_changeset} id="new-article" phx-submit="save_form">
+      <!-- Title -->
+      <div class="my-4">
+        <%= label(f, :title, class: "block text-sm font-medium text-gray-700") %>
+        <div class="mt-1">
+          <%= text_input(f, :title,
+            class:
+              "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          ) %>
+        </div>
+        <%= error_tag(f, :title, "mt-2 text-sm text-red-600") %>
+      </div>
+      <!-- Published At -->
+      <div class="my-4">
+        <%= label(f, :published_at, class: "block text-sm font-medium text-gray-700") %>
+        <div class="mt-1">
+          <%= text_input(f, :published_at,
+            class:
+              "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          ) %>
+        </div>
+        <%= error_tag(f, :published_at, "mt-2 text-sm text-red-600") %>
+      </div>
+      <!-- Body -->
+      <div class="my-4">
+        <%= label(f, :body, class: "block text-sm font-medium text-gray-700") %>
+        <div class="mt-1">
+          <%= textarea(f, :body,
+            rows: 12,
+            class:
+              "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          ) %>
+        </div>
+        <%= error_tag(f, :body, "mt-2 text-sm text-red-600") %>
+      </div>
 
-      <%= label(f, :title) %>
-      <%= text_input(f, :title) %>
-      <%= error_tag(f, :title) %>
-
-      <%= label(f, :body) %>
-      <%= text_input(f, :body) %>
-      <%= error_tag(f, :body) %>
-
-      <%= label(f, :published_at) %>
-      <%= datetime_local_input(f, :published_at) %>
-      <%= error_tag(f, :published_at) %>
-
-      <%= submit("Save") %>
+      <%= submit("Save",
+        class:
+          "inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      ) %>
     </.form>
     """
   end
