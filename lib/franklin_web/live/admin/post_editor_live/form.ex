@@ -6,6 +6,12 @@ defmodule FranklinWeb.Admin.PostEditorLive.Form do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: Ecto.UUID.t(),
+          published_at: DateTime.t(),
+          title: String.t()
+        }
+
   embedded_schema do
     field :title, :string
     field :published_at, :utc_datetime

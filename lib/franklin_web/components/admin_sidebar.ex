@@ -5,7 +5,8 @@ defmodule FranklinWeb.Components.AdminSidebar do
 
   attr :links, :list, required: true
 
-  # TODO: We should allow the user of this component to define where the user currently is so we can highlight that part of the navigation differently.
+  # TODO: We should allow the user of this component to define where the user currently is
+  # TODO: so we can highlight that part of the navigation differently.
 
   @spec admin_sidebar(map()) :: Phoenix.LiveView.Rendered.t()
   def admin_sidebar(assigns) do
