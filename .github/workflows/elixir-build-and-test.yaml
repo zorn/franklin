@@ -87,6 +87,11 @@ jobs:
       - name: Check Formatting
         run: mix format --check-formatted
 
+      # Step: Compile the project treating any warnings as errors.
+      # Customize this step if a different behavior is desired.
+      - name: Static analysis check
+        run: mix lint
+
       # Step: Execute the tests.
       - name: Run tests
         run: mix test
