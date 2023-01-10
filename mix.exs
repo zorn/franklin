@@ -76,7 +76,11 @@ defmodule Franklin.MixProject do
       {:phx_live_storybook, "~> 0.4.0"},
 
       # To help generate some fake test data
-      {:faker, "~> 0.17", only: :test}
+      {:faker, "~> 0.17", only: :test},
+
+      # Static analysis
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 
@@ -116,7 +120,8 @@ defmodule Franklin.MixProject do
       "event_store.reset": ["event_store.drop", "event_store.setup"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      lint: ["credo --strict", "dialyzer --quiet"]
     ]
   end
 end
