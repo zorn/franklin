@@ -83,7 +83,7 @@ defmodule Franklin.MixProject do
 
       # Static analysis
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end
 
