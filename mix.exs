@@ -16,7 +16,10 @@ defmodule Franklin.MixProject do
       name: "Franklin",
       source_url: "https://github.com/zorn/franklin",
       homepage_url: "https://github.com/zorn/franklin",
-      docs: docs()
+      docs: docs(),
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      ]
     ]
   end
 
