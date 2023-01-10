@@ -87,6 +87,10 @@ jobs:
       - name: Check Formatting
         run: mix format --check-formatted
 
+      # Step: Verify static analysis checks pass
+      - name: Credo static analysis
+        run: mix credo --strict
+
       # Don't cache PLTs based on mix.lock hash, as Dialyzer can incrementally update even old ones
       # Cache key based on Elixir & Erlang version (also useful when running in matrix)
       - name: Restore PLT cache
@@ -105,10 +109,11 @@ jobs:
         if: steps.plt_cache.outputs.cache-hit != 'true'
         run: mix dialyzer --plt
 
-      # Step: Compile the project treating any warnings as errors.
-      # Customize this step if a different behavior is desired.
-      - name: Static analysis check
-        run: mix lint
+      # Run Dialyzer static analysis with MIX_ENV=dev
+      - name: Dialyzer static analysis
+        run: mix dialyzer --format github
+        env:
+          MIX_ENV: dev
 
       # Step: Execute the tests.
       - name: Run tests
