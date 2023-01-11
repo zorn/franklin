@@ -26,8 +26,6 @@ jobs:
 
     runs-on: ubuntu-latest
     name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
-    env:
-      MIX_ENV: test
     strategy:
       matrix:
         otp: ["25.1.2"]
