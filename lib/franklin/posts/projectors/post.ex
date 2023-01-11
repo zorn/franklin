@@ -4,12 +4,12 @@ defmodule Franklin.Posts.Projectors.Post do
     name: "Posts.Projectors.Post",
     application: Franklin.CommandedApplication
 
-  alias Franklin.Repo
   alias Franklin.Posts.Events.PostCreated
   alias Franklin.Posts.Events.PostDeleted
   alias Franklin.Posts.Events.PostPublishedAtUpdated
   alias Franklin.Posts.Events.PostTitleUpdated
   alias Franklin.Posts.Projections.Post
+  alias Franklin.Repo
 
   @doc """
   Returns the PubSub topic name relative to the passed in `post_id` uuid value.
@@ -35,7 +35,8 @@ defmodule Franklin.Posts.Projectors.Post do
 
   project(%PostPublishedAtUpdated{id: id, published_at: published_at}, _, fn multi ->
     case Repo.get(Post, id) do
-      # should a projector fail or report an error here? Would we ever accept a command to delete a post that does not exist?
+      # should a projector fail or report an error here? Would we ever accept a command
+      # to delete a post that does not exist?
       nil ->
         multi
 
@@ -79,7 +80,8 @@ defmodule Franklin.Posts.Projectors.Post do
   defp broadcast_name(%PostTitleUpdated{}), do: :post_title_updated
   defp broadcast_name(%PostPublishedAtUpdated{}), do: :post_published_at_updated
 
-  # FIXME: Seems excessive to post unique event names for each attribute, are we sure `after_update` would be called for each event? or is that called after the multi is applies/saved?
+  # FIXME: Seems excessive to post unique event names for each attribute, are we sure `after_update` would be called
+  # FIXME: for each event? or is that called after the multi is applies/saved?
   # FIXME: Commenting out until we fully build out update and delete
   # defp broadcast_name(%PostDeleted{}), do: :post_deleted
 end

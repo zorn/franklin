@@ -13,9 +13,8 @@ defmodule FranklinWeb.BasicAuth do
   end
 
   defp verify(conn, attempted_auth, username: username, password: password) do
-    with ^attempted_auth <- encode(username, password) do
-      conn
-    else
+    case encode(username, password) do
+      ^attempted_auth -> conn
       _ -> unauthorized(conn)
     end
   end

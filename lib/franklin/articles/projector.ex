@@ -4,13 +4,13 @@ defmodule Franklin.Articles.Projector do
     name: "Franklin.Articles.Projector",
     application: Franklin.CommandedApplication
 
-  alias Franklin.Repo
+  alias Franklin.Articles.Article
+  alias Franklin.Articles.Events.ArticleBodyUpdated
   alias Franklin.Articles.Events.ArticleCreated
   alias Franklin.Articles.Events.ArticleDeleted
   alias Franklin.Articles.Events.ArticlePublishedAtUpdated
   alias Franklin.Articles.Events.ArticleTitleUpdated
-  alias Franklin.Articles.Events.ArticleBodyUpdated
-  alias Franklin.Articles.Article
+  alias Franklin.Repo
 
   require Logger
 
