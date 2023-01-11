@@ -123,7 +123,8 @@ defmodule Franklin.MixProject do
       "event_store.reset": ["event_store.drop", "event_store.setup"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      lint: ["credo --strict", "dialyzer"]
     ]
   end
 end
