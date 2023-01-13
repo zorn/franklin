@@ -117,7 +117,16 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     end
   end
 
-  def handle_info({:article_created, %{id: _id}}, socket) do
+  # FIXME: We may in the future have a better way to observe events that should
+  # trigger a redirect. See: https://github.com/zorn/franklin/discussions/62
+  @redirect_triggers [
+    :article_created,
+    :article_title_updated,
+    :article_body_updated,
+    :article_published_at_updated
+  ]
+
+  def handle_info({event, %{id: _id}}, socket) when event in @redirect_triggers do
     # FIXME: This is a sus implementation because there are multiple messages
     # related to article creation and updates. It is questionable if we should
     # redirect after this event and not something else. An ultimate fix would

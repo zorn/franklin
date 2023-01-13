@@ -69,17 +69,20 @@ defmodule Franklin.MixProject do
       {:cors_plug, "~> 3.0"},
       {:commanded_ecto_projections, "~> 1.2"},
 
-      # To help us build with TDD
+      # To help us build with TDD.
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
 
       # For frontend styling.
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
 
-      # For component management
+      # For component management.
       {:phx_live_storybook, "~> 0.4.0"},
 
-      # To help generate some fake test data
+      # To help generate some fake test data.
       {:faker, "~> 0.17", only: :test},
+
+      # To help keep repetitive maps shorter in tests.
+      {:shorter_maps, "~> 2.0"},
 
       # Static analysis
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
