@@ -12,7 +12,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   setup %{conn: conn} do
     # Because the article editor is used for both the creation and editing of
     # articles, we'll construct two instances of the live view, allowing us to
-    # shape the tests to verify aspects of the form for both its create version
+    # shape the tests to verify aspects of the form for both its create mode
     # as well as its edit version.
 
     conn = add_authentication(conn, "zorn", "Pass1234")
