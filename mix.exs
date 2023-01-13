@@ -82,7 +82,7 @@ defmodule Franklin.MixProject do
       {:faker, "~> 0.17", only: :test},
 
       # To help keep repetitive maps shorter in tests.
-      {:shorter_maps, "~> 2.0"}
+      {:shorter_maps, "~> 2.0"},
 
       # Static analysis
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
