@@ -9,6 +9,13 @@ defmodule FranklinWeb.Admin.Articles.ArticleForm do
 
   alias Franklin.Articles.Article
 
+  @type t :: %__MODULE__{
+          body: String.t(),
+          id: Ecto.UUID.t(),
+          published_at: DateTime.t(),
+          title: String.t()
+        }
+
   embedded_schema do
     field :body, :string
     field :published_at, :utc_datetime
