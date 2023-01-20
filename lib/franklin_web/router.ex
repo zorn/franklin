@@ -37,6 +37,7 @@ defmodule FranklinWeb.Router do
 
     scope "/articles", Articles do
       live "/", IndexLive, :index, as: :admin_article_index
+      live "/:id", ViewerLive, :show, as: :admin_article_viewer
       live "/editor/new", EditorLive, :new, as: :admin_article_editor
       live "/editor/:id", EditorLive, :edit, as: :admin_article_editor
     end

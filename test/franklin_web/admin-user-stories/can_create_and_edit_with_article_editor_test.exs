@@ -54,24 +54,26 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     |> form("#new-article", article_form: valid_params)
     |> render_submit()
 
-    assert {"/admin/articles", _flash} = assert_redirect(create_view)
-
     # Because the data projection can take time, we need to wait_for_passing.
-    wait_for_passing(fn ->
-      # FIXME: This is a shit test because I'm using `list_articles/0` but atm I don't
-      # have the `id` of the created article to use in `get_article/1`. Once we
-      # change to redirecting to a view page we can sniff the id from the url
-      # being redirected to.
-      assert Enum.find(Articles.list_articles(), nil, fn article ->
-               match?(
-                 %Article{
-                   title: "A valid new article title.",
-                   body: "A valid new article body."
-                 },
-                 article
-               )
-             end)
-    end)
+    article =
+      wait_for_passing(fn ->
+        # FIXME: This is a shit test because I'm using `list_articles/0` but atm I don't
+        # have the `id` of the created article to use in `get_article/1`. Once we
+        # change to redirecting to a view page we can sniff the id from the url
+        # being redirected to.
+        assert Enum.find(Articles.list_articles(), nil, fn article ->
+                 match?(
+                   %Article{
+                     title: "A valid new article title.",
+                     body: "A valid new article body."
+                   },
+                   article
+                 )
+               end)
+      end)
+
+    redirect_path = "/admin/articles/#{article.id}"
+    assert {^redirect_path, _flash} = assert_redirect(create_view)
   end
 
   test "editing succeeds with all required form fields changed", ~M{edit_view, edit_article} do
@@ -98,7 +100,8 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
              } = Articles.get_article(edit_article.id)
     end)
 
-    assert {"/admin/articles", _flash} = assert_redirect(edit_view)
+    redirect_path = "/admin/articles/#{edit_article.id}"
+    assert {^redirect_path, _flash} = assert_redirect(edit_view)
   end
 
   describe "verify title input failure responses" do
