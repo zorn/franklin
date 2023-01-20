@@ -8,6 +8,7 @@ defmodule FranklinWeb.Admin.Articles.ViewerLive do
 
   alias Franklin.Articles
   alias Franklin.Articles.Article
+  alias Phoenix.LiveView.Socket
 
   def mount(params, _session, socket) do
     socket
