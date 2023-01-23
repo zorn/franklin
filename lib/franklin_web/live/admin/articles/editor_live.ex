@@ -126,14 +126,15 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     :article_published_at_updated
   ]
 
-  def handle_info({event, %{id: _id}}, socket) when event in @redirect_triggers do
+  def handle_info({event, %{id: id}}, socket) when event in @redirect_triggers do
     # FIXME: This is a sus implementation because there are multiple messages
     # related to article creation and updates. It is questionable if we should
     # redirect after this event and not something else. An ultimate fix would
     # involve researching if other CQRS apps published attribute-specific
     # messages or something else. https://github.com/zorn/franklin/issues/21
+
     socket
-    |> redirect(to: "/admin/articles")
+    |> redirect(to: Routes.admin_article_viewer_path(FranklinWeb.Endpoint, :show, id))
     |> noreply()
   end
 

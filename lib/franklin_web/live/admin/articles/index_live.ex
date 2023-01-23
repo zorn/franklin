@@ -20,7 +20,9 @@ defmodule FranklinWeb.Admin.Articles.IndexLive do
 
     <.admin_simple_table rows={@articles}>
       <:column :let={article} label="Title">
-        <%= link(article.title, to: "/") %>
+        <%= link(article.title,
+          to: Routes.admin_article_viewer_path(FranklinWeb.Endpoint, :show, article.id)
+        ) %>
       </:column>
       <:column :let={article} label="Published At">
         <%= article.published_at %>
