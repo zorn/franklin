@@ -52,3 +52,31 @@ A [link](https://mikezornek.com)!
   published_at: ~U[2022-07-14 09:00:00Z]
 }
 |> CommandedApplication.dispatch()
+
+# January Journal
+journal_markdown_path = Path.expand("priv/content/2023/1/22-journal/index.md")
+content = File.read!(journal_markdown_path)
+{:ok, front_matter, markdown_content} = YamlFrontMatter.parse_file(journal_markdown_path)
+{:ok, published_at, _utc_offset} = DateTime.from_iso8601(front_matter["date"])
+
+%CreateArticle{
+  id: Ecto.UUID.generate(),
+  title: front_matter["title"],
+  body: markdown_content,
+  published_at: published_at
+}
+|> CommandedApplication.dispatch()
+
+# Boston Trip
+journal_markdown_path = Path.expand("priv/content/2023/1/boston-2022-trip/index.md")
+content = File.read!(journal_markdown_path)
+{:ok, front_matter, markdown_content} = YamlFrontMatter.parse_file(journal_markdown_path)
+{:ok, published_at, _utc_offset} = DateTime.from_iso8601(front_matter["date"])
+
+%CreateArticle{
+  id: Ecto.UUID.generate(),
+  title: front_matter["title"],
+  body: markdown_content,
+  published_at: published_at
+}
+|> CommandedApplication.dispatch()
