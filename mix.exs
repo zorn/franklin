@@ -29,7 +29,7 @@ defmodule Franklin.MixProject do
   def application do
     [
       mod: {Franklin.Application, []},
-      extra_applications: [:logger, :runtime_tools, :eventstore, :crypto]
+      extra_applications: [:logger, :runtime_tools, :eventstore, :crypto, :yaml_front_matter]
     ]
   end
 
@@ -89,7 +89,10 @@ defmodule Franklin.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
 
       # To render markdown content
-      {:earmark, "~> 1.4"}
+      {:earmark, "~> 1.4"},
+
+      # To help process historical content for seeds and imports.
+      {:yaml_front_matter, "~> 1.0.0"}
     ]
   end
 
