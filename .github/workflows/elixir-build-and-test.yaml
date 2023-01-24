@@ -28,8 +28,8 @@ jobs:
     name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
     strategy:
       matrix:
-        otp: ["25.1.2"]
-        elixir: ["1.14.2"]
+        otp: ["25.2.1"]
+        elixir: ["1.14.3"]
     steps:
       # Step: Setup Elixir + Erlang image as the base.
       - name: Set up Elixir
