@@ -13,7 +13,7 @@ defmodule FranklinWeb.HomeLive do
 
   def mount(_params, _session, socket) do
     socket
-    |> assign(:articles, Articles.list_articles())
+    |> assign(:articles, Articles.list_articles(%{limit: 3}))
     |> ok()
   end
 
@@ -56,7 +56,7 @@ defmodule FranklinWeb.HomeLive do
             <.content_preview
               title={article.title}
               summary={article.title}
-              url="/"
+              url={Routes.article_viewer_path(FranklinWeb.Endpoint, :show, article.id)}
               thumbnail_src="/images/we-are-fine.jpg"
               thumbnail_alt_text="StarWars Meme: WHEN PROJECT MANAGER ASKING FOR UPDATE AT STANDUP CALL WE ARE FINE WE ARE ALL FINE NOW. HOW ARE YOU?"
               published_on={article.published_at}
