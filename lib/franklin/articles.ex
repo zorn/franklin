@@ -48,10 +48,21 @@ defmodule Franklin.Articles do
   @doc """
   # Returns a list of `Article` entities sorted by `:published_at` descending.
   """
-  def list_articles() do
-    query = from(a in Article, order_by: [desc: a.published_at])
+  def list_articles(criteria \\ %{}) do
+    limit = Map.get(criteria, :limit, nil)
+
+    query =
+      from(a in Article, order_by: [desc: a.published_at])
+      |> add_limit(limit)
+
     Repo.all(query)
   end
+
+  defp add_limit(query, limit) when is_integer(limit) do
+    limit(query, ^limit)
+  end
+
+  defp add_limit(query, _), do: query
 
   @doc """
   Subscribes the calling process to a `Phoenix.PubSub` topic relative to the
@@ -69,6 +80,8 @@ defmodule Franklin.Articles do
   def subscribe(article_id) do
     Phoenix.PubSub.subscribe(Franklin.PubSub, Franklin.Articles.Projector.topic(article_id))
   end
+
+  # FIXME: Add `unsubscribe/1`.
 
   @typedoc "Attribute map type relative to the `update_article/2` function."
   @type update_attrs :: %{
