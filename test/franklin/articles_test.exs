@@ -111,24 +111,4 @@ defmodule Franklin.ArticlesTest do
   defp sample_published_at() do
     ~U[2022-08-20 13:30:00Z]
   end
-
-  defp create_article!(custom_values \\ %{}) do
-    attrs = required_new_article_attributes(custom_values)
-    assert {:ok, uuid} = Articles.create_article(attrs)
-    :ok = Articles.subscribe(uuid)
-
-    # It's lame I have to listen for all of these.
-    assert_receive {:article_created, %{id: ^uuid}}
-    assert_receive {:article_title_updated, %{id: ^uuid}}
-    assert_receive {:article_body_updated, %{id: ^uuid}}
-    assert_receive {:article_published_at_updated, %{id: ^uuid}}
-  end
-
-  defp required_new_article_attributes(custom_values) do
-    %{
-      title: Map.get(custom_values, :title, "Default Title"),
-      body: Map.get(custom_values, :body, "Default Body"),
-      published_at: Map.get(custom_values, :published_at, DateTime.utc_now())
-    }
-  end
 end
