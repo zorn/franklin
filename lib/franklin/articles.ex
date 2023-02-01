@@ -82,6 +82,7 @@ defmodule Franklin.Articles do
   end
 
   # FIXME: Add `unsubscribe/1`.
+  # https://github.com/zorn/franklin/issues/92
 
   @typedoc "Attribute map type relative to the `update_article/2` function."
   @type update_attrs :: %{
