@@ -6,9 +6,10 @@ defmodule Franklin.ArrangeArticleHelpers do
   import Franklin.WaitForPassing
 
   alias Franklin.Articles
+  alias Franklin.Articles.Article
 
   @doc """
-  Creates and a new article, raising an exception
+  Creates and a new article, raising an exception on failure.
 
   Attributes for this new article are provided by the incoming `custom_attributes` map alonside the `required_new_article_attributes/1`   mixing default required attributes alongside custom attributes
 
@@ -16,13 +17,13 @@ defmodule Franklin.ArrangeArticleHelpers do
   """
   def create_article!(custom_attributes \\ %{}) do
     attrs = required_new_article_attributes(custom_attributes)
-    assert {:ok, uuid} = Articles.create_article(attrs)
+    {:ok, uuid} = Articles.create_article(attrs)
 
     wait_for_passing(fn ->
-      %Article{} = article = Articles.get_article(sample_article_id)
+      %Article{} = article = Articles.get_article(uuid)
 
       for field <- Map.keys(attrs) do
-        match?()
+        true == match?(field, Map.get(article, field))
       end
     end)
 
