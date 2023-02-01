@@ -10,6 +10,7 @@ defmodule FranklinWeb.HomeLive do
   use FranklinWeb, :live_view
 
   alias Franklin.Articles
+  alias Phoenix.LiveView.Socket
 
   def mount(_params, _session, socket) do
     socket
