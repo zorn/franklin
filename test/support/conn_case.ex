@@ -26,6 +26,7 @@ defmodule FranklinWeb.ConnCase do
       import Phoenix.LiveViewTest
       import Plug.Conn
       import ShorterMaps
+      import Franklin.ArrangeArticleHelpers
 
       alias FranklinWeb.Router.Helpers, as: Routes
 
