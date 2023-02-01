@@ -26,7 +26,12 @@ defmodule FranklinWeb.Router do
   scope "/", FranklinWeb do
     pipe_through :browser
 
+    scope "/articles", Articles do
+      live "/:id", ViewerLive, :show, as: :article_viewer
+    end
+
     live "/", HomeLive, :index
+
     live_storybook("/storybook", backend_module: FranklinWeb.Storybook)
   end
 

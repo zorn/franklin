@@ -9,6 +9,15 @@ defmodule FranklinWeb.HomeLive do
 
   use FranklinWeb, :live_view
 
+  alias Franklin.Articles
+  alias Phoenix.LiveView.Socket
+
+  def mount(_params, _session, socket) do
+    socket
+    |> assign(:articles, Articles.list_articles(%{limit: 3}))
+    |> ok()
+  end
+
   def render(assigns) do
     ~H"""
     <div id="layout-grid" class="lg:grid grid-cols-12 grid-rows-1 py-10">
@@ -44,32 +53,16 @@ defmodule FranklinWeb.HomeLive do
         <section>
           <h1 class="font-bold text-2xl mb-2">Recent Content</h1>
 
-          <.content_preview
-            title="My Standup Format"
-            summary="There is an async standup format I&#39;ve been using for over a year now, and since it seems to be sticking, I figured I&#39;d take a moment to share it and explain why I like it. There is an async standup format I&#39;ve been using for over a year now, and since it seems to be sticking, I figured I&#39;d take a moment to share it and explain why I like it."
-            url="/"
-            thumbnail_src="/images/we-are-fine.jpg"
-            thumbnail_alt_text="StarWars Meme: WHEN PROJECT MANAGER ASKING FOR UPDATE AT STANDUP CALL WE ARE FINE WE ARE ALL FINE NOW. HOW ARE YOU?"
-            published_on="Nov 9, 2022"
-          />
-
-          <.content_preview
-            title="My Standup Format"
-            summary="There is an async standup format I&#39;ve been using for over a year now, and since it seems to be sticking, I figured I&#39;d take a moment to share it and explain why I like it. There is an async standup format I&#39;ve been using for over a year now, and since it seems to be sticking, I figured I&#39;d take a moment to share it and explain why I like it."
-            url="/"
-            thumbnail_src="/images/we-are-fine.jpg"
-            thumbnail_alt_text="StarWars Meme: WHEN PROJECT MANAGER ASKING FOR UPDATE AT STANDUP CALL WE ARE FINE WE ARE ALL FINE NOW. HOW ARE YOU?"
-            published_on="Nov 9, 2022"
-          />
-
-          <.content_preview
-            title="My Standup Format"
-            summary="There is an async standup format I&#39;ve been using for over a year now, and since it seems to be sticking, I figured I&#39;d take a moment to share it and explain why I like it. There is an async standup format I&#39;ve been using for over a year now, and since it seems to be sticking, I figured I&#39;d take a moment to share it and explain why I like it."
-            url="/"
-            thumbnail_src="/images/we-are-fine.jpg"
-            thumbnail_alt_text="StarWars Meme: WHEN PROJECT MANAGER ASKING FOR UPDATE AT STANDUP CALL WE ARE FINE WE ARE ALL FINE NOW. HOW ARE YOU?"
-            published_on="Nov 9, 2022"
-          />
+          <%= for article <- @articles do %>
+            <.content_preview
+              title={article.title}
+              summary={article.title}
+              url={Routes.article_viewer_path(FranklinWeb.Endpoint, :show, article.id)}
+              thumbnail_src="/images/we-are-fine.jpg"
+              thumbnail_alt_text="StarWars Meme: WHEN PROJECT MANAGER ASKING FOR UPDATE AT STANDUP CALL WE ARE FINE WE ARE ALL FINE NOW. HOW ARE YOU?"
+              published_on={article.published_at}
+            />
+          <% end %>
         </section>
 
         <footer class="bg-blue-500">
@@ -130,4 +123,7 @@ defmodule FranklinWeb.HomeLive do
           </p>
         )
   end
+
+  @spec ok(Socket.t()) :: {:ok, Socket.t()}
+  defp ok(socket), do: {:ok, socket}
 end

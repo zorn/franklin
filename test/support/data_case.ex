@@ -26,6 +26,7 @@ defmodule Franklin.DataCase do
       import Franklin.DataCase
       import Commanded.Assertions.EventAssertions
       import Franklin.SmartDescribe
+      import Franklin.ArrangeArticleHelpers
     end
   end
 
