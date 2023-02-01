@@ -21,6 +21,10 @@ defmodule FranklinWeb.Articles.ViewerLive do
   end
 
   @spec assign_rendered_body(Socket.t()) :: Socket.t()
+  defp assign_rendered_body(%{assigns: %{article: %Article{body: nil}}} = socket) do
+    assign(socket, rendered_body: nil)
+  end
+
   defp assign_rendered_body(%{assigns: %{article: %Article{body: body}}} = socket) do
     {:ok, html_doc, _deprecation_messages} = Earmark.as_html(body)
     assign(socket, rendered_body: html_doc)
