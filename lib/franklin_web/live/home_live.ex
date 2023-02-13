@@ -54,20 +54,6 @@ defmodule FranklinWeb.HomeLive do
     """
   end
 
-  defp some_content() do
-    ~s(
-          <p>✏️ My Standup Format</p>
-          <p>
-            There is an async standup format I've been using for over a year now, and since it seems to be sticking, I figured I'd take a moment to share it and explain why I like it.
-          </p>
-          <p>
-            <a href="https://mikezornek.com/posts/2022/11/my-standup-format/\">
-              https://mikezornek.com/posts/2022/11/my-standup-format/
-            </a>
-          </p>
-        )
-  end
-
   @spec ok(Socket.t()) :: {:ok, Socket.t()}
   defp ok(socket), do: {:ok, socket}
 end
