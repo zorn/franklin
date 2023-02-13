@@ -27,6 +27,7 @@ defmodule FranklinWeb.Router do
     pipe_through :browser
 
     scope "/articles", Articles do
+      live "/", IndexLive, :index, as: :article_index
       live "/:id", ViewerLive, :show, as: :article_viewer
     end
 
