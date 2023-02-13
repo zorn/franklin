@@ -32,9 +32,7 @@ defmodule FranklinWeb.Articles.ViewerLive do
 
   def render(assigns) do
     ~H"""
-    <div class="text-xl font-bold my-4">Public Article Viewer</div>
-
-    <h1 id="article-headline" class="text-5xl font-bold my-8"><%= @article.title %></h1>
+    <h1 id="article-headline" class="text-4xl font-bold my-8"><%= @article.title %></h1>
 
     <div id="article-body" class="prose lg:prose-xl">
       <%= raw(@rendered_body) %>

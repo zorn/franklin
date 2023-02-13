@@ -6,10 +6,12 @@ defmodule FranklinWeb.Components.Navigation do
   @spec navigation(map()) :: Phoenix.LiveView.Rendered.t()
   def navigation(assigns) do
     ~H"""
-    <nav class="bg-yellow-500">
-      <ul>
+    <nav class="">
+      <ul class="inline-flex items-center">
         <%= for {title, target} <- @links do %>
-          <li><a href={target}><%= title %></a></li>
+          <li class="text-lg font-bold pr-4 hover:underline hover:text-blue-700">
+            <a href={target}><%= title %></a>
+          </li>
         <% end %>
       </ul>
     </nav>

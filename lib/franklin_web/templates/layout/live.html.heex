@@ -6,6 +6,35 @@
   <p class="alert alert-danger" role="alert" phx-click="lv:clear-flash" phx-value-key="error">
     <%= live_flash(@flash, :error) %>
   </p> --%>
+<div class="max-w-screen-md mx-auto mt-6">
+  <header class="mb-8">
+    <div class="pb-1 border-b border-gray-900">
+      <div class="text-4xl font-bold">Mike Zornek</div>
+      <div class="text-xl">Elixir Developer and Teacher</div>
+    </div>
+    <div class="pt-1 text-gray-900">
+      <.navigation links={[
+        {"Home", "/"},
+        {"Blog", "/"},
+        {"Now", "/"},
+        {"Values", "/"},
+        {"For Hire", "/"},
+        {"Follow", "/"},
+        {"Contact", "/"}
+      ]} />
+    </div>
+  </header>
 
-<%= @inner_content %>
+  <section>
+    <%= @inner_content %>
+  </section>
+
+  <footer class="mt-32 mb-8 border-t border-gray-900 pt-1 text-center">
+    This blog is powered by <a
+      class="underline hover:text-blue-700"
+      href="https://github.com/zorn/franklin"
+    >Franklin</a>, an open-source Elixir / Phoenix project.
+  </footer>
+</div>
+
 <%!-- </main> --%>

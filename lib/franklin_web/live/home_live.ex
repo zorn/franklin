@@ -14,99 +14,47 @@ defmodule FranklinWeb.HomeLive do
 
   def mount(_params, _session, socket) do
     socket
-    |> assign(:articles, Articles.list_articles(%{limit: 3}))
+    |> assign(:recent_articles, Articles.list_articles(%{limit: 3}))
     |> ok()
   end
 
+  # def render(assigns) do
+  #   ~H"""
+  #   <div>The page.</div>
+  #   """
+  # end
+
   def render(assigns) do
     ~H"""
-    <div id="layout-grid" class="lg:grid grid-cols-12 grid-rows-1 py-10">
-      <div id="side-nav" class="bg-red-500 col-span-3 px-6">
-        <header class="bg-pink-500">
-          <.avatar src="/images/zorn_square.png" alt="Mike Zornek's avatar image." />
-          <.name_plate
-            name="Mike Zornek"
-            title="Developer and Teacher"
-            bio="Specializing in Elixir, Phoenix and LiveView."
-          />
-        </header>
-        <.navigation links={[
-          {"Home", "/"},
-          {"Blog", "/"},
-          {"Now", "/"},
-          {"Values", "/"},
-          {"For Hire", "/"},
-          {"Follow", "/"},
-          {"Contact", "/"}
-        ]} />
-      </div>
+    <main>
+      <section class="prose hover:prose-a:text-blue-700 max-w-none mb-6">
+        <p>
+          My name is <strong>Mike Zornek</strong>
+          and I am a developer and teacher living in the suburbs of Philadelphia, PA. I am a computer programmer, writer, video editor, player of video games (lots of retro and RPG-type games) and spectator to baseball games; go Phillies!
+        </p>
 
-      <main class="bg-orange-500 col-span-6 px-6">
-        <section class="prose max-w-none mb-6">
-          My name is Mike Zornek and I am a developer and teacher living in the suburbs of Philadelphia. My programming focus is currently <a href="https://elixir-lang.org/">Elixir</a>, <a href="https://www.phoenixframework.org/">Phoenix</a>, and <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html">LiveView</a>. When I'm not programming I enjoy watching baseball (Go Phillies!) and playing video games (mostly role playing games and relaxing simulations).
-        </section>
-
-        <div class="mb-6">
-          <.now_summary />
-        </div>
-
-        <section>
-          <h1 class="font-bold text-2xl mb-2">Recent Content</h1>
-
-          <%= for article <- @articles do %>
-            <.content_preview
-              title={article.title}
-              summary={article.title}
-              url={Routes.article_viewer_path(FranklinWeb.Endpoint, :show, article.id)}
-              thumbnail_src="/images/we-are-fine.jpg"
-              thumbnail_alt_text="StarWars Meme: WHEN PROJECT MANAGER ASKING FOR UPDATE AT STANDUP CALL WE ARE FINE WE ARE ALL FINE NOW. HOW ARE YOU?"
-              published_on={article.published_at}
-            />
-          <% end %>
-        </section>
-
-        <footer class="bg-blue-500">
-          <div class="text-right">Jump to Top</div>
-        </footer>
-      </main>
-
-      <section class="bg-teal-400 col-span-3 px-6">
-        <h1 class="font-bold text-2xl mb-2">Recent Social Posts</h1>
-
-        <.social_card
-          content="
-          <p>
-            😢 When a loved one dies, it sure does highlight the inhuman nature of software memory prompts and suggestions.
-          </p>
-
-          <p>It hits me hard and is more common than I would have thought.</p>
-
-          <p>
-            My answer is just to turn as much stuff off as I can, but this isn't even an option for some things.
-          </p>
-          "
-          url="/"
-          mastodon_url="/"
-        />
-
-        <.social_card
-          content="
-          <p>✅ Today&#39;s goals:</p>
-          <ul>
-            <li>Pay some IRS bills.</li>
-            <li>A bit of client sprint shaping/pr review.</li>
-            <li>Watch some videos from GitHub Universe.</li>
-            <li>Continue crafting components for Franklin.</li>
-            <li>Read Chapter 2 of Testing Elixir.</li>
-          </ul>
-          "
-          url="/"
-          mastodon_url="/"
-        />
-
-        <.social_card content={some_content()} url="/" mastodon_url="/" />
+        <p>
+          My current programming focus is <a href="https://elixir-lang.org/">Elixir</a>, <a href="https://www.phoenixframework.org/">Phoenix</a>, and <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html">LiveView</a>. I work as a
+          <a href="/for-hire">freelance contractor</a>
+          alongside my own <a href="/now">personal projects</a>.
+        </p>
       </section>
-    </div>
+
+      <section>
+        <h1 class="font-bold text-2xl mb-2">Recent Additions</h1>
+
+        <ul class="ml-8">
+          <%= for article <- @recent_articles do %>
+            <li class="mb-2 list-disc">
+              <%= link(article.title,
+                to: Routes.article_viewer_path(FranklinWeb.Endpoint, :show, article.id),
+                class: "underline hover:text-blue-700"
+              ) %>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    </main>
     """
   end
 
