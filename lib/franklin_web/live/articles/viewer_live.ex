@@ -8,6 +8,7 @@ defmodule FranklinWeb.Articles.ViewerLive do
   alias Franklin.Articles.Article
   alias Phoenix.LiveView.Socket
 
+  @impl Phoenix.LiveView
   def mount(%{"id" => id}, _session, socket) do
     socket
     |> assign_article(id)
@@ -30,6 +31,7 @@ defmodule FranklinWeb.Articles.ViewerLive do
     assign(socket, rendered_body: html_doc)
   end
 
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <h1 id="article-headline" class="text-4xl font-bold my-8"><%= @article.title %></h1>
