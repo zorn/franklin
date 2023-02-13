@@ -10,7 +10,7 @@ defmodule FranklinWeb.Components.Navigation do
       <ul class="inline-flex items-center">
         <%= for {title, target} <- @links do %>
           <li class="text-lg font-bold pr-4 hover:underline hover:text-blue-700">
-            <a href={target}><%= title %></a>
+            <%= live_redirect(title, to: target) %>
           </li>
         <% end %>
       </ul>

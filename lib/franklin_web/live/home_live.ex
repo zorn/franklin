@@ -12,18 +12,14 @@ defmodule FranklinWeb.HomeLive do
   alias Franklin.Articles
   alias Phoenix.LiveView.Socket
 
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     socket
     |> assign(:recent_articles, Articles.list_articles(%{limit: 3}))
     |> ok()
   end
 
-  # def render(assigns) do
-  #   ~H"""
-  #   <div>The page.</div>
-  #   """
-  # end
-
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <main>
@@ -46,7 +42,7 @@ defmodule FranklinWeb.HomeLive do
         <ul class="ml-8">
           <%= for article <- @recent_articles do %>
             <li class="mb-2 list-disc">
-              <%= link(article.title,
+              <%= live_redirect(article.title,
                 to: Routes.article_viewer_path(FranklinWeb.Endpoint, :show, article.id),
                 class: "underline hover:text-blue-700"
               ) %>
