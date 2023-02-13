@@ -3,6 +3,7 @@
         "castable",
         "CQRS",
         "mikezornek",
+        "Phillies",
         "struct"
     ],
     "tailwindCSS.experimental.configFile": "./assets/tailwind.config.js"
