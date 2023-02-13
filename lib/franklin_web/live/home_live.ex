@@ -2,9 +2,9 @@ defmodule FranklinWeb.HomeLive do
   @moduledoc """
   The composition view for the home page.
 
-  A composition view is responsible for the assembly and presentation of the components. Real talk: a composition view is responsible for determining the margins and paddings of the presented elements of the page.
-
-  TODO: It would be neat to turn on these layout helper bg colors with a boolean.
+  A composition view is responsible for the assembly and presentation of the
+  components. Real talk: a composition view is responsible for determining the
+  margins and paddings of the presented elements of the page.
   """
 
   use FranklinWeb, :live_view
