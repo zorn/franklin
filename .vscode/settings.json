@@ -4,6 +4,7 @@
         "CQRS",
         "mikezornek",
         "Phillies",
+        "strftime",
         "struct"
     ],
     "tailwindCSS.experimental.configFile": "./assets/tailwind.config.js"
