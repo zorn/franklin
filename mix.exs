@@ -92,7 +92,10 @@ defmodule Franklin.MixProject do
       {:earmark, "~> 1.4"},
 
       # To help process historical content for seeds and imports.
-      {:yaml_front_matter, "~> 1.0.0"}
+      {:yaml_front_matter, "~> 1.0.0"},
+
+      # To help generate valid URL slugs.
+      {:slugify, "~> 1.3"}
     ]
   end
 
