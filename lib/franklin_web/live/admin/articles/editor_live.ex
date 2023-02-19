@@ -93,7 +93,8 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
       id: subscription_id,
       body: form.body,
       published_at: form.published_at,
-      title: form.title
+      title: form.title,
+      slug: form.slug
     }
 
     case Articles.create_article(create_attrs) do
@@ -113,6 +114,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     update_attrs = %{
       published_at: form.published_at,
       title: form.title,
+      slug: form.slug,
       body: form.body
     }
 
@@ -153,6 +155,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     :article_created,
     :article_title_updated,
     :article_body_updated,
+    :article_slug_updated,
     :article_published_at_updated
   ]
 
