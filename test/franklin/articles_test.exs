@@ -6,7 +6,7 @@ defmodule Franklin.ArticlesTest do
 
   describe "create_article/1" do
     test "successful with minimum valid arguments" do
-      min_attrs = %{title: "t", body: "b", published_at: sample_published_at()}
+      min_attrs = %{title: "t", body: "b", slug: "s", published_at: sample_published_at()}
       assert {:ok, _uuid} = Articles.create_article(min_attrs)
 
       # Since we don't have the `uuid` before calling `create_article/1` we
@@ -22,6 +22,7 @@ defmodule Franklin.ArticlesTest do
         id: uuid,
         title: title_255_length(),
         body: sample_body(),
+        slug: "#{uuid}",
         published_at: sample_published_at()
       }
 

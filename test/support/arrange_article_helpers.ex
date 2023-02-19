@@ -36,6 +36,7 @@ defmodule Franklin.ArrangeArticleHelpers do
     %{
       title: Map.get(custom_values, :title, "Default Title"),
       body: Map.get(custom_values, :body, "Default Body"),
+      slug: Map.get(custom_values, :slug, "#{Ecto.UUID.generate()}"),
       published_at: Map.get(custom_values, :published_at, now)
     }
   end
