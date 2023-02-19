@@ -1,7 +1,7 @@
 defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   @moduledoc """
   Asserts the business rule that an authenticated admin can create or edit an
-  article via the article editor and that field value failures works as expected.
+  article via the article editor and that field value failures work as expected.
   """
 
   use FranklinWeb.ConnCase
