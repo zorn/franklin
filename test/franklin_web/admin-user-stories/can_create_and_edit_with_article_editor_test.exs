@@ -15,9 +15,6 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     # shape the tests to verify aspects of the form for both its create mode
     # as well as its edit version.
 
-    conn = add_authentication(conn, "zorn", "Pass1234")
-    {:ok, create_view, _html} = live(conn, "/admin/articles/editor/new")
-
     now = DateTime.utc_now() |> DateTime.truncate(:second)
 
     # This will be the article we will edit.
@@ -41,6 +38,8 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
                } = Articles.get_article(edit_article_id)
       end)
 
+    conn = add_authentication(conn, "zorn", "Pass1234")
+    {:ok, create_view, _html} = live(conn, "/admin/articles/editor/new")
     {:ok, edit_view, _html} = live(conn, "/admin/articles/editor/#{edit_article.id}")
 
     ~M{create_view, edit_view, edit_article}
