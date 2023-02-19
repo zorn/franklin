@@ -81,10 +81,41 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     assert {^redirect_path, _flash} = assert_redirect(create_view)
   end
 
-  test "empty slug field values will get a new slug value based on the title", ~M{_create_view} do
-  end
+  test "empty slug field values will get a new slug value based on the title", ~M{create_view} do
+    valid_params = %{
+      title: "Cookies are good!",
+      slug: "",
+      slug_autogenerate: true,
+      body: "We like cookies."
+    }
 
-  test "slug field values can have a forward slash", ~M{_create_view} do
+    create_view
+    |> form("#new-article", article_form: valid_params)
+    |> render_submit()
+
+    # Because the data projection can take time, we need to wait_for_passing.
+    article =
+      wait_for_passing(fn ->
+        # FIXME: This is a shit test because I'm using `list_articles/0` but atm I don't
+        # have the `id` of the created article to use in `get_article/1`. Once we
+        # change to redirecting to a view page we can sniff the id from the url
+        # being redirected to.
+        assert Enum.find(Articles.list_articles(), nil, fn article ->
+                 match?(
+                   %Article{
+                     title: "Cookies are good!",
+                     body: "We like cookies.",
+                     slug: _slug,
+                     published_at: %DateTime{}
+                   },
+                   article
+                 )
+               end)
+      end)
+
+    assert String.ends_with?(article.slug, "/cookies-are-good")
+    redirect_path = "/admin/articles/#{article.id}"
+    assert {^redirect_path, _flash} = assert_redirect(create_view)
   end
 
   test "editing succeeds with all required form fields changed", ~M{edit_view, edit_article} do
