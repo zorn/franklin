@@ -65,7 +65,8 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
                  match?(
                    %Article{
                      title: "A valid new article title.",
-                     body: "A valid new article body."
+                     body: "A valid new article body.",
+                     slug: "a-valid-new-article-title"
                    },
                    article
                  )
@@ -74,6 +75,9 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
 
     redirect_path = "/admin/articles/#{article.id}"
     assert {^redirect_path, _flash} = assert_redirect(create_view)
+  end
+
+  test "empty slug field values will get a new slug value based on the title", ~M{create_view} do
   end
 
   test "editing succeeds with all required form fields changed", ~M{edit_view, edit_article} do
@@ -129,6 +133,11 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
                  "should be at most 255 character(s)"
                )
       end
+    end
+  end
+
+  describe "verify slug input failure responses" do
+    test "slugs can not have any character outside of alphanumeric and dashes" do
     end
   end
 
