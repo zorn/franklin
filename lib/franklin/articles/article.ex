@@ -11,6 +11,7 @@ defmodule Franklin.Articles.Article do
           body: String.t(),
           id: Ecto.UUID.t(),
           published_at: DateTime.t(),
+          slug: String.t(),
           title: String.t()
         }
 
@@ -19,6 +20,7 @@ defmodule Franklin.Articles.Article do
   schema "articles" do
     field :body, :string
     field :published_at, :utc_datetime
+    field :slug, :string
     field :title, :string
 
     timestamps()
@@ -28,6 +30,7 @@ defmodule Franklin.Articles.Article do
     Ecto.Changeset.cast(article, attrs, [
       :body,
       :published_at,
+      :slug,
       :title
     ])
   end

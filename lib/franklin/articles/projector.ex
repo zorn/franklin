@@ -9,6 +9,7 @@ defmodule Franklin.Articles.Projector do
   alias Franklin.Articles.Events.ArticleCreated
   alias Franklin.Articles.Events.ArticleDeleted
   alias Franklin.Articles.Events.ArticlePublishedAtUpdated
+  alias Franklin.Articles.Events.ArticleSlugUpdated
   alias Franklin.Articles.Events.ArticleTitleUpdated
   alias Franklin.Repo
 
@@ -31,6 +32,10 @@ defmodule Franklin.Articles.Projector do
 
   project(%ArticleBodyUpdated{id: id, body: body}, _, fn multi ->
     add_changeset_to_multi(multi, get_article(id), :body, body)
+  end)
+
+  project(%ArticleSlugUpdated{id: id, slug: slug}, _, fn multi ->
+    add_changeset_to_multi(multi, get_article(id), :slug, slug)
   end)
 
   project(%ArticlePublishedAtUpdated{id: id, published_at: published_at}, _, fn multi ->

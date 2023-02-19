@@ -9,11 +9,13 @@ defmodule Franklin.Articles.Commands.CreateArticle do
   import Franklin.Articles.Validations
 
   alias Franklin.ValidationErrorMap
+  alias Franklin.Articles.Slugs
 
   @type t :: %__MODULE__{
           body: String.t(),
           id: Ecto.UUID.t(),
           published_at: DateTime.t(),
+          slug: String.t(),
           title: String.t()
         }
 
@@ -22,6 +24,7 @@ defmodule Franklin.Articles.Commands.CreateArticle do
   embedded_schema do
     field :body, :string
     field :published_at, :utc_datetime
+    field :slug, :string
     field :title, :string
   end
 
@@ -29,6 +32,7 @@ defmodule Franklin.Articles.Commands.CreateArticle do
     :body,
     :id,
     :published_at,
+    :slug,
     :title
   ]
 
@@ -42,12 +46,15 @@ defmodule Franklin.Articles.Commands.CreateArticle do
        identity of this article. Will be generated if not provided.
     * `:published_at` - A `DateTime` value representing the public-facing
        publication date of the article.
+    * `:slug` - (optional) A customizable URL fragment to help identify a single article.
     * `:title` - A plain-text string value using 1 to 255 characters in length.
   """
   @type new_attrs :: %{
           required(:body) => String.t(),
           optional(:id) => Ecto.UUID.t(),
           required(:published_at) => DateTime.t(),
+          # we might want to make slug required at the command level
+          optional(:slug) => String.t(),
           required(:title) => String.t()
         }
 
@@ -62,6 +69,15 @@ defmodule Franklin.Articles.Commands.CreateArticle do
     # `id` is optional, if not present, generate one.
     new_attrs = Map.put_new(new_attrs, :id, Ecto.UUID.generate())
 
+    new_attrs =
+      Map.put_new(
+        new_attrs,
+        :slug,
+        Slugs.generate_slug_for_title(new_attrs.title, new_attrs.published_at)
+      )
+
+    dbg(new_attrs)
+
     case apply_action(changeset(%__MODULE__{}, new_attrs), :validate) do
       {:ok, command} -> {:ok, command}
       {:error, changeset} -> {:error, ValidationErrorMap.new(changeset)}
@@ -75,5 +91,6 @@ defmodule Franklin.Articles.Commands.CreateArticle do
     |> validate_id()
     |> validate_published_at()
     |> validate_title()
+    |> validate_slug(apply_unique_constraint: false)
   end
 end
