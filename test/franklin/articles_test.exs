@@ -29,6 +29,7 @@ defmodule Franklin.ArticlesTest do
 
       assert_receive {:article_created, %{id: ^uuid}}
       assert_receive {:article_body_updated, %{id: ^uuid}}
+      assert_receive {:article_slug_updated, %{id: ^uuid}}
       assert_receive {:article_published_at_updated, %{id: ^uuid}}
       assert_receive {:article_title_updated, %{id: ^uuid}}
     end

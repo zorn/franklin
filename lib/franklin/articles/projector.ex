@@ -66,6 +66,7 @@ defmodule Franklin.Articles.Projector do
   defp broadcast_name(%ArticleCreated{}), do: :article_created
   defp broadcast_name(%ArticleTitleUpdated{}), do: :article_title_updated
   defp broadcast_name(%ArticleBodyUpdated{}), do: :article_body_updated
+  defp broadcast_name(%ArticleSlugUpdated{}), do: :article_slug_updated
   defp broadcast_name(%ArticlePublishedAtUpdated{}), do: :article_published_at_updated
   defp broadcast_name(%ArticleDeleted{}), do: :article_deleted
 

@@ -64,6 +64,6 @@ defmodule Franklin.Articles.Commands.UpdateArticle do
     |> validate_id()
     |> validate_published_at()
     |> validate_title()
-    |> validate_slug()
+    |> validate_slug(apply_unique_constraint: false)
   end
 end

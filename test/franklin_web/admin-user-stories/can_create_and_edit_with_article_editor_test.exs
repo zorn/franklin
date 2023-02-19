@@ -23,6 +23,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     # This will be the article we will edit.
     edit_article_attributes = %{
       title: "edit article title",
+      slug: "slug/edit-article-title",
       body: "edit article body",
       published_at: now
     }
@@ -34,6 +35,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
         # Because projections are not instant, we need to wait until it is finished.
         assert %Article{
                  title: "edit article title",
+                 slug: "slug/edit-article-title",
                  body: "edit article body",
                  published_at: ^now
                } = Articles.get_article(edit_article_id)
@@ -47,6 +49,8 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   test "creation succeeds with all required form fields", ~M{create_view} do
     valid_params = %{
       title: "A valid new article title.",
+      slug: "slug/a-valid-new-article-title",
+      slug_autogenerate: false,
       body: "A valid new article body."
     }
 
@@ -66,7 +70,8 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
                    %Article{
                      title: "A valid new article title.",
                      body: "A valid new article body.",
-                     slug: "a-valid-new-article-title"
+                     slug: "slug/a-valid-new-article-title",
+                     published_at: %DateTime{}
                    },
                    article
                  )
@@ -77,16 +82,21 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     assert {^redirect_path, _flash} = assert_redirect(create_view)
   end
 
-  test "empty slug field values will get a new slug value based on the title", ~M{create_view} do
+  test "empty slug field values will get a new slug value based on the title", ~M{_create_view} do
+  end
+
+  test "slug field values can have a forward slash", ~M{_create_view} do
   end
 
   test "editing succeeds with all required form fields changed", ~M{edit_view, edit_article} do
     edited_title = "#{edit_article.title} was edited."
     edited_body = "#{edit_article.body} was edited."
-    edited_published_at = DateTime.add(edit_article.published_at, -1, :day)
+    edited_slug = "#{edit_article.slug}-was-edited."
+    edited_published_at = DateTime.add(edit_article.published_at, -5, :day)
 
     edited_params = %{
       title: edited_title,
+      slug: edited_slug,
       body: edited_body,
       published_at: DateTime.to_iso8601(edited_published_at)
     }
@@ -99,6 +109,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     wait_for_passing(fn ->
       assert %Article{
                title: ^edited_title,
+               slug: ^edited_slug,
                body: ^edited_body,
                published_at: ^edited_published_at
              } = Articles.get_article(edit_article.id)
