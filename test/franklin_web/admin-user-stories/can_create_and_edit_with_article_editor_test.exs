@@ -113,7 +113,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
                end)
       end)
 
-    assert String.ends_with?(article.slug, "/cookies-are-good")
+    assert String.ends_with?(article.slug, "/cookies-are-good/")
     redirect_path = "/admin/articles/#{article.id}"
     assert {^redirect_path, _flash} = assert_redirect(create_view)
   end
