@@ -48,6 +48,15 @@ defmodule Franklin.Articles do
   end
 
   @doc """
+  Returns the `Article` entity for the matching slug value or
+  `nil` if none is found.
+  """
+  @spec get_article_by_slug(Ecto.UUID.t()) :: Article.t() | nil
+  def get_article_by_slug(slug) do
+    Repo.get_by(Article, slug: slug)
+  end
+
+  @doc """
   # Returns a list of `Article` entities sorted by `:published_at` descending.
   """
   def list_articles(criteria \\ %{}) do
