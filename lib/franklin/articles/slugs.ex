@@ -19,12 +19,12 @@ defmodule Franklin.Articles.Slugs do
 
     case Slug.slugify(title) do
       nil ->
-        "#{time_component}/title"
+        "#{time_component}/title/"
 
       slugged_title ->
-        "#{time_component}/#{slugged_title}"
+        "#{time_component}/#{slugged_title}/"
     end
   end
 
-  def generate_slug_for_title(_, _), do: "title"
+  def generate_slug_for_title(_, _), do: "title/"
 end
