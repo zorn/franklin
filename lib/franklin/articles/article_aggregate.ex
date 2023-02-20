@@ -17,8 +17,8 @@ defmodule Franklin.Articles.ArticleAggregate do
   alias Franklin.Articles.Events.ArticleCreated
   alias Franklin.Articles.Events.ArticleDeleted
   alias Franklin.Articles.Events.ArticlePublishedAtUpdated
-  alias Franklin.Articles.Events.ArticleTitleUpdated
   alias Franklin.Articles.Events.ArticleSlugUpdated
+  alias Franklin.Articles.Events.ArticleTitleUpdated
 
   def execute(
         %Article{id: nil},

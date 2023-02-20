@@ -5,12 +5,11 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
 
   use FranklinWeb, :admin_live_view
 
-  alias Franklin.Articles.Slugs
   alias Franklin.Articles
   alias Franklin.Articles.Article
-  alias Phoenix.LiveView.Socket
-
+  alias Franklin.Articles.Slugs
   alias FranklinWeb.Admin.Articles.ArticleForm
+  alias Phoenix.LiveView.Socket
   alias Phoenix.LiveView.Socket
 
   def mount(params, _session, socket) do
