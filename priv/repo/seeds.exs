@@ -50,7 +50,7 @@ CreateArticle.new(%{
 |> SeedTools.dispatch_command()
 
 # January Journal
-journal_markdown_path = Path.expand("priv/content/2023/1/22-journal/index.md")
+journal_markdown_path = Path.expand("priv/static/articles/2023/1/22-journal/index.md")
 content = File.read!(journal_markdown_path)
 {:ok, front_matter, markdown_content} = YamlFrontMatter.parse_file(journal_markdown_path)
 {:ok, published_at, _utc_offset} = DateTime.from_iso8601(front_matter["date"])
@@ -66,7 +66,7 @@ CreateArticle.new(%{
 |> SeedTools.dispatch_command()
 
 # Boston Trip
-journal_markdown_path = Path.expand("priv/content/2023/1/boston-2022-trip/index.md")
+journal_markdown_path = Path.expand("priv/static/articles/2023/1/boston-2022-trip/index.md")
 content = File.read!(journal_markdown_path)
 {:ok, front_matter, markdown_content} = YamlFrontMatter.parse_file(journal_markdown_path)
 {:ok, published_at, _utc_offset} = DateTime.from_iso8601(front_matter["date"])
