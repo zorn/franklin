@@ -18,9 +18,7 @@ defmodule FranklinWeb.Articles.ViewerLive do
 
   @spec assign_article(Socket.t(), String.t()) :: Socket.t()
   defp assign_article(socket, slug) do
-    dbg(slug)
     slug = Enum.join(slug, "/") |> Kernel.<>("/")
-    dbg(slug)
 
     case Articles.get_article_by_slug(slug) do
       nil ->
