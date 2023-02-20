@@ -21,7 +21,7 @@ defmodule FranklinWeb.PublicUserStories.CanViewArticleArchiveListTest do
 
   test "page renders expected list of article titles with links", ~M{view, articles} do
     for article <- articles do
-      assert has_element?(view, ~s(a[href="/articles/#{article.id}"]), article.title)
+      assert has_element?(view, ~s(a[href="/articles/#{article.slug}"]), article.title)
     end
   end
 end

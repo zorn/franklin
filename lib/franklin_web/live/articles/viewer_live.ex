@@ -9,16 +9,27 @@ defmodule FranklinWeb.Articles.ViewerLive do
   alias Phoenix.LiveView.Socket
 
   @impl Phoenix.LiveView
-  def mount(%{"id" => id}, _session, socket) do
+  def mount(%{"slug" => slug}, _session, socket) do
     socket
-    |> assign_article(id)
+    |> assign_article(slug)
     |> assign_rendered_body()
     |> ok()
   end
 
   @spec assign_article(Socket.t(), String.t()) :: Socket.t()
-  defp assign_article(socket, id) do
-    assign(socket, article: Articles.get_article(id))
+  defp assign_article(socket, slug) do
+    dbg(slug)
+    slug = Enum.join(slug, "/") |> Kernel.<>("/")
+    dbg(slug)
+
+    case Articles.get_article_by_slug(slug) do
+      nil ->
+        raise Ecto.NoResultsError
+        socket
+
+      article ->
+        assign(socket, article: article)
+    end
   end
 
   @spec assign_rendered_body(Socket.t()) :: Socket.t()

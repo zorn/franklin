@@ -22,7 +22,12 @@ defmodule FranklinWeb.Articles.IndexLive do
         <%= for article <- @all_articles do %>
           <li class="mb-2 list-disc">
             <%= live_redirect(article.title,
-              to: Routes.article_viewer_path(FranklinWeb.Endpoint, :show, article.id),
+              to:
+                Routes.article_viewer_path(
+                  FranklinWeb.Endpoint,
+                  :show,
+                  String.split(article.slug, "/")
+                ),
               class: "underline hover:text-blue-700"
             ) %> &bull;
             <span class="text-gray-400">
