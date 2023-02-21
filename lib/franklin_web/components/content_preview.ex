@@ -7,7 +7,7 @@ defmodule FranklinWeb.Components.ContentPreview do
   attr :url, :string, required: true
   attr :thumbnail_src, :string, required: true
   attr :thumbnail_alt_text, :string, required: true
-  attr :published_on, :any, required: true
+  attr :published_at, :any, required: true
 
   @spec content_preview(map()) :: Phoenix.LiveView.Rendered.t()
   def content_preview(assigns) do
@@ -27,7 +27,7 @@ defmodule FranklinWeb.Components.ContentPreview do
         </p>
 
         <div class="text-right text-sm italic">
-          Published on <%= inspect(@published_on) %>
+          Published on <%= inspect(@published_at) %>
         </div>
       </div>
     </div>
