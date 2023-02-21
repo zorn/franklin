@@ -3,6 +3,7 @@ defmodule Franklin.Articles.ArticleAggregate do
     :body,
     :id,
     :published_at,
+    :slug,
     :title
   ]
 
@@ -16,21 +17,36 @@ defmodule Franklin.Articles.ArticleAggregate do
   alias Franklin.Articles.Events.ArticleCreated
   alias Franklin.Articles.Events.ArticleDeleted
   alias Franklin.Articles.Events.ArticlePublishedAtUpdated
+  alias Franklin.Articles.Events.ArticleSlugUpdated
   alias Franklin.Articles.Events.ArticleTitleUpdated
 
   def execute(
         %Article{id: nil},
-        %CreateArticle{id: id, title: title, body: body, published_at: published_at}
+        %CreateArticle{
+          id: id,
+          title: title,
+          slug: slug,
+          body: body,
+          published_at: published_at
+        }
       ) do
     create_event = %ArticleCreated{id: id}
 
     title_event = title && %ArticleTitleUpdated{id: id, title: title}
     body_event = body && %ArticleBodyUpdated{id: id, body: body}
+    slug_event = body && %ArticleSlugUpdated{id: id, slug: slug}
 
     published_at_event =
       published_at && %ArticlePublishedAtUpdated{id: id, published_at: published_at}
 
-    [create_event, title_event, body_event, published_at_event] |> Enum.reject(&is_nil/1)
+    [
+      create_event,
+      title_event,
+      body_event,
+      slug_event,
+      published_at_event
+    ]
+    |> Enum.reject(&is_nil/1)
   end
 
   def execute(%Article{id: id}, %DeleteArticle{id: id}) do
@@ -46,11 +62,21 @@ defmodule Franklin.Articles.ArticleAggregate do
       if article.body != update.body and not is_nil(update.body),
         do: %ArticleBodyUpdated{id: article.id, body: update.body}
 
+    slug_event =
+      if article.slug != update.slug and not is_nil(update.slug),
+        do: %ArticleSlugUpdated{id: article.id, slug: update.slug}
+
     published_at_event =
       if article.published_at != update.published_at and not is_nil(update.published_at),
         do: %ArticlePublishedAtUpdated{id: article.id, published_at: update.published_at}
 
-    [title_event, body_event, published_at_event] |> Enum.reject(&is_nil/1)
+    [
+      title_event,
+      body_event,
+      slug_event,
+      published_at_event
+    ]
+    |> Enum.reject(&is_nil/1)
   end
 
   def apply(%Article{} = article, %ArticleCreated{} = created) do
@@ -67,6 +93,10 @@ defmodule Franklin.Articles.ArticleAggregate do
 
   def apply(%Article{} = article, %ArticleBodyUpdated{body: body}) do
     %Article{article | body: body}
+  end
+
+  def apply(%Article{} = article, %ArticleSlugUpdated{slug: slug}) do
+    %Article{article | slug: slug}
   end
 
   def apply(%Article{} = article, %ArticlePublishedAtUpdated{published_at: published_at}) do

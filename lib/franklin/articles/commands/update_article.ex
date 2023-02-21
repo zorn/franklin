@@ -14,6 +14,7 @@ defmodule Franklin.Articles.Commands.UpdateArticle do
           body: String.t(),
           id: Ecto.UUID.t(),
           published_at: DateTime.t(),
+          slug: String.t(),
           title: String.t()
         }
 
@@ -22,6 +23,7 @@ defmodule Franklin.Articles.Commands.UpdateArticle do
   embedded_schema do
     field :body, :string
     field :published_at, :utc_datetime
+    field :slug, :string
     field :title, :string
   end
 
@@ -29,6 +31,7 @@ defmodule Franklin.Articles.Commands.UpdateArticle do
     :body,
     :id,
     :published_at,
+    :slug,
     :title
   ]
 
@@ -36,6 +39,7 @@ defmodule Franklin.Articles.Commands.UpdateArticle do
           required(:body) => String.t(),
           required(:id) => Ecto.UUID.t(),
           required(:published_at) => DateTime.t(),
+          required(:slug) => String.t(),
           required(:title) => String.t()
         }
 
@@ -60,5 +64,6 @@ defmodule Franklin.Articles.Commands.UpdateArticle do
     |> validate_id()
     |> validate_published_at()
     |> validate_title()
+    |> validate_slug(apply_unique_constraint: false)
   end
 end

@@ -10,6 +10,7 @@ defmodule Franklin.Articles do
           required(:body) => String.t(),
           optional(:id) => Ecto.UUID.t(),
           required(:published_at) => DateTime.t(),
+          required(:slug) => String.t(),
           required(:title) => String.t()
         }
 
@@ -26,6 +27,7 @@ defmodule Franklin.Articles do
        identity of this article. Will be generated if not provided.
     * `:published_at` - A `DateTime` value representing the public-facing
        publication date of the article.
+    * `:slug` - The URL fragment used to identify a single article.
     * `:title` - A plain-text string value using 1 to 255 characters in length.
   """
   @spec create_article(create_attrs()) :: {:ok, Ecto.UUID.t()} | {:error, ValidationErrorMap.t()}
@@ -43,6 +45,15 @@ defmodule Franklin.Articles do
   @spec get_article(Ecto.UUID.t()) :: Article.t() | nil
   def get_article(id) do
     Repo.get(Article, id)
+  end
+
+  @doc """
+  Returns the `Article` entity for the matching slug value or
+  `nil` if none is found.
+  """
+  @spec get_article_by_slug(Ecto.UUID.t()) :: Article.t() | nil
+  def get_article_by_slug(slug) do
+    Repo.get_by(Article, slug: slug)
   end
 
   @doc """
@@ -73,6 +84,7 @@ defmodule Franklin.Articles do
   * `{:article_created, %{id: uuid}}`
   * `{:article_deleted, %{id: uuid}}`
   * `{:article_body_updated, %{id: uuid}}`
+  * `{:article_slug_updated, %{id: uuid}}`
   * `{:article_published_at_updated, %{id: uuid}}`
   * `{:article_title_updated, %{id: uuid}}`
   """
@@ -88,7 +100,8 @@ defmodule Franklin.Articles do
   @type update_attrs :: %{
           optional(:body) => String.t(),
           optional(:published_at) => DateTime.t(),
-          optional(:title) => String.t()
+          optional(:title) => String.t(),
+          optional(:slug) => String.t()
         }
 
   @doc """
@@ -113,6 +126,7 @@ defmodule Franklin.Articles do
       |> Map.put_new(:body, article.body)
       |> Map.put_new(:published_at, article.published_at)
       |> Map.put_new(:title, article.title)
+      |> Map.put_new(:slug, article.slug)
 
     case Franklin.Articles.Commands.UpdateArticle.new(command_attrs) do
       {:ok, command} -> dispatch_command(command)

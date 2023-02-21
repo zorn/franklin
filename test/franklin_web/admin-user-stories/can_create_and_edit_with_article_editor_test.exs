@@ -1,7 +1,7 @@
 defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   @moduledoc """
   Asserts the business rule that an authenticated admin can create or edit an
-  article via the article editor and that field value failures works as expected.
+  article via the article editor and that field value failures work as expected.
   """
 
   use FranklinWeb.ConnCase
@@ -15,14 +15,12 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     # shape the tests to verify aspects of the form for both its create mode
     # as well as its edit version.
 
-    conn = add_authentication(conn, "zorn", "Pass1234")
-    {:ok, create_view, _html} = live(conn, "/admin/articles/editor/new")
-
     now = DateTime.utc_now() |> DateTime.truncate(:second)
 
     # This will be the article we will edit.
     edit_article_attributes = %{
       title: "edit article title",
+      slug: "slug/edit-article-title/",
       body: "edit article body",
       published_at: now
     }
@@ -34,11 +32,14 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
         # Because projections are not instant, we need to wait until it is finished.
         assert %Article{
                  title: "edit article title",
+                 slug: "slug/edit-article-title/",
                  body: "edit article body",
                  published_at: ^now
                } = Articles.get_article(edit_article_id)
       end)
 
+    conn = add_authentication(conn, "zorn", "Pass1234")
+    {:ok, create_view, _html} = live(conn, "/admin/articles/editor/new")
     {:ok, edit_view, _html} = live(conn, "/admin/articles/editor/#{edit_article.id}")
 
     ~M{create_view, edit_view, edit_article}
@@ -47,6 +48,8 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   test "creation succeeds with all required form fields", ~M{create_view} do
     valid_params = %{
       title: "A valid new article title.",
+      slug: "slug/a-valid-new-article-title",
+      slug_autogenerate: false,
       body: "A valid new article body."
     }
 
@@ -65,7 +68,9 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
                  match?(
                    %Article{
                      title: "A valid new article title.",
-                     body: "A valid new article body."
+                     body: "A valid new article body.",
+                     slug: "slug/a-valid-new-article-title",
+                     published_at: %DateTime{}
                    },
                    article
                  )
@@ -76,13 +81,52 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     assert {^redirect_path, _flash} = assert_redirect(create_view)
   end
 
+  test "empty slug field values will get a new slug value based on the title", ~M{create_view} do
+    valid_params = %{
+      title: "Cookies are good!",
+      slug: "",
+      slug_autogenerate: true,
+      body: "We like cookies."
+    }
+
+    create_view
+    |> form("#new-article", article_form: valid_params)
+    |> render_submit()
+
+    # Because the data projection can take time, we need to wait_for_passing.
+    article =
+      wait_for_passing(fn ->
+        # FIXME: This is a shit test because I'm using `list_articles/0` but atm I don't
+        # have the `id` of the created article to use in `get_article/1`. Once we
+        # change to redirecting to a view page we can sniff the id from the url
+        # being redirected to.
+        assert Enum.find(Articles.list_articles(), nil, fn article ->
+                 match?(
+                   %Article{
+                     title: "Cookies are good!",
+                     body: "We like cookies.",
+                     slug: _slug,
+                     published_at: %DateTime{}
+                   },
+                   article
+                 )
+               end)
+      end)
+
+    assert String.ends_with?(article.slug, "/cookies-are-good/")
+    redirect_path = "/admin/articles/#{article.id}"
+    assert {^redirect_path, _flash} = assert_redirect(create_view)
+  end
+
   test "editing succeeds with all required form fields changed", ~M{edit_view, edit_article} do
     edited_title = "#{edit_article.title} was edited."
     edited_body = "#{edit_article.body} was edited."
-    edited_published_at = DateTime.add(edit_article.published_at, -1, :day)
+    edited_slug = "#{edit_article.slug}-was-edited/"
+    edited_published_at = DateTime.add(edit_article.published_at, -5, :day)
 
     edited_params = %{
       title: edited_title,
+      slug: edited_slug,
       body: edited_body,
       published_at: DateTime.to_iso8601(edited_published_at)
     }
@@ -95,6 +139,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     wait_for_passing(fn ->
       assert %Article{
                title: ^edited_title,
+               slug: ^edited_slug,
                body: ^edited_body,
                published_at: ^edited_published_at
              } = Articles.get_article(edit_article.id)
@@ -127,6 +172,30 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
                  view,
                  error_feedback_query(:title),
                  "should be at most 255 character(s)"
+               )
+      end
+    end
+  end
+
+  describe "verify slug input failure responses" do
+    test "slugs can not have any character outside of alphanumeric and dashes",
+         ~M{create_view, edit_view} do
+      invalid_slug = "!?invalid slug?!"
+
+      for view <- [create_view, edit_view] do
+        view
+        |> form("#new-article",
+          article_form: %{
+            slug: invalid_slug,
+            slug_autogenerate: false
+          }
+        )
+        |> render_submit()
+
+        assert has_element?(
+                 view,
+                 error_feedback_query(:slug),
+                 "has invalid format"
                )
       end
     end

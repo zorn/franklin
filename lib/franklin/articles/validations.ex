@@ -44,4 +44,27 @@ defmodule Franklin.Articles.Validations do
     |> validate_required(:body)
     |> validate_length(:body, max: 30_000)
   end
+
+  @doc """
+  Accepts and returns a Changeset of a `Article` and applies domain
+  validation rules for the `slug` attribute.
+  """
+  @spec validate_slug(Ecto.Changeset.t(), keyword()) :: Ecto.Changeset.t()
+  def validate_slug(changeset, opts \\ []) do
+    should_apply_unique_constraint = Keyword.get(opts, :apply_unique_constraint, true)
+
+    changeset
+    |> validate_required(:slug)
+    |> validate_length(:slug, min: 1, max: 255)
+    |> validate_format(:slug, ~r/^[a-zA-Z0-9-\/]*$/)
+    |> apply_unique_constraint(should_apply_unique_constraint, :slug)
+  end
+
+  defp apply_unique_constraint(changeset, true, field) do
+    unique_constraint(changeset, field)
+  end
+
+  defp apply_unique_constraint(changeset, false, _field) do
+    changeset
+  end
 end
