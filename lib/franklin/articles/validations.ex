@@ -56,7 +56,7 @@ defmodule Franklin.Articles.Validations do
     changeset
     |> validate_required(:slug)
     |> validate_length(:slug, min: 1, max: 255)
-    |> validate_format(:slug, ~r/[A-Za-z0-9\s-\/]/)
+    |> validate_format(:slug, ~r/^[a-zA-Z0-9-\/]*$/)
     |> apply_unique_constraint(should_apply_unique_constraint, :slug)
   end
 

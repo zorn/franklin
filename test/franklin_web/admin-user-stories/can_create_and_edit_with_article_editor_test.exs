@@ -20,7 +20,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     # This will be the article we will edit.
     edit_article_attributes = %{
       title: "edit article title",
-      slug: "slug/edit-article-title",
+      slug: "slug/edit-article-title/",
       body: "edit article body",
       published_at: now
     }
@@ -32,7 +32,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
         # Because projections are not instant, we need to wait until it is finished.
         assert %Article{
                  title: "edit article title",
-                 slug: "slug/edit-article-title",
+                 slug: "slug/edit-article-title/",
                  body: "edit article body",
                  published_at: ^now
                } = Articles.get_article(edit_article_id)
@@ -121,7 +121,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   test "editing succeeds with all required form fields changed", ~M{edit_view, edit_article} do
     edited_title = "#{edit_article.title} was edited."
     edited_body = "#{edit_article.body} was edited."
-    edited_slug = "#{edit_article.slug}-was-edited."
+    edited_slug = "#{edit_article.slug}-was-edited/"
     edited_published_at = DateTime.add(edit_article.published_at, -5, :day)
 
     edited_params = %{
@@ -178,7 +178,26 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   end
 
   describe "verify slug input failure responses" do
-    test "slugs can not have any character outside of alphanumeric and dashes" do
+    test "slugs can not have any character outside of alphanumeric and dashes",
+         ~M{create_view, edit_view} do
+      invalid_slug = "!?invalid slug?!"
+
+      for view <- [create_view, edit_view] do
+        view
+        |> form("#new-article",
+          article_form: %{
+            slug: invalid_slug,
+            slug_autogenerate: false
+          }
+        )
+        |> render_submit()
+
+        assert has_element?(
+                 view,
+                 error_feedback_query(:slug),
+                 "has invalid format"
+               )
+      end
     end
   end
 
