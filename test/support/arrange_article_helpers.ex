@@ -18,7 +18,7 @@ defmodule Franklin.ArrangeArticleHelpers do
     {:ok, uuid} = Articles.create_article(attrs)
 
     wait_for_passing(fn ->
-      %Article{} = article = Articles.get_article(uuid)
+      {:ok, article} = Articles.fetch_article(uuid)
 
       for field <- Map.keys(attrs) do
         attr_value = Map.get(attrs, field)

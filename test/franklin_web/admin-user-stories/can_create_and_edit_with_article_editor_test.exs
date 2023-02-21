@@ -27,15 +27,16 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
 
     {:ok, edit_article_id} = Articles.create_article(edit_article_attributes)
 
-    edit_article =
+    {:ok, edit_article} =
       wait_for_passing(fn ->
         # Because projections are not instant, we need to wait until it is finished.
-        assert %Article{
-                 title: "edit article title",
-                 slug: "slug/edit-article-title/",
-                 body: "edit article body",
-                 published_at: ^now
-               } = Articles.get_article(edit_article_id)
+        assert {:ok,
+                %Article{
+                  title: "edit article title",
+                  slug: "slug/edit-article-title/",
+                  body: "edit article body",
+                  published_at: ^now
+                }} = Articles.fetch_article(edit_article_id)
       end)
 
     conn = add_authentication(conn, "zorn", "Pass1234")
@@ -61,7 +62,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     article =
       wait_for_passing(fn ->
         # FIXME: This is a shit test because I'm using `list_articles/0` but atm I don't
-        # have the `id` of the created article to use in `get_article/1`. Once we
+        # have the `id` of the created article to use in `fetch_article/1`. Once we
         # change to redirecting to a view page we can sniff the id from the url
         # being redirected to.
         assert Enum.find(Articles.list_articles(), nil, fn article ->
@@ -137,12 +138,13 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
 
     # Because the data projection can take time, we need to wait_for_passing.
     wait_for_passing(fn ->
-      assert %Article{
-               title: ^edited_title,
-               slug: ^edited_slug,
-               body: ^edited_body,
-               published_at: ^edited_published_at
-             } = Articles.get_article(edit_article.id)
+      assert {:ok,
+              %Article{
+                title: ^edited_title,
+                slug: ^edited_slug,
+                body: ^edited_body,
+                published_at: ^edited_published_at
+              }} = Articles.fetch_article(edit_article.id)
     end)
 
     redirect_path = "/admin/articles/#{edit_article.id}"

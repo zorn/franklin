@@ -39,21 +39,27 @@ defmodule Franklin.Articles do
   end
 
   @doc """
-  Returns the `Article` entity with an identity matching the given id or
-  `nil` if none is found.
+  Returns {:ok, %Article{}} when an article with the given identity can be found
+  and `{:error, :article_not_found}` if unsuccessful.
   """
-  @spec get_article(Ecto.UUID.t()) :: Article.t() | nil
-  def get_article(id) do
-    Repo.get(Article, id)
+  @spec fetch_article(Article.id()) :: {:ok, Article.t()} | {:error, :article_not_found}
+  def fetch_article(id) do
+    case Repo.get(Article, id) do
+      nil -> {:error, :article_not_found}
+      %Article{} = article -> {:ok, article}
+    end
   end
 
   @doc """
-  Returns the `Article` entity for the matching slug value or
-  `nil` if none is found.
+  Returns {:ok, %Article{}} when an article with the given slug value can be found
+  and `{:error, :article_not_found}` if unsuccessful.
   """
-  @spec get_article_by_slug(Ecto.UUID.t()) :: Article.t() | nil
-  def get_article_by_slug(slug) do
-    Repo.get_by(Article, slug: slug)
+  @spec fetch_article_by_slug(Article.slug()) :: {:ok, Article.t()} | {:error, :article_not_found}
+  def fetch_article_by_slug(slug) do
+    case Repo.get_by(Article, slug: slug) do
+      nil -> {:error, :article_not_found}
+      %Article{} = article -> {:ok, article}
+    end
   end
 
   @doc """

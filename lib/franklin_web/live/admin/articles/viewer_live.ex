@@ -19,7 +19,14 @@ defmodule FranklinWeb.Admin.Articles.ViewerLive do
 
   @spec assign_article(Socket.t(), map()) :: Socket.t()
   defp assign_article(socket, %{"id" => id}) do
-    assign(socket, article: Articles.get_article(id))
+    case Articles.fetch_article(id) do
+      {:ok, article} ->
+        assign(socket, article: article)
+
+      {:error, :article_not_found} ->
+        raise Ecto.NoResultsError
+        socket
+    end
   end
 
   @spec assign_rendered_body(Socket.t()) :: Socket.t()

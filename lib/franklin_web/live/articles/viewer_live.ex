@@ -20,13 +20,13 @@ defmodule FranklinWeb.Articles.ViewerLive do
   defp assign_article(socket, slug) do
     slug = Enum.join(slug, "/") |> Kernel.<>("/")
 
-    case Articles.get_article_by_slug(slug) do
-      nil ->
+    case Articles.fetch_article_by_slug(slug) do
+      {:ok, article} ->
+        assign(socket, article: article)
+
+      {:error, :article_not_found} ->
         raise Ecto.NoResultsError
         socket
-
-      article ->
-        assign(socket, article: article)
     end
   end
 
