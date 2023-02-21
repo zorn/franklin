@@ -139,12 +139,11 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
            "slug_autogenerate" => "true"
          } = form_params
        ) do
-    case DateTime.from_iso8601(published_at) do
-      {:ok, datetime, _} ->
-        Map.put(form_params, "slug", Slugs.generate_slug_for_title(title, datetime))
-
-      {:error, _} ->
-        form_params
+    with {:ok, datetime, _} <- DateTime.from_iso8601(published_at),
+         {:ok, slug} <- Slugs.generate_slug_for_title(title, datetime) do
+      Map.put(form_params, "slug", slug)
+    else
+      _ -> form_params
     end
   end
 

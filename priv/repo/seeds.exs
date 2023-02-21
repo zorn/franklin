@@ -56,10 +56,12 @@ content = File.read!(journal_markdown_path)
 {:ok, published_at, _utc_offset} = DateTime.from_iso8601(front_matter["date"])
 filename = journal_markdown_path |> String.replace_suffix("/index.md", "") |> Path.basename()
 
+{:ok, slug} = Slugs.generate_slug_for_title(filename, published_at)
+
 CreateArticle.new(%{
   id: Ecto.UUID.generate(),
   title: front_matter["title"],
-  slug: Slugs.generate_slug_for_title(filename, published_at),
+  slug: slug,
   body: markdown_content,
   published_at: published_at
 })
@@ -71,11 +73,12 @@ content = File.read!(journal_markdown_path)
 {:ok, front_matter, markdown_content} = YamlFrontMatter.parse_file(journal_markdown_path)
 {:ok, published_at, _utc_offset} = DateTime.from_iso8601(front_matter["date"])
 filename = journal_markdown_path |> String.replace_suffix("/index.md", "") |> Path.basename()
+{:ok, slug} = Slugs.generate_slug_for_title(filename, published_at)
 
 CreateArticle.new(%{
   id: Ecto.UUID.generate(),
   title: front_matter["title"],
-  slug: Slugs.generate_slug_for_title(filename, published_at),
+  slug: slug,
   body: markdown_content,
   published_at: published_at
 })

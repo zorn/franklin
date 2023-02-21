@@ -48,7 +48,13 @@ defmodule FranklinWeb.Admin.Articles.ArticleForm do
   end
 
   defp current_slug_matches_generated_slug(article) do
-    article.slug == Slugs.generate_slug_for_title(article.title, article.published_at)
+    case Slugs.generate_slug_for_title(article.title, article.published_at) do
+      {:ok, slug} ->
+        article.slug == slug
+
+      {:error, _} ->
+        false
+    end
   end
 
   @spec changeset(%__MODULE__{}, map()) :: Ecto.Changeset.t()
