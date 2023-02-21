@@ -7,11 +7,14 @@ defmodule Franklin.Articles.Article do
 
   use Ecto.Schema
 
+  @type id :: Ecto.UUID.t()
+  @type slug :: String.t()
+
   @type t :: %__MODULE__{
           body: String.t(),
-          id: Ecto.UUID.t(),
+          id: id(),
           published_at: DateTime.t(),
-          slug: String.t(),
+          slug: slug,
           title: String.t()
         }
 
