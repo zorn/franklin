@@ -67,10 +67,13 @@ defmodule Franklin.Articles do
   """
   def list_articles(criteria \\ %{}) do
     limit = Map.get(criteria, :limit, nil)
+    published_only = Map.get(criteria, :published_only, false)
 
     query =
-      from(a in Article, order_by: [desc: a.published_at])
+      from(a in Article, as: :article)
+      |> order_by([article: a], desc: a.published_at)
       |> add_limit(limit)
+      |> where_published(published_only)
 
     Repo.all(query)
   end
@@ -80,6 +83,12 @@ defmodule Franklin.Articles do
   end
 
   defp add_limit(query, _), do: query
+
+  defp where_published(query, true) do
+    where(query, [article: a], not is_nil(a.published_at))
+  end
+
+  defp where_published(query, false), do: query
 
   @doc """
   Subscribes the calling process to a `Phoenix.PubSub` topic relative to the

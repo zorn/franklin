@@ -22,9 +22,28 @@ defmodule Franklin.Articles.Projector do
     "article:#{article_id}"
   end
 
-  project(%ArticleCreated{id: id}, _, fn multi ->
-    Ecto.Multi.insert(multi, :article, %Article{id: id})
-  end)
+  project(
+    %ArticleCreated{
+      id: id,
+      title: title,
+      body: body,
+      slug: slug,
+      published_at: published_at
+    },
+    _,
+    fn multi ->
+      changeset =
+        Article.insert_changeset(%Article{}, %{
+          id: id,
+          title: title,
+          body: body,
+          slug: slug,
+          published_at: published_at
+        })
+
+      Ecto.Multi.insert(multi, :article, changeset)
+    end
+  )
 
   project(%ArticleDeleted{id: id}, _, fn multi ->
     Ecto.Multi.delete(multi, :article, fn _ -> %Article{id: id} end)

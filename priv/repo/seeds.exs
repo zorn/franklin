@@ -34,7 +34,7 @@ A [link](https://mikezornek.com)!
 CreateArticle.new(%{
   id: Ecto.UUID.generate(),
   title: "Sample Article One",
-  slug: "2022/7/sample-article-one",
+  slug: "2022/7/sample-article-one/",
   body: sample_article_markdown,
   published_at: ~U[2022-07-13 09:00:00Z]
 })
@@ -43,7 +43,7 @@ CreateArticle.new(%{
 CreateArticle.new(%{
   id: Ecto.UUID.generate(),
   title: "Sample Article Two",
-  slug: "2022/7/sample-article-two",
+  slug: "2022/7/sample-article-two/",
   body: sample_article_markdown,
   published_at: ~U[2022-07-14 09:00:00Z]
 })
@@ -51,7 +51,6 @@ CreateArticle.new(%{
 
 # January Journal
 journal_markdown_path = Path.expand("priv/static/articles/2023/1/22-journal/index.md")
-content = File.read!(journal_markdown_path)
 {:ok, front_matter, markdown_content} = YamlFrontMatter.parse_file(journal_markdown_path)
 {:ok, published_at, _utc_offset} = DateTime.from_iso8601(front_matter["date"])
 filename = journal_markdown_path |> String.replace_suffix("/index.md", "") |> Path.basename()
@@ -69,7 +68,6 @@ CreateArticle.new(%{
 
 # Boston Trip
 journal_markdown_path = Path.expand("priv/static/articles/2023/1/boston-2022-trip/index.md")
-content = File.read!(journal_markdown_path)
 {:ok, front_matter, markdown_content} = YamlFrontMatter.parse_file(journal_markdown_path)
 {:ok, published_at, _utc_offset} = DateTime.from_iso8601(front_matter["date"])
 filename = journal_markdown_path |> String.replace_suffix("/index.md", "") |> Path.basename()

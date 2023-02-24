@@ -13,7 +13,7 @@ defmodule Franklin.Articles.Commands.UpdateArticle do
   @type t :: %__MODULE__{
           body: String.t(),
           id: Ecto.UUID.t(),
-          published_at: DateTime.t(),
+          published_at: DateTime.t() | nil,
           slug: String.t(),
           title: String.t()
         }

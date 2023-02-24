@@ -20,7 +20,8 @@ defmodule Franklin.Articles.Validations do
   """
   @spec validate_published_at(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def validate_published_at(changeset) do
-    validate_required(changeset, :published_at)
+    # published_at is no longer required so passthrough the changeset
+    changeset
   end
 
   @doc """
