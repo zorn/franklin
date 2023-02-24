@@ -29,15 +29,10 @@ defmodule Franklin.ArticlesTest do
       assert {:ok, ^uuid} = Articles.create_article(max_attrs)
 
       assert_receive {:article_created, %{id: ^uuid}}
-      assert_receive {:article_body_updated, %{id: ^uuid}}
-      assert_receive {:article_slug_updated, %{id: ^uuid}}
-      assert_receive {:article_published_at_updated, %{id: ^uuid}}
-      assert_receive {:article_title_updated, %{id: ^uuid}}
     end
 
     test "fails with no arguments" do
       assert {:error, errors} = Articles.create_article(%{})
-      assert "can't be blank" in errors.published_at
       assert "can't be blank" in errors.title
       assert "can't be blank" in errors.body
     end

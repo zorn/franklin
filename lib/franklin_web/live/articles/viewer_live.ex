@@ -22,10 +22,15 @@ defmodule FranklinWeb.Articles.ViewerLive do
 
     case Articles.fetch_article_by_slug(slug) do
       {:ok, article} ->
-        assign(socket, article: article)
+        if is_nil(article.published_at) do
+          raise FranklinWeb.NotFoundError
+          socket
+        else
+          assign(socket, article: article)
+        end
 
       {:error, :article_not_found} ->
-        raise Ecto.NoResultsError
+        raise FranklinWeb.NotFoundError
         socket
     end
   end

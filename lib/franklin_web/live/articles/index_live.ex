@@ -10,7 +10,7 @@ defmodule FranklinWeb.Articles.IndexLive do
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     socket
-    |> assign(:all_articles, Articles.list_articles())
+    |> assign(:all_articles, Articles.list_articles(%{published_only: true}))
     |> ok()
   end
 

@@ -204,16 +204,6 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   end
 
   describe "verify published_at input failure responses" do
-    test "fails without a required published_at value", ~M{create_view, edit_view} do
-      for view <- [create_view, edit_view] do
-        view
-        |> form("#new-article", article_form: %{published_at: ""})
-        |> render_submit()
-
-        assert has_element?(view, error_feedback_query(:published_at), "can't be blank")
-      end
-    end
-
     test "fails without a date-specific string published_at value", ~M{create_view, edit_view} do
       for view <- [create_view, edit_view] do
         view

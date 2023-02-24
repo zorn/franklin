@@ -13,7 +13,7 @@ defmodule Franklin.Articles.Commands.CreateArticle do
   @type t :: %__MODULE__{
           body: String.t(),
           id: Ecto.UUID.t(),
-          published_at: DateTime.t(),
+          published_at: DateTime.t() | nil,
           slug: String.t(),
           title: String.t()
         }
@@ -43,8 +43,9 @@ defmodule Franklin.Articles.Commands.CreateArticle do
     * `:body` - A Markdown-flavored string value no more that 100 MBs in length.
     * `:id` - (optional) An `Ecto.UUID` value that will be used as the
        identity of this article. Will be generated if not provided.
-    * `:published_at` - A `DateTime` value representing the public-facing
-       publication date of the article.
+    * `:published_at` - A `DateTime` value representing the
+       public-facing publication date of the article. When `nil` the article
+       is considered unpublished.
     * `:slug` - The URL fragment used to identify a single article.
     * `:title` - A plain-text string value using 1 to 255 characters in length.
   """

@@ -13,7 +13,7 @@ defmodule Franklin.Articles.Article do
   @type t :: %__MODULE__{
           body: String.t(),
           id: id(),
-          published_at: DateTime.t(),
+          published_at: DateTime.t() | nil,
           slug: slug,
           title: String.t()
         }
@@ -27,6 +27,16 @@ defmodule Franklin.Articles.Article do
     field :title, :string
 
     timestamps()
+  end
+
+  def insert_changeset(article, attrs \\ %{}) do
+    Ecto.Changeset.cast(article, attrs, [
+      :id,
+      :body,
+      :published_at,
+      :slug,
+      :title
+    ])
   end
 
   def update_changeset(article, attrs \\ %{}) do

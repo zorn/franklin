@@ -12,7 +12,7 @@ If you are only writing a single accessor function, this should be the pattern t
 
 ## 2. Provide a `fetch_noun!/1` function.
 
-Some call sites may prefer the simplicity of accessing the raw entity value as the return type in favor of the `:ok` tuple pattern. We mostly expect this in tests, scripts, or other places where the resource's existence is assumed, so raising will be uncommon. For those call sites, we can offer `fetch_noun!/1`, which will return the entity or raise an error like `App.NounNotFoundError` (or `Ecto.NoResultsError` if you are ok leaking Ecto as an implementation detail). Raising errors as a common form of logic flow is discouraged in Elixir, so use this pattern with caution.
+Some call sites may prefer the simplicity of accessing the raw entity value as the return type in favor of the `:ok` tuple pattern. We mostly expect this in tests, scripts, or other places where the resource's existence is assumed, so raising will be uncommon. For those call sites, we can offer `fetch_noun!/1`, which will return the entity or raise an error like `App.NotFoundError` (or `Ecto.NoResultsError` if you are ok leaking Ecto as an implementation detail). Raising errors as a common form of logic flow is discouraged in Elixir, so use this pattern with caution.
 
 ## 3. Provide a `get_noun/2` function.
 

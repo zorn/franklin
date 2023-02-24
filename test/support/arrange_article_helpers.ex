@@ -6,7 +6,6 @@ defmodule Franklin.ArrangeArticleHelpers do
   import Franklin.WaitForPassing
 
   alias Franklin.Articles
-  alias Franklin.Articles.Article
 
   @doc """
   Creates and returns a new article, raising an exception on failure.
