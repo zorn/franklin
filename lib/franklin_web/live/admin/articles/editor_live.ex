@@ -28,7 +28,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
         assign(socket, article: article)
 
       {:error, :article_not_found} ->
-        raise Ecto.NoResultsError
+        raise FranklinWeb.NotFoundError
         socket
     end
   end
