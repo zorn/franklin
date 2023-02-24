@@ -45,7 +45,7 @@ defmodule Franklin.Articles.Commands.CreateArticle do
        identity of this article. Will be generated if not provided.
     * `:published_at` - A `DateTime` value representing the
        public-facing publication date of the article. When `nil` the article
-       is considered non-public.
+       is considered unpublished.
     * `:slug` - The URL fragment used to identify a single article.
     * `:title` - A plain-text string value using 1 to 255 characters in length.
   """
