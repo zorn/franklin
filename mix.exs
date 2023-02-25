@@ -95,7 +95,10 @@ defmodule Franklin.MixProject do
       {:yaml_front_matter, "~> 1.0.0"},
 
       # To help generate valid URL slugs.
-      {:slugify, "~> 1.3"}
+      {:slugify, "~> 1.3"},
+
+      # To help with generating RSS feeds.
+      {:xml_builder, "~> 2.1"}
     ]
   end
 
