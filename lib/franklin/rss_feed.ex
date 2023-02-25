@@ -1,9 +1,11 @@
 defmodule Franklin.RssFeed do
   import XmlBuilder
 
-  alias Franklin.Repo
+  alias Franklin.Articles.Article
+  alias Franklin.DateTimeFormatter
 
-  def new(_articles) do
+  @spec new([Article.t()]) :: String.t()
+  def new(articles) when is_list(articles) do
     document([
       element(
         :rss,
@@ -11,7 +13,15 @@ defmodule Franklin.RssFeed do
         [
           element(:channel, [
             element(:title, "Mike Zornek"),
-            element(:link, "http://mikezornek.com/")
+            element(:link, "http://mikezornek.com/"),
+            element(
+              :description,
+              "Programming, Elixir, tech, video games and personal journals."
+            ),
+            element(:language, "en-us"),
+            element(:copyright, "Mike Zornek"),
+            element(:generator, "Franklin - https://github.com/zorn/franklin/"),
+            element(:lastBuildDate, last_build_date(articles) |> DateTimeFormatter.to_rfc_2822())
           ])
         ]
       )
@@ -36,6 +46,16 @@ defmodule Franklin.RssFeed do
     #   end
     # end
   end
+
+  defp last_build_date(articles) when is_list(articles) and length(articles) > 0 do
+    sorted_articles_newest_first =
+      Enum.sort_by(articles, & &1.published_at, {:desc, NaiveDateTime})
+
+    %Article{published_at: last_build_date} = List.first(sorted_articles_newest_first)
+    dbg(last_build_date)
+  end
+
+  defp last_build_date(_articles), do: DateTime.utc_now()
 end
 
 # <?xml version="1.0" encoding="utf-8" standalone="yes"?>

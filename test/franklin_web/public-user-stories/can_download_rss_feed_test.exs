@@ -5,6 +5,8 @@ defmodule FranklinWeb.PublicUserStories.CanDownloadRssFeedTest do
 
   use FranklinWeb.ConnCase
 
+  alias Franklin.DateTimeFormatter
+
   setup %{conn: conn} do
     articles =
       -1..-5
@@ -17,6 +19,12 @@ defmodule FranklinWeb.PublicUserStories.CanDownloadRssFeedTest do
   end
 
   test "can download RSS file", ~M{conn, articles} do
+    expected_last_build_date =
+      articles
+      |> hd()
+      |> Map.get(:published_at)
+      |> DateTimeFormatter.to_rfc_2822()
+
     expected_response =
       """
       <?xml version="1.0" encoding="UTF-8"?>
@@ -28,7 +36,7 @@ defmodule FranklinWeb.PublicUserStories.CanDownloadRssFeedTest do
           <language>en-us</language>
           <copyright>Mike Zornek</copyright>
           <generator>Franklin - https://github.com/zorn/franklin/</generator>
-          <lastBuildDate>#{DateTime.utc_now() |> DateTime.to_iso8601()}</lastBuildDate>
+          <lastBuildDate>#{expected_last_build_date}</lastBuildDate>
         </channel>
       </rss>
       """
@@ -37,7 +45,7 @@ defmodule FranklinWeb.PublicUserStories.CanDownloadRssFeedTest do
     # FIXME: That lastBuildDate is not correct. It needs to be RFC 2822.
     # lastBuildDate: should be based on the most recent article in the feed
     conn = get(conn, "/index.xml")
-    IO.inspect(conn.resp_body)
+    IO.puts(conn.resp_body)
     assert conn.resp_body == expected_response
   end
 end
