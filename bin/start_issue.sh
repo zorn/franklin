@@ -21,9 +21,12 @@ issue_title=$(gh issue view $issue_number --json title | jq -r '.title')
 
 # Kick out issues that do not exsit.
 # GraphQL: Could not resolve to an issue or pull request with the number of 999. (repository.issue)
-if [[ "${issue_title:0:8}" = "GraphQL:" ]]; then
-    echo "Could not verify that is an actual issue."
-    exit
+if [[ -z "$issue_title" ]]; then
+  echo "The issue title is empty or could not be loaded."
+  exit
+elif [[ "$issue_title" == GraphQL:* ]]; then
+  echo "The issue title is empty or could not be loaded."
+  exit
 fi
 
 # TODO: We might warn if referencing an issue that has already been started or closed by someone else.
@@ -42,8 +45,9 @@ $(git checkout -b $branch_name)
 
 # Make a notes file so we can have a commit in place (which is sadly a requirement for a PR).
 note_filename="$branch_name-notes.md"
-echo $(touch ../$note_filename)
-echo $(git add ../$note_filename)
+script_path=$(dirname $(readlink -f $0))
+echo $(touch $script_path/../$note_filename)
+echo $(git add $script_path/../$note_filename)
 echo $(git commit -m "adding notes file")
 
 echo "Pushing branch"
