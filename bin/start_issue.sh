@@ -42,8 +42,9 @@ $(git checkout -b $branch_name)
 
 # Make a notes file so we can have a commit in place (which is sadly a requirement for a PR).
 note_filename="$branch_name-notes.md"
-echo $(touch ../$note_filename)
-echo $(git add ../$note_filename)
+script_path=$(dirname $(readlink -f $0))
+echo $(touch $script_path/../$note_filename)
+echo $(git add $script_path/../$note_filename)
 echo $(git commit -m "adding notes file")
 
 echo "Pushing branch"
