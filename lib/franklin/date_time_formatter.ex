@@ -1,7 +1,7 @@
 defmodule Franklin.DateTimeFormatter do
   @moduledoc """
-  Functions that help format DateTime values into common formats that are not
-  supplied by the standard library.
+  Provides functions that help format `DateTime` values into common formats that
+  are not supplied by the standard library.
   """
 
   @doc """
