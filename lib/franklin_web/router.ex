@@ -33,6 +33,8 @@ defmodule FranklinWeb.Router do
 
     live "/", HomeLive, :index
 
+    get "/index.xml", SyndicationController, :rss
+
     live_storybook("/storybook", backend_module: FranklinWeb.Storybook)
   end
 

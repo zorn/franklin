@@ -32,10 +32,18 @@ defmodule Franklin.ArrangeArticleHelpers do
   defp required_new_article_attributes(custom_values) do
     now = DateTime.utc_now() |> DateTime.truncate(:second)
 
+    sample_markdown = """
+    # This is a sample article headline
+
+    This is the body of the article with a [link](http://mikezornek).
+    """
+
+    slug = Faker.Internet.slug(Faker.Lorem.words(2..3), ["-"]) <> "/"
+
     %{
-      title: Map.get(custom_values, :title, "Default Title"),
-      body: Map.get(custom_values, :body, "Default Body"),
-      slug: Map.get(custom_values, :slug, "#{Ecto.UUID.generate()}/"),
+      title: Map.get(custom_values, :title, Faker.Lorem.sentence(2..5)),
+      body: Map.get(custom_values, :body, sample_markdown),
+      slug: Map.get(custom_values, :slug, slug),
       published_at: Map.get(custom_values, :published_at, now)
     }
   end
