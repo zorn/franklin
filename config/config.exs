@@ -59,6 +59,8 @@ config :commanded_ecto_projections, repo: Franklin.Repo
 
 config :franklin, event_stores: [Franklin.EventStore]
 
+config :franklin, FranklinWeb.RssFeed, url: "https://mikezornek.com"
+
 config :tailwind,
   version: "3.1.8",
   default: [
