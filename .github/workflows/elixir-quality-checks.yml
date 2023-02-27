@@ -12,7 +12,6 @@ jobs:
   check-unused-deps:
     name: Unused Dependencies
     runs-on: ubuntu-latest
-    needs: setup-elixir
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,7 +26,6 @@ jobs:
   check-format:
     name: Code Formatting
     runs-on: ubuntu-latest
-    needs: setup-elixir
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -42,7 +40,6 @@ jobs:
   check-credo:
     name: Credo Rules
     runs-on: ubuntu-latest
-    needs: setup-elixir
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
