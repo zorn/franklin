@@ -9,13 +9,10 @@ on:
       - "*"
 
 jobs:
-  setup-elixir:
-    name: Setup Elixir
+  check-unused-deps:
+    name: Unused Dependencies
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        otp: ["25.2.1"]
-        elixir: ["1.14.3"]
+    needs: setup-elixir
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -25,24 +22,34 @@ jobs:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
           build-app: false
-
-  check-unused-deps:
-    name: Check for Unused Dependencies
-    runs-on: ubuntu-latest
-    needs: setup-elixir
-    steps:
       - run: mix deps.unlock --check-unused
 
   check-format:
-    name: Check Code Formatting
+    name: Code Formatting
     runs-on: ubuntu-latest
     needs: setup-elixir
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Elixir Project
+        uses: ./.github/actions/elixir-setup
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+          build-app: false
       - run: mix format --check-formatted
 
   check-credo:
-    name: Check Credo Rules
+    name: Credo Rules
     runs-on: ubuntu-latest
     needs: setup-elixir
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Elixir Project
+        uses: ./.github/actions/elixir-setup
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+          build-app: false
       - run: mix credo --strict
