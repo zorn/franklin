@@ -44,7 +44,7 @@ jobs:
           build-flags: --all-warnings --warnings-as-errors
 
       - name: Run Migrations
-        run: mix ecto.setup
+        run: mix ecto.create; mix ecto.migrate
         if: always()
 
       - name: Run Tests
