@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build and Test
+    name: Compile with No Warnings, Migrate, and Run Tests
     runs-on: ubuntu-latest
     env:
       MIX_ENV: test
