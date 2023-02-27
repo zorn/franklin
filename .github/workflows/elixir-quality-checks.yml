@@ -9,44 +9,44 @@ on:
       - "*"
 
 jobs:
-  check-unused-deps:
-    name: Unused Dependencies
+  quality_checks:
+    name: Formatting, Credo, and Unused Deps
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Setup Elixir Project
-        uses: ./.github/actions/elixir-setup
-        with:
-          elixir-version: ${{ matrix.elixir }}
-          otp-version: ${{ matrix.otp }}
-          build-app: false
-      - run: mix deps.unlock --check-unused
+    strategy:
+      matrix:
+        otp: ["25.2.1"]
+        elixir: ["1.14.3"]
 
-  check-format:
-    name: Code Formatting
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Setup Elixir Project
-        uses: ./.github/actions/elixir-setup
-        with:
-          elixir-version: ${{ matrix.elixir }}
-          otp-version: ${{ matrix.otp }}
-          build-app: false
-      - run: mix format --check-formatted
 
-  check-credo:
-    name: Credo Rules
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
       - name: Setup Elixir Project
         uses: ./.github/actions/elixir-setup
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
           build-app: false
-      - run: mix credo --strict
+
+      - name: Check for unused deps
+        run: mix deps.unlock --check-unused
+
+      - name: Check code formatting
+        run: mix format --check-formatted
+        if: always()
+
+      - name: Run Credo
+        run: mix credo --strict
+        if: always()
+
+      # This was part of the template we copied but I've turned it off for this
+      # repo since we use Commanded and `Franklin.CommandedApplication` will
+      # cause this to fail, but that is kind of expected.
+      # - name: Check for compile-time dependencies
+      #   run: mix xref graph --label compile-connected --fail-above 0
+      #   if: always()
+
+      # TODO: https://github.com/zorn/franklin/issues/161
+      # - name: Check for security vulnerabilities in Phoenix project
+      #   run: mix sobelow
+      #   if: always()
