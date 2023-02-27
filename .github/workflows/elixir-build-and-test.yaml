@@ -1,6 +1,5 @@
 name: Elixir Build and Test
 
-# Run this workflow for all pushes to `main` as well as all pull requests.
 on:
   push:
     branches:
@@ -11,6 +10,15 @@ on:
 
 jobs:
   build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+    strategy:
+      matrix:
+        otp: ["25.2.1"]
+        elixir: ["1.14.3"]
+
     services:
       db:
         image: postgres:14
@@ -24,93 +32,21 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    runs-on: ubuntu-latest
-    name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
-    strategy:
-      matrix:
-        otp: ["25.2.1"]
-        elixir: ["1.14.3"]
     steps:
-      # Step: Setup Elixir + Erlang image as the base.
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          otp-version: ${{matrix.otp}}
-          elixir-version: ${{matrix.elixir}}
-
-      # Step: Check out the code.
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step: Define how to cache deps. Restores existing cache if present.
-      - name: Cache deps
-        id: cache-deps
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-elixir-deps
+      - name: Setup Elixir Project
+        uses: ./.github/actions/elixir-setup
         with:
-          path: deps
-          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-mix-${{ env.cache-name }}-
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+          build-flags: --all-warnings --warnings-as-errors
 
-      # Step: Define how to cache the `_build` directory. After the first run,
-      # this speeds up tests runs a lot. This includes not re-compiling our
-      # project's downloaded deps every run.
-      - name: Cache compiled build
-        id: cache-build
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-compiled-build
-        with:
-          path: _build
-          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-mix-${{ env.cache-name }}-
-            ${{ runner.os }}-mix-
+      - name: Run Migrations
+        run: mix ecto.migrate
+        if: always()
 
-      # Step: Download project dependencies. If unchanged, uses
-      # the cached version.
-      - name: Install dependencies
-        run: mix deps.get
-
-      # Step: Compile the project treating any warnings as errors.
-      # Customize this step if a different behavior is desired.
-      - name: Compiles without warnings
-        run: mix compile --warnings-as-errors
-
-      # Step: Check that the checked in code has already been formatted.
-      # This step fails if something was found unformatted.
-      # Customize this step as desired.
-      - name: Check Formatting
-        run: mix format --check-formatted
-
-      # Step: Verify static analysis checks pass
-      - name: Credo static analysis
-        run: mix credo --strict
-
-      # Step: Cache key based on Elixir & Erlang version
-      # Don't cache PLTs based on mix.lock hash, as Dialyzer can incrementally update even old ones
-      - name: Restore PLT cache
-        uses: actions/cache@v3
-        id: plt_cache
-        with:
-          key: |
-            ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-plt
-          path: |
-            priv/plts
-
-      # Step: Create PLTs if no cache was found
-      - name: Create PLTs
-        if: steps.plt_cache.outputs.cache-hit != 'true'
-        run: mix dialyzer --plt
-
-      # Step: Run Dialyzer static analysis
-      - name: Dialyzer static analysis
-        run: mix dialyzer --format github
-
-      # Step: Execute the tests.
-      - name: Run tests
+      - name: Run Tests
         run: mix test
+        if: always()
