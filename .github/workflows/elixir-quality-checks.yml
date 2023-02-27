@@ -1,0 +1,47 @@
+name: Elixir Quality Checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  quality_checks:
+    name: Formatting, Credo, and Unused Deps
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp: ["25.2.1"]
+        elixir: ["1.14.3"]
+
+    steps:
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check for unused deps
+        run: mix deps.unlock --check-unused
+      - name: Check code formatting
+        run: mix format --check-formatted
+        # Check formatting even if there were unused deps so that
+        # we give devs as much feedback as possible & save some time.
+        if: always()
+      - name: Run Credo
+        run: mix credo --strict
+        # Run Credo even if formatting or the unused deps check failed
+        if: always()
+      - name: Check for compile-time dependencies
+        run: mix xref graph --label compile-connected --fail-above 0
+        if: always()
+      # TODO: https://github.com/zorn/franklin/issues/161
+      # - name: Check for security vulnerabilities in Phoenix project
+      #   run: mix sobelow
+      #   if: always()
