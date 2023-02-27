@@ -119,7 +119,7 @@ runs:
     # performance penalty when the dependencies are already fully compiled:
     # https://elixirforum.com/t/github-action-cache-elixir-always-recompiles-dependencies-elixir-1-13-3/45994/12
     #
-    # Accoring to Jose Valim at the above link `mix loadpaths` will check and
+    # According to Jose Valim at the above link `mix loadpaths` will check and
     # compile missing dependencies
     - name: Compile Dependencies
       run: mix loadpaths
