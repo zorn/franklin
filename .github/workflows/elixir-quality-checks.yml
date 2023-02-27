@@ -39,9 +39,14 @@ jobs:
         run: mix credo --strict
         # Run Credo even if formatting or the unused deps check failed
         if: always()
-      - name: Check for compile-time dependencies
-        run: mix xref graph --label compile-connected --fail-above 0
-        if: always()
+
+      # This was part of the template we copied but I've turned it off for this
+      # repo since we use Commanded and `Franklin.CommandedApplication` will
+      # cause this to fail, but that is kind of expected.
+      # - name: Check for compile-time dependencies
+      #   run: mix xref graph --label compile-connected --fail-above 0
+      #   if: always()
+
       # TODO: https://github.com/zorn/franklin/issues/161
       # - name: Check for security vulnerabilities in Phoenix project
       #   run: mix sobelow
