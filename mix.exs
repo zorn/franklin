@@ -44,6 +44,7 @@ defmodule Franklin.MixProject do
       # Core Phoenix Deps
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
+      {:finch, "~> 0.14"},
       {:floki, ">= 0.30.0", only: :test},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},

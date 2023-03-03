@@ -8,16 +8,24 @@ defmodule Franklin.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      Franklin.Repo,
       # Start the Telemetry supervisor
       FranklinWeb.Telemetry,
+
+      # Start the Ecto repository
+      Franklin.Repo,
+
       # Start the PubSub system
       {Phoenix.PubSub, name: Franklin.PubSub},
+
+      # Start Finch
+      {Finch, name: Franklin.Finch},
+
       # Start the Endpoint (http/https)
       FranklinWeb.Endpoint,
+
       # Start the Commanded Application
       Franklin.CommandedApplication,
+
       # Start the supervisors for Projections
       Franklin.Posts.Supervisor,
       Franklin.Articles.Supervisor
