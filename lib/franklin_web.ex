@@ -19,6 +19,23 @@ defmodule FranklinWeb do
 
   def static_paths, do: ~w(articles assets fonts images favicon.ico robots.txt)
 
+  def router do
+    quote do
+      use Phoenix.Router, helpers: false
+
+      import Plug.Conn
+      import Phoenix.Controller
+      import Phoenix.LiveView.Router
+    end
+  end
+
+  def channel do
+    quote do
+      use Phoenix.Channel
+      import FranklinWeb.Gettext
+    end
+  end
+
   def controller do
     quote do
       use Phoenix.Controller, namespace: FranklinWeb
@@ -74,23 +91,6 @@ defmodule FranklinWeb do
       use Phoenix.Component
 
       unquote(view_helpers())
-    end
-  end
-
-  def router do
-    quote do
-      use Phoenix.Router, helpers: false
-
-      import Plug.Conn
-      import Phoenix.Controller
-      import Phoenix.LiveView.Router
-    end
-  end
-
-  def channel do
-    quote do
-      use Phoenix.Channel
-      import FranklinWeb.Gettext
     end
   end
 
