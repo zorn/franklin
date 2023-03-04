@@ -191,9 +191,9 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     >
       <!-- Title -->
       <div class="my-4">
-        <%= label(f, :title, class: "block text-sm font-medium text-gray-700") %>
+        <%= Phoenix.HTML.Form.label(f, :title, class: "block text-sm font-medium text-gray-700") %>
         <div class="mt-1">
-          <%= text_input(f, :title,
+          <%= Phoenix.HTML.Form.text_input(f, :title,
             class:
               "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           ) %>
@@ -202,24 +202,24 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
       </div>
       <!-- Slug -->
       <div class="my-4">
-        <%= label(f, :slug, class: "block text-sm font-medium text-gray-700") %>
+        <%= Phoenix.HTML.Form.label(f, :slug, class: "block text-sm font-medium text-gray-700") %>
         <div class="mt-1">
-          <%= text_input(f, :slug,
+          <%= Phoenix.HTML.Form.text_input(f, :slug,
             class:
               "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
-            readonly: input_value(f, :slug_autogenerate)
+            readonly: Phoenix.HTML.Form.input_value(f, :slug_autogenerate)
           ) %>
         </div>
         <%= error_tag(f, :slug, "mt-2 text-sm text-red-600") %>
 
         <div class="relative flex items-start ml-2">
           <div class="flex h-5 items-center">
-            <%= checkbox(f, :slug_autogenerate,
+            <%= Phoenix.HTML.Form.checkbox(f, :slug_autogenerate,
               class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             ) %>
           </div>
           <div class="ml-2 text-sm">
-            <%= label(f, :slug_autogenerate, "Autogenerate slug from title.",
+            <%= Phoenix.HTML.Form.label(f, :slug_autogenerate, "Autogenerate slug from title.",
               class: "font-medium text-gray-700"
             ) %>
           </div>
@@ -227,9 +227,9 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
       </div>
       <!-- Published At -->
       <div class="my-4">
-        <%= label(f, :published_at, class: "block text-sm font-medium text-gray-700") %>
+        <%= Phoenix.HTML.Form.label(f, :published_at, class: "block text-sm font-medium text-gray-700") %>
         <div class="mt-1">
-          <%= text_input(f, :published_at,
+          <%= Phoenix.HTML.Form.text_input(f, :published_at,
             class:
               "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           ) %>
@@ -238,9 +238,9 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
       </div>
       <!-- Body -->
       <div class="my-4">
-        <%= label(f, :body, class: "block text-sm font-medium text-gray-700") %>
+        <%= Phoenix.HTML.Form.label(f, :body, class: "block text-sm font-medium text-gray-700") %>
         <div class="mt-1">
-          <%= textarea(f, :body,
+          <%= Phoenix.HTML.Form.textarea(f, :body,
             rows: 12,
             class:
               "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -249,7 +249,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
         <%= error_tag(f, :body, "mt-2 text-sm text-red-600") %>
       </div>
 
-      <%= submit("Save",
+      <%= Phoenix.HTML.Form.submit("Save",
         class:
           "inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       ) %>
