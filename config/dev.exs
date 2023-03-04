@@ -62,14 +62,12 @@ config :franklin, FranklinWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-# TODO: Remove `views` when I remove Views. templates folder too?
 config :franklin, FranklinWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/franklin_web/(live|components|views)/.*(ex|heex)$",
-      ~r"lib/franklin_web/templates/.*(eex)$",
+      ~r"lib/franklin_web/(controllers|live|components)/.*(ex|heex)$",
       ~r"storybook/.*(exs)$"
     ]
   ]
