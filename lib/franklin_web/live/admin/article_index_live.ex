@@ -9,10 +9,13 @@ defmodule FranklinWeb.Admin.ArticleIndexLive do
 
   def render(assigns) do
     ~H"""
-    <p><%= link("New Article", to: "/") %></p>
+    <p>
+      <.link href={~p"/"}>New Article</.link>
+    </p>
 
     <%= for article <- @articles do %>
-      <p><%= link(article.title, to: "/") %> published: <%= IO.inspect(article.published_at) %></p>
+      <.link href={~p"/"}><%= article.title %></.link>
+      published: <%= IO.inspect(article.published_at) %>
     <% end %>
     """
   end

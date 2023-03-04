@@ -23,6 +23,7 @@ defmodule FranklinWeb do
     quote do
       use Phoenix.Router, helpers: false
 
+      # Import common connection and controller functions to use in pipelines
       import Plug.Conn
       import Phoenix.Controller
       import Phoenix.LiveView.Router
@@ -32,40 +33,29 @@ defmodule FranklinWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import FranklinWeb.Gettext
     end
   end
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: FranklinWeb
+      use Phoenix.Controller,
+        formats: [:html, :json],
+        layouts: [html: FranklinWeb.Layouts]
 
       import Plug.Conn
+
       import FranklinWeb.Gettext
-      alias FranklinWeb.Router.Helpers, as: Routes
-    end
-  end
 
-  def view do
-    quote do
-      use Phoenix.View,
-        root: "lib/franklin_web/templates",
-        namespace: FranklinWeb
-
-      # Import convenience functions from controllers
-      import Phoenix.Controller, only: [view_module: 1, view_template: 1]
-
-      # Include shared imports and aliases for views
-      unquote(view_helpers())
+      unquote(verified_routes())
     end
   end
 
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {FranklinWeb.LayoutView, :live}
+        layout: {FranklinWeb.Layouts, :live}
 
-      unquote(view_helpers())
+      unquote(html_helpers())
     end
   end
 
@@ -74,7 +64,7 @@ defmodule FranklinWeb do
       use Phoenix.LiveView,
         layout: {FranklinWeb.LayoutView, :live_admin}
 
-      unquote(view_helpers())
+      unquote(html_helpers())
     end
   end
 
@@ -82,33 +72,35 @@ defmodule FranklinWeb do
     quote do
       use Phoenix.LiveComponent
 
-      unquote(view_helpers())
+      unquote(html_helpers())
     end
   end
 
-  def component do
+  def html do
     quote do
       use Phoenix.Component
 
-      unquote(view_helpers())
+      # Import convenience functions from controllers
+      import Phoenix.Controller,
+        only: [get_csrf_token: 0, view_module: 1, view_template: 1]
+
+      # Include general helpers for rendering HTML
+      unquote(html_helpers())
     end
   end
 
-  defp view_helpers do
+  defp html_helpers do
     quote do
-      # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
-
-      # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
-      import Phoenix.Component
-
-      # Import basic rendering functionality (render, render_layout, etc)
-      import Phoenix.View
-
-      import FranklinWeb.ErrorHelpers
+      # HTML escaping functionality
+      import Phoenix.HTML
+      # Core UI components and translation
+      import FranklinWeb.CoreComponents
       import FranklinWeb.Gettext
-      alias FranklinWeb.Router.Helpers, as: Routes
 
+      # Shortcut for generating JS commands
+      alias Phoenix.LiveView.JS
+
+      # Components
       import FranklinWeb.Components.Avatar
       import FranklinWeb.Components.ContentPreview
       import FranklinWeb.Components.NamePlate
@@ -119,9 +111,32 @@ defmodule FranklinWeb do
       import FranklinWeb.Components.AdminSidebarButton
       import FranklinWeb.Components.AdminSimpleTable
       import FranklinWeb.Components.Button
-
       import FranklinWeb.Components.AdminFormError
       import FranklinWeb.Components.AdminFormInput
+
+      @doc """
+      Generates tag for inlined form input errors.
+      """
+      def error_tag(form, field, class \\ "invalid-feedback") do
+        Enum.map(Keyword.get_values(form.errors, field), fn error ->
+          Phoenix.HTML.Tag.content_tag(:span, translate_error(error),
+            class: class,
+            phx_feedback_for: Phoenix.HTML.Form.input_name(form, field)
+          )
+        end)
+      end
+
+      # Routes generation with the ~p sigil
+      unquote(verified_routes())
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: FranklinWeb.Endpoint,
+        router: FranklinWeb.Router,
+        statics: FranklinWeb.static_paths()
     end
   end
 

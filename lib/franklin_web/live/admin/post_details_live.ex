@@ -13,7 +13,9 @@ defmodule FranklinWeb.Admin.PostDetailsLive do
     ~H"""
     <h1>Post Details</h1>
 
-    <p><%= link("Edit Post", to: Routes.post_editor_path(@socket, :edit, @post.id)) %></p>
+    <p>
+      <.link href={~p"/admin/posts/edit/#{@post}"}>Edit Post</.link>
+    </p>
 
     <p>Title: <%= @post.title %></p>
 

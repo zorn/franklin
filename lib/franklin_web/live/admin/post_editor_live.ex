@@ -113,7 +113,7 @@ defmodule FranklinWeb.Admin.PostEditorLive do
 
   def handle_info({:post_created, %{id: id}}, socket) do
     socket
-    |> redirect(to: Routes.post_details_path(socket, :details, id))
+    |> redirect(to: path(socket, FranklinWeb.Router, ~p"/admin/posts/#{id}"))
     |> noreply()
   end
 
@@ -125,7 +125,7 @@ defmodule FranklinWeb.Admin.PostEditorLive do
     # something else.
     # https://github.com/zorn/franklin/issues/21
     socket
-    |> redirect(to: Routes.post_details_path(socket, :details, id))
+    |> redirect(to: url(~p"/admin/posts/#{id}"))
     |> noreply()
   end
 
@@ -133,15 +133,15 @@ defmodule FranklinWeb.Admin.PostEditorLive do
   def render(assigns) do
     ~H"""
     <.form :let={f} for={@form_changeset} id="new-post" phx-submit="save_form">
-      <%= label(f, :title) %>
-      <%= text_input(f, :title) %>
+      <%= Phoenix.HTML.Form.label(f, :title) %>
+      <%= Phoenix.HTML.Form.text_input(f, :title) %>
       <%= error_tag(f, :title) %>
 
-      <%= label(f, :published_at) %>
-      <%= datetime_local_input(f, :published_at) %>
+      <%= Phoenix.HTML.Form.label(f, :published_at) %>
+      <%= Phoenix.HTML.Form.datetime_local_input(f, :published_at) %>
       <%= error_tag(f, :published_at) %>
 
-      <%= submit("Save") %>
+      <%= Phoenix.HTML.Form.submit("Save") %>
     </.form>
     """
   end

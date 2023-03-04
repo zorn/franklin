@@ -68,7 +68,7 @@ if config_env() == :prod do
   # To get SSL working, you will need to add the `https` key
   # to your endpoint configuration:
   #
-  #     config :sample_app, SampleAppWeb.Endpoint,
+  #     config :franklin, FranklinWeb.Endpoint,
   #       https: [
   #         ...,
   #         port: 443,
@@ -90,7 +90,7 @@ if config_env() == :prod do
   # We also recommend setting `force_ssl` in your endpoint, ensuring
   # no data is ever sent via http, always redirecting to https:
   #
-  #     config :sample_app, SampleAppWeb.Endpoint,
+  #     config :franklin, FranklinWeb.Endpoint,
   #       force_ssl: [hsts: true]
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.

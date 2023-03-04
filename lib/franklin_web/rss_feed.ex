@@ -4,11 +4,12 @@ defmodule FranklinWeb.RssFeed do
   keep up to date with the latest articles.
   """
 
+  use FranklinWeb, :html
+
   import XmlBuilder
 
   alias Franklin.Articles.Article
   alias Franklin.DateTimeFormatter
-  alias FranklinWeb.Router.Helpers, as: Routes
 
   @config Application.compile_env(:franklin, __MODULE__)
   @url Keyword.fetch!(@config, :url)
@@ -71,12 +72,8 @@ defmodule FranklinWeb.RssFeed do
   end
 
   defp article_link(%Article{slug: slug}) do
-    path =
-      Routes.article_viewer_path(
-        FranklinWeb.Endpoint,
-        :show,
-        String.split(slug, "/")
-      )
+    slug_as_list = String.split(slug, "/")
+    path = url(~p"/articles/#{slug_as_list}")
 
     "#{@url}#{path}"
   end

@@ -32,7 +32,7 @@ defmodule FranklinWeb.Router do
     end
 
     live "/", HomeLive, :index
-
+    get "/old-home", PageController, :home
     get "/index.xml", SyndicationController, :rss
 
     live_storybook("/storybook", backend_module: FranklinWeb.Storybook)
