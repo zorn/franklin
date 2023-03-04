@@ -1,5 +1,5 @@
 defmodule FranklinWeb.Storybook do
-  use PhxLiveStorybook,
+  use PhoenixStorybook,
     otp_app: :franklin_web,
     content_path: Path.expand("../../storybook", __DIR__),
     # assets path are remote path, not local file-system paths

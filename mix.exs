@@ -76,7 +76,7 @@ defmodule Franklin.MixProject do
       {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
 
       # For component management.
-      {:phx_live_storybook, "~> 0.4.0"},
+      {:phoenix_storybook, "~> 0.5.0"},
 
       # To help generate some fake test data.
       {:faker, "~> 0.17", only: :test},
