@@ -19,6 +19,8 @@ defmodule FranklinWeb.ConnCase do
 
   using do
     quote do
+      use FranklinWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Franklin.WaitForPassing
       import FranklinWeb.ConnCase

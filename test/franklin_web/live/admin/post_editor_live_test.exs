@@ -9,7 +9,7 @@ defmodule FranklinWeb.Admin.PostEditorLiveTest do
   end
 
   test "user can submit new post", %{conn: conn} do
-    {:ok, view, _html} = live(conn, Routes.post_editor_path(conn, :new))
+    {:ok, view, _html} = live(conn, ~p"/admin/posts/editor/new")
 
     view
     |> form("#new-post", form: %{title: "A valid new post title."})
@@ -20,7 +20,7 @@ defmodule FranklinWeb.Admin.PostEditorLiveTest do
   end
 
   test "user must have a title to submit a new post", %{conn: conn} do
-    {:ok, view, _html} = live(conn, Routes.post_editor_path(conn, :new))
+    {:ok, view, _html} = live(conn, ~p"/admin/posts/editor/new")
 
     view
     |> form("#new-post", form: %{title: ""})
@@ -30,7 +30,7 @@ defmodule FranklinWeb.Admin.PostEditorLiveTest do
   end
 
   test "user must have a published_at date time to submit a new post", %{conn: conn} do
-    {:ok, view, _html} = live(conn, Routes.post_editor_path(conn, :new))
+    {:ok, view, _html} = live(conn, ~p"/admin/posts/editor/new")
 
     view
     |> form("#new-post", form: %{published_at: ""})

@@ -42,15 +42,9 @@ defmodule FranklinWeb.HomeLive do
         <ul class="ml-8">
           <%= for article <- @recent_articles do %>
             <li class="mb-2 list-disc">
-              <%= live_redirect(article.title,
-                to:
-                  Routes.article_viewer_path(
-                    FranklinWeb.Endpoint,
-                    :show,
-                    String.split(article.slug, "/")
-                  ),
-                class: "underline hover:text-blue-700"
-              ) %>
+              <.link navigate={~p"/articles/#{String.split(article.slug, "/")}"}>
+                <%= article.title %>
+              </.link>
             </li>
           <% end %>
         </ul>

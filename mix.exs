@@ -7,7 +7,6 @@ defmodule Franklin.MixProject do
       version: "0.1.0",
       elixir: "~> 1.14.0",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
@@ -44,16 +43,17 @@ defmodule Franklin.MixProject do
     [
       # Core Phoenix Deps
       {:ecto_sql, "~> 3.6"},
-      {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
+      {:finch, "~> 0.14"},
       {:floki, ">= 0.30.0", only: :test},
-      {:gettext, "~> 0.18"},
+      {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:phoenix_ecto, "~> 4.4"},
-      {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_dashboard, "~> 0.7"},
+      {:phoenix_html, "~> 3.3"},
+      {:phoenix_live_dashboard, "~> 0.7.2"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.18.0"},
-      {:phoenix, "~> 1.6.10"},
+      {:phoenix_live_view, "~> 0.18.16"},
+      {:phoenix, "~> 1.7.1"},
       {:plug_cowboy, "~> 2.5"},
       {:postgrex, ">= 0.0.0"},
       {:swoosh, "~> 1.3"},
@@ -73,7 +73,7 @@ defmodule Franklin.MixProject do
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
 
       # For frontend styling.
-      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
 
       # For component management.
       {:phx_live_storybook, "~> 0.4.0"},
@@ -131,13 +131,15 @@ defmodule Franklin.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "event_store.setup", "ecto.setup"],
+      setup: ["deps.get", "event_store.setup", "ecto.setup", "assets.setup", "assets.build"],
       "event_store.setup": ["event_store.create", "event_store.init"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       reset_databases: ["event_store.reset", "ecto.reset"],
       "event_store.reset": ["event_store.drop", "event_store.setup"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
       lint: ["credo --strict", "dialyzer"]
     ]

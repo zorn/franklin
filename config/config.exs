@@ -13,7 +13,10 @@ config :franklin,
 # Configures the endpoint
 config :franklin, FranklinWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: FranklinWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [
+    formats: [html: FranklinWeb.ErrorHTML, json: FranklinWeb.ErrorJSON],
+    layout: false
+  ],
   pubsub_server: Franklin.PubSub,
   live_view: [signing_salt: "ACCBZ9OX"]
 
@@ -26,12 +29,9 @@ config :franklin, FranklinWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :franklin, Franklin.Mailer, adapter: Swoosh.Adapters.Local
 
-# Swoosh API client is needed for adapters other than SMTP.
-config :swoosh, :api_client, false
-
 # Configure esbuild (the version is required)
 config :esbuild,
-  version: "0.14.29",
+  version: "0.14.41",
   default: [
     args:
       ~w(js/app.js js/storybook.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
@@ -62,7 +62,7 @@ config :franklin, event_stores: [Franklin.EventStore]
 config :franklin, FranklinWeb.RssFeed, url: "https://mikezornek.com"
 
 config :tailwind,
-  version: "3.1.8",
+  version: "3.2.4",
   default: [
     args: ~w(
     --config=tailwind.config.js

@@ -40,9 +40,7 @@ defmodule FranklinWeb.Admin.Articles.ViewerLive do
     <div class="text-xl font-bold my-4">Article Viewer</div>
 
     <div>
-      <%= link("Edit",
-        to: Routes.admin_article_editor_path(FranklinWeb.Endpoint, :edit, @article.id)
-      ) %>
+      <.link href={~p"/admin/articles/editor/#{@article}"}>Edit</.link>
     </div>
 
     <h1 id="article-headline" class="text-5xl font-bold my-8"><%= @article.title %></h1>
