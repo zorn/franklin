@@ -1,7 +1,7 @@
 defmodule Storybook.Components.Button do
-  use PhxLiveStorybook.Story, :component
+  use PhoenixStorybook.Story, :component
 
-  alias PhxLiveStorybook.Stories.Variation
+  alias PhoenixStorybook.Stories.Variation
 
   # iframe needed to properly pickup font family.
   def container, do: :iframe

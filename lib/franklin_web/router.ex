@@ -1,6 +1,6 @@
 defmodule FranklinWeb.Router do
   use FranklinWeb, :router
-  import PhxLiveStorybook.Router
+  import PhoenixStorybook.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
