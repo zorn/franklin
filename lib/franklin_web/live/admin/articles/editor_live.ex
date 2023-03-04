@@ -174,7 +174,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     # messages or something else. https://github.com/zorn/franklin/issues/21
 
     socket
-    |> redirect(to: Routes.admin_article_viewer_path(FranklinWeb.Endpoint, :show, id))
+    |> redirect(to: path(socket, FranklinWeb.Router, ~p"/admin/articles/#{id}"))
     |> noreply()
   end
 

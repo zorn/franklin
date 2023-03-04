@@ -73,7 +73,7 @@ defmodule FranklinWeb.RssFeed do
 
   defp article_link(%Article{slug: slug}) do
     slug_as_list = String.split(slug, "/")
-    path = url(~p"/articles/#{slug_as_list}")
+    path = path(FranklinWeb.Endpoint, FranklinWeb.Router, ~p"/articles/#{slug_as_list}")
 
     "#{@url}#{path}"
   end

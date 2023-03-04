@@ -21,15 +21,10 @@ defmodule FranklinWeb.Articles.IndexLive do
       <ul class="ml-8">
         <%= for article <- @all_articles do %>
           <li class="mb-2 list-disc">
-            <%= live_redirect(article.title,
-              to:
-                Routes.article_viewer_path(
-                  FranklinWeb.Endpoint,
-                  :show,
-                  String.split(article.slug, "/")
-                ),
-              class: "underline hover:text-blue-700"
-            ) %> &bull;
+            <.link navigate={~p"/articles/#{String.split(article.slug, "/")}"}>
+              <%= article.title %>
+            </.link>
+            &bull;
             <span class="text-gray-400">
               <%= Calendar.strftime(article.published_at, "%b %d %Y") %>
             </span>

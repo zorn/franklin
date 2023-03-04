@@ -62,7 +62,7 @@ defmodule FranklinWeb do
   def admin_live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {FranklinWeb.LayoutView, :live_admin}
+        layout: {FranklinWeb.Layouts, :live_admin}
 
       unquote(html_helpers())
     end

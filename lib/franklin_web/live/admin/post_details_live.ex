@@ -14,7 +14,7 @@ defmodule FranklinWeb.Admin.PostDetailsLive do
     <h1>Post Details</h1>
 
     <p>
-      <.link href={~p"/admin/posts/edit/#{@post}"}>Edit Post</.link>
+      <.link href={~p"/admin/posts/editor/#{@post}"}>Edit Post</.link>
     </p>
 
     <p>Title: <%= @post.title %></p>
