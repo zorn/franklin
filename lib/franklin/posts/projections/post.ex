@@ -14,7 +14,7 @@ defmodule Franklin.Posts.Projections.Post do
     field :title, :string
     field :published_at, :utc_datetime
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   def update_changeset(post, attrs \\ %{}) do

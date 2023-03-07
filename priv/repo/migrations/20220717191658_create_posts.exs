@@ -6,7 +6,7 @@ defmodule Franklin.Repo.Migrations.CreatePosts do
       add :id, :uuid, primary_key: true
       add :title, :string
       add :published_at, :utc_datetime
-      timestamps()
+      timestamps(type: :utc_datetime)
     end
   end
 end

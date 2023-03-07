@@ -8,7 +8,7 @@ defmodule Franklin.Repo.Migrations.CreateArticles do
       add :slug, :string, null: false
       add :body, :text, null: false
       add :published_at, :utc_datetime, null: true
-      timestamps()
+      timestamps(type: :utc_datetime)
     end
 
     create unique_index(:articles, [:slug])
