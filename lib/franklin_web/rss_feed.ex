@@ -79,8 +79,7 @@ defmodule FranklinWeb.RssFeed do
   end
 
   defp last_build_date(articles) when is_list(articles) and length(articles) > 0 do
-    sorted_articles_newest_first =
-      Enum.sort_by(articles, & &1.published_at, {:desc, NaiveDateTime})
+    sorted_articles_newest_first = Enum.sort_by(articles, & &1.published_at, {:desc, DateTime})
 
     %Article{published_at: last_build_date} = List.first(sorted_articles_newest_first)
 

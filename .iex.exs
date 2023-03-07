@@ -1,6 +1,4 @@
-alias Franklin.Posts.Commands.CreatePost
-
-alias FranklinWeb.Router.Helpers, as: Routes
+alias Franklin.Articles
 
 # Never pry for `Kernel.dbg()`.
 Application.put_env(:elixir, :dbg_callback, {Macro, :dbg, []})

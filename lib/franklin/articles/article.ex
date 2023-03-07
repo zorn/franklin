@@ -26,7 +26,7 @@ defmodule Franklin.Articles.Article do
     field :slug, :string
     field :title, :string
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   def insert_changeset(article, attrs \\ %{}) do

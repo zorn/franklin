@@ -10,6 +10,8 @@ import Config
 config :franklin,
   ecto_repos: [Franklin.Repo]
 
+config :franklin, Franklin.Repo, migration_timestamps: [type: :utc_datetime]
+
 # Configures the endpoint
 config :franklin, FranklinWeb.Endpoint,
   url: [host: "localhost"],

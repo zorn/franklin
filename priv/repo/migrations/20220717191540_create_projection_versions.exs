@@ -5,8 +5,7 @@ defmodule Franklin.Repo.Migrations.CreateProjectionVersions do
     create table(:projection_versions, primary_key: false) do
       add(:projection_name, :text, primary_key: true)
       add(:last_seen_event_number, :bigint)
-      # why this type?
-      timestamps(type: :naive_datetime_usec)
+      timestamps(type: :utc_datetime_usec)
     end
   end
 end
