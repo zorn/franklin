@@ -10,7 +10,7 @@ defmodule FranklinWeb.PublicUserStories.CanViewArticleArchiveListTest do
     articles =
       -1..-10
       |> Enum.map(fn n ->
-        published_at = DateTime.add(DateTime.utc_now(), n, :day) |> DateTime.truncate(:second)
+        published_at = DateTime.add(DateTime.utc_now(), n, :day)
         create_article!(~M{published_at})
       end)
 

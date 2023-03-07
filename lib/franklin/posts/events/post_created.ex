@@ -16,7 +16,6 @@ defimpl Commanded.Serialization.JsonDecoder, for: PostCreated do
   """
   def decode(%PostCreated{published_at: published_at} = event) do
     {:ok, datetime, _} = DateTime.from_iso8601(published_at)
-    datetime = DateTime.truncate(datetime, :second)
     %PostCreated{event | published_at: datetime}
   end
 end

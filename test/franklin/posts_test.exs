@@ -36,7 +36,7 @@ defmodule Franklin.PostsTest do
       assert %Post{
                id: ^uuid,
                title: "hello world",
-               published_at: ~U[2022-08-20 13:30:00Z]
+               published_at: ~U[2022-08-20 13:30:00.000000Z]
              } = Posts.get_post(uuid)
     end
 
@@ -52,7 +52,7 @@ defmodule Franklin.PostsTest do
     test "fails when title is too short", %{uuid: uuid} do
       attrs = %{
         id: uuid,
-        published_at: ~U[2022-08-20 13:30:00Z],
+        published_at: ~U[2022-08-20 13:30:00.000000Z],
         title: "hi"
       }
 
@@ -105,7 +105,7 @@ defmodule Franklin.PostsTest do
 
       assert %Post{
                id: ^uuid,
-               published_at: ~U[2019-08-20 13:30:00Z]
+               published_at: ~U[2019-08-20 13:30:00.000000Z]
              } = Posts.get_post(uuid)
     end
 
@@ -114,7 +114,7 @@ defmodule Franklin.PostsTest do
       assert {:ok, ^uuid} =
                Posts.update_post(test_post, %{
                  title: "new title",
-                 published_at: ~U[2019-08-20 13:30:00Z]
+                 published_at: ~U[2019-08-20 13:30:00.000000Z]
                })
 
       assert_receive {:post_title_updated, %{id: ^uuid}}
@@ -123,7 +123,7 @@ defmodule Franklin.PostsTest do
       assert %Post{
                id: ^uuid,
                title: "new title",
-               published_at: ~U[2019-08-20 13:30:00Z]
+               published_at: ~U[2019-08-20 13:30:00.000000Z]
              } = Posts.get_post(uuid)
     end
 
@@ -173,7 +173,7 @@ defmodule Franklin.PostsTest do
   defp valid_create_post_attrs(uuid) do
     %{
       id: uuid,
-      published_at: ~U[2022-08-20 13:30:00Z],
+      published_at: ~U[2022-08-20 13:30:00.000000Z],
       title: "hello world"
     }
   end

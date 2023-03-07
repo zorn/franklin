@@ -22,7 +22,7 @@ defmodule Franklin.Articles.Commands.CreateArticle do
 
   embedded_schema do
     field :body, :string
-    field :published_at, :utc_datetime
+    field :published_at, :utc_datetime_usec
     field :slug, :string
     field :title, :string
   end

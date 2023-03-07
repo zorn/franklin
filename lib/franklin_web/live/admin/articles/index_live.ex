@@ -15,7 +15,7 @@ defmodule FranklinWeb.Admin.Articles.IndexLive do
     <h2 class="text-xl font-bold my-4">Articles</h2>
 
     <p class="my-4">
-      <.link href={~p"/admin/articles/new"}>New Article</.link>
+      <.link href={~p"/admin/articles/editor/new"}>New Article</.link>
     </p>
 
     <.admin_simple_table rows={@articles}>

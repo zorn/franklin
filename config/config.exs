@@ -10,7 +10,7 @@ import Config
 config :franklin,
   ecto_repos: [Franklin.Repo]
 
-config :franklin, Franklin.Repo, migration_timestamps: [type: :utc_datetime]
+config :franklin, Franklin.Repo, migration_timestamps: [type: :utc_datetime_usec]
 
 # Configures the endpoint
 config :franklin, FranklinWeb.Endpoint,

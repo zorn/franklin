@@ -12,17 +12,17 @@ defmodule FranklinWeb.PublicUserStories.CanDownloadRssFeedTest do
   setup %{conn: conn} do
     article1 =
       create_article!(%{
-        published_at: DateTime.add(DateTime.utc_now(), -1, :day) |> DateTime.truncate(:second)
+        published_at: DateTime.add(DateTime.utc_now(), -1, :day)
       })
 
     article2 =
       create_article!(%{
-        published_at: DateTime.add(DateTime.utc_now(), -2, :day) |> DateTime.truncate(:second)
+        published_at: DateTime.add(DateTime.utc_now(), -2, :day)
       })
 
     article3 =
       create_article!(%{
-        published_at: DateTime.add(DateTime.utc_now(), -3, :day) |> DateTime.truncate(:second)
+        published_at: DateTime.add(DateTime.utc_now(), -3, :day)
       })
 
     ~M{conn, article1, article2, article3}

@@ -23,7 +23,7 @@ defmodule Franklin.Posts.Commands.CreatePost do
   @primary_key {:id, Ecto.UUID, autogenerate: false}
 
   embedded_schema do
-    field :published_at, :utc_datetime
+    field :published_at, :utc_datetime_usec
     field :title, :string
   end
 

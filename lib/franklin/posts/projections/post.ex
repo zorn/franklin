@@ -12,9 +12,9 @@ defmodule Franklin.Posts.Projections.Post do
 
   schema "posts" do
     field :title, :string
-    field :published_at, :utc_datetime
+    field :published_at, :utc_datetime_usec
 
-    timestamps(type: :utc_datetime)
+    timestamps(type: :utc_datetime_usec)
   end
 
   def update_changeset(post, attrs \\ %{}) do

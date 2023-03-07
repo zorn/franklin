@@ -22,11 +22,11 @@ defmodule Franklin.Articles.Article do
 
   schema "articles" do
     field :body, :string
-    field :published_at, :utc_datetime
+    field :published_at, :utc_datetime_usec
     field :slug, :string
     field :title, :string
 
-    timestamps(type: :utc_datetime)
+    timestamps(type: :utc_datetime_usec)
   end
 
   def insert_changeset(article, attrs \\ %{}) do

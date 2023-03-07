@@ -14,7 +14,7 @@ defmodule FranklinWeb.Admin.PostEditorLive.Form do
 
   embedded_schema do
     field :title, :string
-    field :published_at, :utc_datetime
+    field :published_at, :utc_datetime_usec
   end
 
   @spec changeset(%__MODULE__{}, map()) :: Ecto.Changeset.t()
