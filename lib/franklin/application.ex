@@ -27,7 +27,6 @@ defmodule Franklin.Application do
       Franklin.CommandedApplication,
 
       # Start the supervisors for Projections
-      Franklin.Posts.Supervisor,
       Franklin.Articles.Supervisor
     ]
 

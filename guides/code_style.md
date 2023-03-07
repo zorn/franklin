@@ -15,7 +15,7 @@ Whenever constructing a struct value inline or defining the attributes of a sche
 Instead of this:
 
 ```elixir
-%PostCreated{
+%ArticleCreated{
     uuid: create.uuid,
     title: create.title,
     published_at: create.published_at
@@ -26,7 +26,7 @@ We prefer this:
 
 
 ```elixir
-%PostCreated{
+%ArticleCreated{
     published_at: create.published_at,
     title: create.title,
     uuid: create.uuid
