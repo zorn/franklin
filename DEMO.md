@@ -13,7 +13,7 @@ alias Franklin.Posts.Commands.DeletePost
 
 # Generate an ID for the post
 uuid = Ecto.UUID.generate()
-now = DateTime.utc_now() |> DateTime.truncate(:second)
+now = DateTime.utc_now()
 
 # Create a command instance
 command = %CreatePost{uuid: uuid, title: "Hello, world!", published_at: now}

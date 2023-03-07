@@ -30,7 +30,7 @@ defmodule Franklin.ArrangeArticleHelpers do
   end
 
   defp required_new_article_attributes(custom_values) do
-    now = DateTime.utc_now() |> DateTime.truncate(:second)
+    now = DateTime.utc_now()
 
     sample_markdown = """
     # This is a sample article headline

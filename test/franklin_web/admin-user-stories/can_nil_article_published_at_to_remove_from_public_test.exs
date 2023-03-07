@@ -13,9 +13,9 @@ defmodule FranklinWeb.AdminUserStories.CanNilArticlePublishedAtToRemoveFromPubli
   test "previously public articles are no longer visible on public site after published_at value is set to nil",
        ~M{conn} do
     articles = [
-      create_article!(%{published_at: ~U[2023-01-10 00:01:00Z]}),
-      create_article!(%{published_at: ~U[2023-01-11 00:01:00Z]}),
-      create_article!(%{published_at: ~U[2023-01-12 00:01:00Z]})
+      create_article!(%{published_at: ~U[2023-01-10 00:01:00.000000Z]}),
+      create_article!(%{published_at: ~U[2023-01-11 00:01:00.000000Z]}),
+      create_article!(%{published_at: ~U[2023-01-12 00:01:00.000000Z]})
     ]
 
     edit_article = hd(articles)

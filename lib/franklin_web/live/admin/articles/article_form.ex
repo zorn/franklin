@@ -21,7 +21,7 @@ defmodule FranklinWeb.Admin.Articles.ArticleForm do
 
   embedded_schema do
     field :body, :string
-    field :published_at, :utc_datetime
+    field :published_at, :utc_datetime_usec
     field :slug, :string
     field :slug_autogenerate, :boolean
     field :title, :string

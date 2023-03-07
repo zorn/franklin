@@ -15,7 +15,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     # shape the tests to verify aspects of the form for both its create mode
     # as well as its edit version.
 
-    now = DateTime.utc_now() |> DateTime.truncate(:second)
+    now = DateTime.utc_now()
 
     # This will be the article we will edit.
     edit_article_attributes = %{

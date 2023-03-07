@@ -15,7 +15,7 @@ defmodule FranklinWeb.PublicUserStories.CanVisitArticleViewerTest do
     With a [link](http://example.com)!
     """
 
-    published_at = DateTime.utc_now() |> DateTime.truncate(:second)
+    published_at = DateTime.utc_now()
 
     article = create_article!(~M{title, body, published_at})
     {:ok, view, _html} = live(conn, "/articles/#{article.slug}")

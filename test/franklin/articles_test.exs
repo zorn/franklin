@@ -71,12 +71,12 @@ defmodule Franklin.ArticlesTest do
     end
 
     test "can limit returned list and the default expected sort order is honored" do
-      create_article!(%{title: "January", published_at: ~U[2022-01-01 12:00:00Z]})
-      create_article!(%{title: "February", published_at: ~U[2022-02-01 12:00:00Z]})
-      create_article!(%{title: "March", published_at: ~U[2022-03-01 12:00:00Z]})
-      create_article!(%{title: "April", published_at: ~U[2022-04-01 12:00:00Z]})
-      create_article!(%{title: "May", published_at: ~U[2022-05-01 12:00:00Z]})
-      create_article!(%{title: "June", published_at: ~U[2022-06-01 12:00:00Z]})
+      create_article!(%{title: "January", published_at: ~U[2022-01-01 12:00:00.000000Z]})
+      create_article!(%{title: "February", published_at: ~U[2022-02-01 12:00:00.000000Z]})
+      create_article!(%{title: "March", published_at: ~U[2022-03-01 12:00:00.000000Z]})
+      create_article!(%{title: "April", published_at: ~U[2022-04-01 12:00:00.000000Z]})
+      create_article!(%{title: "May", published_at: ~U[2022-05-01 12:00:00.000000Z]})
+      create_article!(%{title: "June", published_at: ~U[2022-06-01 12:00:00.000000Z]})
 
       list = Articles.list_articles(%{limit: 3})
       assert length(list) == 3
