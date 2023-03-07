@@ -13,13 +13,4 @@ defmodule Franklin.Router do
   dispatch([CreateArticle], to: ArticleAggregate, identity: :id)
   dispatch([DeleteArticle], to: ArticleAggregate, identity: :id)
   dispatch([UpdateArticle], to: ArticleAggregate, identity: :id)
-
-  alias Franklin.Posts.Aggregates.Post, as: PostAggregate
-  alias Franklin.Posts.Commands.CreatePost
-  alias Franklin.Posts.Commands.DeletePost
-  alias Franklin.Posts.Commands.UpdatePost
-
-  dispatch([CreatePost], to: PostAggregate, identity: :id)
-  dispatch([DeletePost], to: PostAggregate, identity: :id)
-  dispatch([UpdatePost], to: PostAggregate, identity: :id)
 end
