@@ -1,6 +1,8 @@
 // See the Tailwind configuration guide for advanced usage
 // https://tailwindcss.com/docs/configuration
 
+const { fontFamily } = require('tailwindcss/defaultTheme')
+
 let plugin = require('tailwindcss/plugin')
 
 module.exports = {
@@ -10,6 +12,11 @@ module.exports = {
     '../lib/*_web/**/*.*ex'
   ],
   theme: {
+    fontFamily: {
+      'sans': ['GeneralSans-Bold', ...fontFamily.sans],
+      'serif': ['GeneralSans-Bold', ...fontFamily.serif],
+      'mono': ['GeneralSans-Bold', 'SFMono-Regular', ...fontFamily.mono],
+    },
     extend: {},
   },
   plugins: [
