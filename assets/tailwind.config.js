@@ -13,11 +13,20 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      'sans': ['GeneralSans-Bold', ...fontFamily.sans],
-      'serif': ['GeneralSans-Bold', ...fontFamily.serif],
-      'mono': ['GeneralSans-Bold', 'SFMono-Regular', ...fontFamily.mono],
+      'sans': ['Yanone Kaffeesatz', ...fontFamily.sans],
+      'serif': ['Martel', ...fontFamily.serif],
+      'mono': [...fontFamily.mono],
     },
-    extend: {},
+    extend: {
+      typography: {
+        quoteless: {
+          css: {
+            'blockquote p:first-of-type::before': { content: 'none' },
+            'blockquote p:first-of-type::after': { content: 'none' },
+          },
+        },
+      },
+    },
   },
   plugins: [
     require('@tailwindcss/typography'),
