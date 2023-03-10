@@ -1,11 +1,13 @@
 {
     "cSpell.words": [
+        "blockquote",
         "castable",
         "CQRS",
         "devs",
         "ecto",
         "mikezornek",
         "Phillies",
+        "quoteless",
         "slugification",
         "strftime",
         "struct"
