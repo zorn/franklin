@@ -2,4 +2,11 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import "general-sans.css";
+@import "martel.css";
+@import "yanone-kaffeesatz.css";
+
+@layer base {
+    html {
+        font-family: Martel, system-ui, sans-serif;
+    }
+}
