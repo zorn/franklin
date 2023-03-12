@@ -1,0 +1,19 @@
+version: "3"
+services:
+  minio:
+    image: minio/minio
+    hostname: minio
+    command: server --console-address ":9090" data
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      MINIO_ACCESS_KEY: minio_access_key
+      MINIO_SECRET_KEY: minio_secret_key
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - data:/data
+
+volumes:
+  data: null
