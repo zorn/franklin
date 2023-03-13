@@ -1,6 +1,8 @@
 // See the Tailwind configuration guide for advanced usage
 // https://tailwindcss.com/docs/configuration
 
+const { fontFamily } = require('tailwindcss/defaultTheme')
+
 let plugin = require('tailwindcss/plugin')
 
 module.exports = {
@@ -10,7 +12,21 @@ module.exports = {
     '../lib/*_web/**/*.*ex'
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      'sans': ['Yanone Kaffeesatz', ...fontFamily.sans],
+      'serif': ['Martel', ...fontFamily.serif],
+      'mono': [...fontFamily.mono],
+    },
+    extend: {
+      typography: {
+        quoteless: {
+          css: {
+            'blockquote p:first-of-type::before': { content: 'none' },
+            'blockquote p:first-of-type::after': { content: 'none' },
+          },
+        },
+      },
+    },
   },
   plugins: [
     require('@tailwindcss/typography'),
