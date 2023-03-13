@@ -86,3 +86,13 @@ config :phoenix, :plug_init_mode, :runtime
 config :swoosh, :api_client, false
 
 config :franklin, FranklinWeb.RssFeed, url: "http://localhost:4000"
+
+# ExAws config for local minio access:
+config :ex_aws,
+  access_key_id: "minioadmin",
+  secret_access_key: "minioadmin"
+
+config :ex_aws, :s3,
+  host: "localhost",
+  scheme: "http://",
+  port: 9000

@@ -39,3 +39,13 @@ config :logger, level: :warning
 config :phoenix, :plug_init_mode, :runtime
 
 config :franklin, FranklinWeb.RssFeed, url: "https://test.mikezornek.com"
+
+# ExAws config for local minio access:
+config :ex_aws,
+  access_key_id: "minioadmin",
+  secret_access_key: "minioadmin"
+
+config :ex_aws, :s3,
+  host: "localhost",
+  scheme: "http://",
+  port: 9000
