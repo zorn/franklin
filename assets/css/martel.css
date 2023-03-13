@@ -1,0 +1,146 @@
+/* martel-200 - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Martel';
+    font-style: normal;
+    font-weight: 200;
+    src: url('/fonts/martel-v10-latin-200.eot');
+    /* IE9 Compat Modes */
+    src: url('/fonts/martel-v10-latin-200.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('/fonts/martel-v10-latin-200.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('/fonts/martel-v10-latin-200.woff') format('woff'),
+        /* Modern Browsers */
+        url('/fonts/martel-v10-latin-200.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('/fonts/martel-v10-latin-200.svg#Martel') format('svg');
+    /* Legacy iOS */
+}
+
+/* martel-300 - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Martel';
+    font-style: normal;
+    font-weight: 300;
+    src: url('/fonts/martel-v10-latin-300.eot');
+    /* IE9 Compat Modes */
+    src: url('/fonts/martel-v10-latin-300.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('/fonts/martel-v10-latin-300.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('/fonts/martel-v10-latin-300.woff') format('woff'),
+        /* Modern Browsers */
+        url('/fonts/martel-v10-latin-300.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('/fonts/martel-v10-latin-300.svg#Martel') format('svg');
+    /* Legacy iOS */
+}
+
+/* martel-regular - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Martel';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/martel-v10-latin-regular.eot');
+    /* IE9 Compat Modes */
+    src: url('/fonts/martel-v10-latin-regular.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('/fonts/martel-v10-latin-regular.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('/fonts/martel-v10-latin-regular.woff') format('woff'),
+        /* Modern Browsers */
+        url('/fonts/martel-v10-latin-regular.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('/fonts/martel-v10-latin-regular.svg#Martel') format('svg');
+    /* Legacy iOS */
+}
+
+/* martel-600 - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Martel';
+    font-style: normal;
+    font-weight: 600;
+    src: url('/fonts/martel-v10-latin-600.eot');
+    /* IE9 Compat Modes */
+    src: url('/fonts/martel-v10-latin-600.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('/fonts/martel-v10-latin-600.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('/fonts/martel-v10-latin-600.woff') format('woff'),
+        /* Modern Browsers */
+        url('/fonts/martel-v10-latin-600.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('/fonts/martel-v10-latin-600.svg#Martel') format('svg');
+    /* Legacy iOS */
+}
+
+/* martel-700 - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Martel';
+    font-style: normal;
+    font-weight: 700;
+    src: url('/fonts/martel-v10-latin-700.eot');
+    /* IE9 Compat Modes */
+    src: url('/fonts/martel-v10-latin-700.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('/fonts/martel-v10-latin-700.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('/fonts/martel-v10-latin-700.woff') format('woff'),
+        /* Modern Browsers */
+        url('/fonts/martel-v10-latin-700.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('/fonts/martel-v10-latin-700.svg#Martel') format('svg');
+    /* Legacy iOS */
+}
+
+/* martel-800 - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Martel';
+    font-style: normal;
+    font-weight: 800;
+    src: url('/fonts/martel-v10-latin-800.eot');
+    /* IE9 Compat Modes */
+    src: url('/fonts/martel-v10-latin-800.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('/fonts/martel-v10-latin-800.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('/fonts/martel-v10-latin-800.woff') format('woff'),
+        /* Modern Browsers */
+        url('/fonts/martel-v10-latin-800.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('/fonts/martel-v10-latin-800.svg#Martel') format('svg');
+    /* Legacy iOS */
+}
+
+/* martel-900 - latin */
+@font-face {
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Martel';
+    font-style: normal;
+    font-weight: 900;
+    src: url('/fonts/martel-v10-latin-900.eot');
+    /* IE9 Compat Modes */
+    src: url('/fonts/martel-v10-latin-900.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('/fonts/martel-v10-latin-900.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('/fonts/martel-v10-latin-900.woff') format('woff'),
+        /* Modern Browsers */
+        url('/fonts/martel-v10-latin-900.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('/fonts/martel-v10-latin-900.svg#Martel') format('svg');
+    /* Legacy iOS */
+}
