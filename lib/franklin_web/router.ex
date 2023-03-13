@@ -42,6 +42,7 @@ defmodule FranklinWeb.Router do
     pipe_through [:browser, :auth]
 
     live "/", IndexLive, :index, as: :admin_index
+    live "/upload-demo", UploadDemoLive, :index, as: :admin_upload_demo
 
     scope "/articles", Articles do
       live "/", IndexLive, :index, as: :admin_article_index
