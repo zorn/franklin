@@ -112,20 +112,23 @@ defmodule Franklin.MixProject do
     [
       main: "Franklin",
       extra_section: "GUIDES",
-      extras: guides(),
+      extras: extras(),
       groups_for_extras: groups_for_extras()
     ]
   end
 
-  defp guides do
+  defp extras do
     [
+      "decisions/about.md",
+      "decisions/datetime_column_types.md",
       "guides/testing_values.md"
     ]
   end
 
   defp groups_for_extras do
     [
-      Guides: ~r/guides\/[^\/]+\.md/
+      Guides: ~r/guides\/[^\/]+\.md/,
+      Decisions: ~r/decisions\/[^\/]+\.md/
     ]
   end
 
