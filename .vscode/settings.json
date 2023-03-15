@@ -11,7 +11,9 @@
         "quoteless",
         "slugification",
         "strftime",
-        "struct"
+        "struct",
+        "topbar",
+        "uploaders"
     ],
     "tailwindCSS.experimental.configFile": "./assets/tailwind.config.js"
 }
