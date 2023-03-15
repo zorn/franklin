@@ -42,7 +42,10 @@ defmodule FranklinWeb.HomeLive do
         <ul class="ml-8">
           <%= for article <- @recent_articles do %>
             <li class="mb-2 list-disc">
-              <.link navigate={~p"/articles/#{String.split(article.slug, "/")}"}>
+              <.link
+                class="underline hover:text-blue-700"
+                navigate={~p"/articles/#{String.split(article.slug, "/")}"}
+              >
                 <%= article.title %>
               </.link>
             </li>
