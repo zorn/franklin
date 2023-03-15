@@ -1,6 +1,6 @@
 # ADR: Title Name
 
-A one line summary of the decision context.
+A one-line summary of the decision.
 
 **Status:** Open or Closed on January 1, 2023.
 
