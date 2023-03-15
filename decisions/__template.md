@@ -1,10 +1,10 @@
-# ADR: Title Name
+# Decision Title Name
 
 A one-line summary of the decision.
 
 **Status:** Open or Closed on January 1, 2023.
 
-You might commit an `Open` ADR for a decision that is still being discussed but not acted on or considered complete yet. When complete, mark as `Closed` and include the date.
+You might commit an `Open` decision for a problem that is still being discussed but not acted on or considered complete yet. When complete, mark as `Closed` and include the date.
 
 ## Problem Context
 
