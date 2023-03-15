@@ -4,7 +4,7 @@ As a programmer we try to avoid making assumptions to allow our projects to grow
 
 ## CQRS (Command Query Responsibility Segregation) / Event Sourced Core
 
-More info on ADR on this?
+More info or decision document on this?
 
 ## English Only
 
