@@ -10,7 +10,8 @@
         "quoteless",
         "slugification",
         "strftime",
-        "struct"
+        "struct",
+        "usec"
     ],
     "tailwindCSS.experimental.configFile": "./assets/tailwind.config.js"
 }
