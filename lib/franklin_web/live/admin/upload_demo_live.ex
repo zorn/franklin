@@ -54,7 +54,7 @@ defmodule FranklinWeb.Admin.UploadDemoLive do
     {:ok,
      socket
      |> assign(:uploaded_files, [])
-     |> allow_upload(:avatar, accept: ~w(.jpg .jpeg), max_entries: 2)}
+     |> allow_upload(:avatar, accept: ~w(.jpg .jpeg), max_entries: 3, external: &presign_upload/2)}
   end
 
   @impl Phoenix.LiveView
@@ -82,4 +82,26 @@ defmodule FranklinWeb.Admin.UploadDemoLive do
   defp error_to_string(:too_large), do: "Too large"
   defp error_to_string(:too_many_files), do: "You have selected too many files"
   defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
+
+  defp presign_upload(entry, socket) do
+    uploads = socket.assigns.uploads
+    key = "public/#{entry.client_name}"
+
+    {:ok, fields} =
+      SimpleS3Upload.sign_form_upload(config, bucket,
+        key: key,
+        content_type: entry.client_type,
+        max_file_size: uploads[entry.upload_config].max_file_size,
+        expires_in: :timer.hours(1)
+      )
+
+    meta = %{
+      uploader: "S3",
+      key: "public/#{entry.client_name}",
+      url: "http://#{bucket}.s3-#{config.region}.amazonaws.com",
+      fields: fields
+    }
+
+    {:ok, meta, socket}
+  end
 end
