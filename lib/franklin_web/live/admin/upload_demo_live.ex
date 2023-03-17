@@ -1,6 +1,8 @@
 defmodule FranklinWeb.Admin.UploadDemoLive do
   use FranklinWeb, :live_view
 
+  require Logger
+
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
@@ -54,7 +56,13 @@ defmodule FranklinWeb.Admin.UploadDemoLive do
     {:ok,
      socket
      |> assign(:uploaded_files, [])
-     |> allow_upload(:avatar, accept: ~w(.jpg .jpeg), max_entries: 3, external: &presign_upload/2)}
+     |> allow_upload(:avatar,
+       accept: ~w(.jpg .jpeg),
+       max_entries: 3,
+       external: &presign_upload/2,
+       progress: &handle_progress/3,
+       auto_upload: true
+     )}
   end
 
   @impl Phoenix.LiveView
@@ -69,39 +77,64 @@ defmodule FranklinWeb.Admin.UploadDemoLive do
 
   @impl Phoenix.LiveView
   def handle_event("save", _params, socket) do
-    uploaded_files =
-      consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry ->
-        dest = Path.join([:code.priv_dir(:franklin), "static", "uploads", Path.basename(path)])
-        File.cp!(path, dest)
-        {:ok, ~p"/uploads/#{Path.basename(dest)}"}
+    # dbg(socket.assigns.uploaded_files)
+
+    # uploaded_files =
+    #   consume_uploaded_entries(socket, entry, fn %{url: url}, _entry ->
+    #     {:ok, remove_presign_url_parameters(url)}
+    #   end)
+
+    {:noreply, socket}
+  end
+
+  defp handle_progress(:avatar, %Phoenix.LiveView.UploadEntry{done?: done?} = entry, socket)
+       when done? do
+    avatar_url =
+      consume_uploaded_entry(socket, entry, fn %{url: url} ->
+        {:ok, remove_presign_url_parameters(url)}
       end)
 
-    {:noreply, update(socket, :uploaded_files, &(&1 ++ uploaded_files))}
+    dbg(avatar_url)
+
+    {:noreply, socket}
+  end
+
+  defp handle_progress(:avatar, _entry, socket) do
+    # Catch all for when progress is not done.
+    {:noreply, socket}
   end
 
   defp error_to_string(:too_large), do: "Too large"
   defp error_to_string(:too_many_files), do: "You have selected too many files"
   defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
 
+  defp error_to_string(:external_client_failure),
+    do: "The external client failed to upload the file"
+
   defp presign_upload(entry, socket) do
-    uploads = socket.assigns.uploads
-    key = "public/#{entry.client_name}"
+    case Franklin.S3Storage.generate_presigned_url(entry.client_name) do
+      {:ok, presigned_url} ->
+        {:ok, %{uploader: "S3", url: presigned_url}, socket}
 
-    {:ok, fields} =
-      SimpleS3Upload.sign_form_upload(config, bucket,
-        key: key,
-        content_type: entry.client_type,
-        max_file_size: uploads[entry.upload_config].max_file_size,
-        expires_in: :timer.hours(1)
-      )
+      {:error, reason} ->
+        # Even though we could not generate a presigned URL, we still need to
+        # return an `{:ok, metadata, socket}` shaped value, else LiveView enters a never ending crash/reload/crash loop. We will log the error for observation.
 
-    meta = %{
-      uploader: "S3",
-      key: "public/#{entry.client_name}",
-      url: "http://#{bucket}.s3-#{config.region}.amazonaws.com",
-      fields: fields
-    }
+        Logger.error(
+          message: "Failed to generate presigned URL for entry",
+          entry: entry,
+          reason: reason
+        )
 
-    {:ok, meta, socket}
+        {:ok, %{uploader: "S3", error: reason}, socket}
+    end
+  end
+
+  defp remove_presign_url_parameters(url) do
+    if String.contains?(url, "?") do
+      url |> String.split("?") |> hd()
+    else
+      url
+    end
   end
 end

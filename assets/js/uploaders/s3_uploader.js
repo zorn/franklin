@@ -1,16 +1,19 @@
 export default function (entries, onViewError) {
-
-    // Right now, this is built with the assumptions that Chris bulit which attaches the upload constraints via `fields` to the xhr network request so they are honored by S3. For now, we may want to skip this and just upload everything.
-
     entries.forEach(entry => {
-        let formData = new FormData()
-        let { url, fields } = entry.meta
-        Object.entries(fields).forEach(([key, val]) => formData.append(key, val))
-        formData.append("file", entry.file)
+        // Get the presigned url from the entry.meta object.
+        let { url, error } = entry.meta
+        if (undefined === url) {
+            throw new Error('URL was not found in entity metadata. Did get back error message: ' + error);
+        }
+
+        // Create a new XMLHttpRequest object.
         let xhr = new XMLHttpRequest()
+        // Abort the request if the user navigates away from the page
         onViewError(() => xhr.abort())
-        xhr.onload = () => xhr.status === 204 ? entry.progress(100) : entry.error()
+        // Handle the request events.
+        xhr.onload = () => ([200, 204].includes(xhr.status) ? entry.progress(100) : entry.error());
         xhr.onerror = () => entry.error()
+        // Update the entity's progress value as the file uploads.
         xhr.upload.addEventListener("progress", (event) => {
             if (event.lengthComputable) {
                 let percent = Math.round((event.loaded / event.total) * 100)
@@ -18,7 +21,8 @@ export default function (entries, onViewError) {
             }
         })
 
-        xhr.open("POST", url, true)
-        xhr.send(formData)
+        // Send the request.
+        xhr.open("PUT", url, true)
+        xhr.send(entry.file)
     })
 }
