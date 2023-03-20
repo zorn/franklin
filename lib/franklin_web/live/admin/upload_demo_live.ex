@@ -118,7 +118,9 @@ defmodule FranklinWeb.Admin.UploadDemoLive do
 
       {:error, reason} ->
         # Even though we could not generate a presigned URL, we still need to
-        # return an `{:ok, metadata, socket}` shaped value, else LiveView enters a never ending crash/reload/crash loop. We will log the error for observation.
+        # return an `{:ok, metadata, socket}` shaped value, else LiveView enters
+        # a never ending crash/reload/crash loop. We will log the error for
+        # observation.
 
         Logger.error(
           message: "Failed to generate presigned URL for entry",
