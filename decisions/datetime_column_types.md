@@ -21,7 +21,7 @@ For the first problem, during [pull request #171](https://github.com/zorn/frankl
 
 For the second problem, we again edited those migrations during [pull request #172](https://github.com/zorn/franklin/pull/172), now changing the column type from `:utc_datetime` to `:utc_datetime_usec`. While we do not have a business need for microsecond precision, the event tooling provided by the Commanded and related projection libraries prefers microsecond precision. Moving forward, it feels easier to use microsecond precision inside Franklin's domain contexts and be consistent across the board. Overall, this change resulted in more straightforward code.
 
-## Known Consequences & Tradeoffs Considered
+## Consequences & Tradeoffs
 
 * We felt confident editing historical migration files because the app is not yet deployed.
 * Adding this extra data has a database space cost. For the constraints of this simple app, it will be negligible, but if this were a more significant application, we would have to consider the size increase for N number of projected rows,

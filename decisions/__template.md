@@ -14,7 +14,7 @@ Describe the issue that we're seeing what is motivating this decision or change?
 
 Describe the decision chosen and the reasoning behind it. When possible link to the pull requests and relevant lines of code.
 
-## Known Consequences & Tradeoffs Considered
+## Consequences & Tradeoffs
 
 * What else was considered? 
 * What tradeoffs do we accept with this decision?
