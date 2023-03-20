@@ -41,4 +41,4 @@ services:
       minio:
         condition: service_healthy
     entrypoint: >
-      /bin/sh -c "/usr/bin/mc config host add myminio http://minio:9000 minioadmin minioadmin; /usr/bin/mc mb myminio/franklin-media; exit 0;"
+      /bin/sh -c "/usr/bin/mc config host add myminio http://minio:9000 minioadmin minioadmin; /usr/bin/mc mb myminio/franklin-media; /usr/bin/mc anonymous set download myminio/franklin-media; exit 0;"
