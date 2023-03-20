@@ -121,6 +121,7 @@ defmodule Franklin.MixProject do
     [
       "decisions/about.md",
       "decisions/datetime_column_types.md",
+      "decisions/s3_will_not_enforce_file_constraints.md",
       "guides/testing_values.md"
     ]
   end
