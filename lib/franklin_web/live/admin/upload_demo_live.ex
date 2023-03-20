@@ -77,13 +77,8 @@ defmodule FranklinWeb.Admin.UploadDemoLive do
 
   @impl Phoenix.LiveView
   def handle_event("save", _params, socket) do
-    # dbg(socket.assigns.uploaded_files)
-
-    # uploaded_files =
-    #   consume_uploaded_entries(socket, entry, fn %{url: url}, _entry ->
-    #     {:ok, remove_presign_url_parameters(url)}
-    #   end)
-
+    # For this demo, we do nothing on save since the upload was consumed during
+    # the handle_progress callback.
     {:noreply, socket}
   end
 
