@@ -98,7 +98,13 @@ defmodule Franklin.MixProject do
       {:slugify, "~> 1.3"},
 
       # To help with generating RSS feeds.
-      {:xml_builder, "~> 2.1"}
+      {:xml_builder, "~> 2.1"},
+
+      # For S3 uploads.
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:hackney, "~> 1.15"},
+      {:sweet_xml, "~> 0.6"}
     ]
   end
 
@@ -115,6 +121,7 @@ defmodule Franklin.MixProject do
     [
       "decisions/about.md",
       "decisions/datetime_column_types.md",
+      "decisions/s3_will_not_enforce_file_constraints.md",
       "guides/testing_values.md"
     ]
   end

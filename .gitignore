@@ -35,5 +35,8 @@ franklin-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Do not commit any of the local MinIO S3 storage to git.
+/local_bucket_data/
+
 *.plt
 *.plt.hash

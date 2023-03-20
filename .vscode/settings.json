@@ -1,17 +1,21 @@
 {
-    "cSpell.words": [
-        "blockquote",
-        "castable",
-        "CQRS",
-        "devs",
-        "ecto",
-        "mikezornek",
-        "Phillies",
-        "quoteless",
-        "slugification",
-        "strftime",
-        "struct",
-        "usec"
-    ],
-    "tailwindCSS.experimental.configFile": "./assets/tailwind.config.js"
+        "cSpell.words": [
+                "blockquote",
+                "castable",
+                "CQRS",
+                "devs",
+                "ecto",
+                "mikezornek",
+                "minio",
+                "Phillies",
+                "presign",
+                "quoteless",
+                "slugification",
+                "strftime",
+                "struct",
+                "topbar",
+                "uploaders",
+                "usec"
+        ],
+        "tailwindCSS.experimental.configFile": "./assets/tailwind.config.js"
 }

@@ -1,0 +1,44 @@
+version: "3"
+services:
+  # Build a minio service, which is an open source S3 alternative that can help us
+  # create and serve assets in a similar fashion that we will do in production.
+  minio:
+    image: minio/minio
+    hostname: minio
+    command: server --console-address ":9090" data
+    ports:
+      # Port 9000 is for the API, 9090 is for the browser admin tool.
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      # Note: While `MINIO_ACCESS_KEY` and `MINIO_SECRET_KEY` are documented as
+      # possible enviornment variables they are not independant values from
+      # `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD`. As we define a root user
+      # and password below those values can be used interchangeably for access
+      # key and secret (as seen in the `createbucket` service documented below).
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - ./local_bucket_data:/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "http://localhost:9000/minio/health/live"
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # This service loads a docker image for the `mc` command line tool which we
+  # can use to populate minio with the expected bucket and user needed to run
+  # our Phoenix app.
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "/usr/bin/mc config host add myminio http://minio:9000 minioadmin minioadmin; /usr/bin/mc mb myminio/franklin-media; exit 0;"
