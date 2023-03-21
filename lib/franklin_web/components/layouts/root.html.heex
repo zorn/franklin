@@ -9,6 +9,13 @@
       <%= assigns[:page_title] || "Welcome" %>
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/primer-live/priv/static/primer-live.min.css"
+      media="all"
+    />
+    <script src="https://unpkg.com/primer-live/priv/static/primer-live.min.js">
+    </script>
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>

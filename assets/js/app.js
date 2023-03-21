@@ -27,7 +27,11 @@ import topbar from "../vendor/topbar"
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
     uploaders: Uploaders,
-    params: { _csrf_token: csrfToken }
+    params: { _csrf_token: csrfToken },
+    hooks: {
+        Prompt,
+        Session,
+    }
 })
 
 // Show progress bar on live navigation and form submits
