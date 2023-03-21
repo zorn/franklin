@@ -30,7 +30,8 @@ liveSocketConfig = {
     uploaders: Uploaders,
     params: { _csrf_token: csrfToken }
 }
-// Only add the Prompt and Session hooks of Primer if they are present (which should only be for the admin section).
+// Only add the Prompt and Session hooks of Primer if they are present (which
+// should only be for the admin section).
 if (typeof Prompt !== 'undefined' && typeof Session !== 'undefined') {
     liveSocketConfig.hooks = {
         Prompt,
