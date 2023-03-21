@@ -196,10 +196,6 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
       </.form_group>
       <!-- Slug -->
       <.form_group field="slug">
-        <%!-- Because we use `disabled` below, we need to use a hidden input here
-        to make sure some value for `slug` is submitted in the form payload. --%>
-        <%!-- TODO: This current causes a unique id console related warning. --%>
-        <%= Phoenix.HTML.Form.hidden_input(f, :slug) %>
         <fieldset disabled={Phoenix.HTML.Form.input_value(f, :slug_autogenerate)}>
           <.text_input form={f} field={:slug} is_full_width />
         </fieldset>
