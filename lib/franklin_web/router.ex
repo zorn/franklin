@@ -11,11 +11,11 @@ defmodule FranklinWeb.Router do
   end
 
   pipeline :assign_root_layout do
-    plug :put_root_layout, {FranklinWeb.Layouts, :root}
+    plug :put_root_layout, html: {FranklinWeb.Layouts, :root}
   end
 
   pipeline :assign_root_layout_admin do
-    plug :put_root_layout, {FranklinWeb.LayoutsAdmin, :root}
+    plug :put_root_layout, html: {FranklinWeb.LayoutsAdmin, :root}
   end
 
   pipeline :api do
