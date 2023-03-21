@@ -108,7 +108,8 @@ defmodule Franklin.MixProject do
 
       # GitHub-like components to help style the admin.
       # {:primer_live, "~> 0.2.2"}
-      {:primer_live, git: "https://github.com/zorn/primer_live", branch: "zorn-phoenix-html-update"}
+      {:primer_live,
+       git: "https://github.com/zorn/primer_live", branch: "zorn-phoenix-html-update"}
     ]
   end
 
