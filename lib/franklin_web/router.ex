@@ -6,9 +6,16 @@ defmodule FranklinWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {FranklinWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+  end
+
+  pipeline :assign_root_layout do
+    plug :put_root_layout, {FranklinWeb.Layouts, :root}
+  end
+
+  pipeline :assign_root_layout_admin do
+    plug :put_root_layout, {FranklinWeb.LayoutsAdmin, :root}
   end
 
   pipeline :api do
@@ -24,7 +31,7 @@ defmodule FranklinWeb.Router do
   end
 
   scope "/", FranklinWeb do
-    pipe_through :browser
+    pipe_through [:browser, :assign_root_layout]
 
     scope "/articles", Articles do
       live "/", IndexLive, :index, as: :article_index
@@ -39,7 +46,7 @@ defmodule FranklinWeb.Router do
   end
 
   scope "/admin", FranklinWeb.Admin do
-    pipe_through [:browser, :auth]
+    pipe_through [:browser, :assign_root_layout_admin, :auth]
 
     live "/", IndexLive, :index, as: :admin_index
     live "/upload-demo", UploadDemoLive, :index, as: :admin_upload_demo

@@ -62,8 +62,9 @@ defmodule FranklinWeb do
   def admin_live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {FranklinWeb.Layouts, :live_admin}
+        layout: {FranklinWeb.LayoutsAdmin, :live_admin}
 
+      use PrimerLive
       unquote(html_helpers())
     end
   end
@@ -94,12 +95,10 @@ defmodule FranklinWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      # import FranklinWeb.CoreComponents
-      # import FranklinWeb.Gettext
+      import FranklinWeb.CoreComponents
+      import FranklinWeb.Gettext
 
       import FranklinWeb.CoreComponents, only: [translate_error: 1]
-
-      use PrimerLive
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
