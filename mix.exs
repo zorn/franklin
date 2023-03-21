@@ -104,7 +104,12 @@ defmodule Franklin.MixProject do
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
       {:hackney, "~> 1.15"},
-      {:sweet_xml, "~> 0.6"}
+      {:sweet_xml, "~> 0.6"},
+
+      # GitHub-like components to help style the admin.
+      # {:primer_live, "~> 0.2.2"}
+      {:primer_live,
+       git: "https://github.com/zorn/primer_live", branch: "zorn-phoenix-html-update"}
     ]
   end
 

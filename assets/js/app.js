@@ -25,10 +25,21 @@ import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {
+
+liveSocketConfig = {
     uploaders: Uploaders,
     params: { _csrf_token: csrfToken }
-})
+}
+// Only add the Prompt and Session hooks of Primer if they are present (which
+// should only be for the admin section).
+if (typeof Prompt !== 'undefined' && typeof Session !== 'undefined') {
+    liveSocketConfig.hooks = {
+        Prompt,
+        Session
+    }
+}
+
+let liveSocket = new LiveSocket("/live", Socket, liveSocketConfig)
 
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })

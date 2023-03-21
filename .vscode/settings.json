@@ -13,6 +13,7 @@
                 "slugification",
                 "strftime",
                 "struct",
+                "stylesheet",
                 "topbar",
                 "uploaders",
                 "usec"

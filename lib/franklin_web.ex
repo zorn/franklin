@@ -62,8 +62,9 @@ defmodule FranklinWeb do
   def admin_live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {FranklinWeb.Layouts, :live_admin}
+        layout: {FranklinWeb.LayoutsAdmin, :live_admin}
 
+      use PrimerLive
       unquote(html_helpers())
     end
   end
@@ -97,6 +98,8 @@ defmodule FranklinWeb do
       import FranklinWeb.CoreComponents
       import FranklinWeb.Gettext
 
+      import FranklinWeb.CoreComponents, only: [translate_error: 1]
+
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
 
@@ -110,7 +113,7 @@ defmodule FranklinWeb do
       import FranklinWeb.Components.AdminSidebar
       import FranklinWeb.Components.AdminSidebarButton
       import FranklinWeb.Components.AdminSimpleTable
-      import FranklinWeb.Components.Button
+      # import FranklinWeb.Components.Button
       import FranklinWeb.Components.AdminFormError
       import FranklinWeb.Components.AdminFormInput
 
