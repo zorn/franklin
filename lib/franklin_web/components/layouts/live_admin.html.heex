@@ -1,11 +1,22 @@
-<div id="layout-grid" class="grid grid-cols-12 grid-rows-1 py-10">
-  <div class="col-span-2 px-4">
-    <.admin_sidebar links={[
-      {"Launchpad", "/admin/", "rocket"},
-      {"Articles", "/admin/articles", "articles"}
-    ]} />
-  </div>
-  <div class="col-span-10 px-4">
-    <%= @inner_content %>
-  </div>
-</div>
+<.header>
+  <:item :let={classes}>
+    <.link navigate={~p"/admin/"} class={[classes.link, "f4 d-flex flex-items-center mr-4"]}>
+      <.octicon name="star-fill-24" width="32" height="32" class="mr-2" />
+      <span>Franklin Admin</span>
+    </.link>
+  </:item>
+  <:item :let={classes}>
+    <.link href={~p"/admin/"} class={classes.link}>Launchpad</.link>
+  </:item>
+  <:item :let={classes}>
+    <.link href={~p"/admin/articles"} class={classes.link}>Articles</.link>
+  </:item>
+</.header>
+
+<main class="container mx-auto px-4">
+  <%= @inner_content %>
+</main>
+
+<footer class="mt-8 mb-4 text-center">
+  Some cool footer.
+</footer>

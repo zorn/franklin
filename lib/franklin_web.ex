@@ -94,8 +94,12 @@ defmodule FranklinWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import FranklinWeb.CoreComponents
-      import FranklinWeb.Gettext
+      # import FranklinWeb.CoreComponents
+      # import FranklinWeb.Gettext
+
+      import FranklinWeb.CoreComponents, only: [translate_error: 1]
+
+      use PrimerLive
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
