@@ -20,11 +20,7 @@ defmodule FranklinWeb.AdminUserStories.CanNilArticlePublishedAtToRemoveFromPubli
 
     edit_article = hd(articles)
 
-    {:ok, edit_view, _html} =
-      live(
-        add_authentication(conn, "zorn", "Pass1234"),
-        "/admin/articles/editor/#{edit_article.id}"
-      )
+    {:ok, edit_view, _html} = live(conn, "/admin/articles/editor/#{edit_article.id}")
 
     {:ok, public_article_index_view, _html} = live(conn, "/articles/")
 
@@ -68,9 +64,5 @@ defmodule FranklinWeb.AdminUserStories.CanNilArticlePublishedAtToRemoveFromPubli
     assert_raise FranklinWeb.NotFoundError, fn ->
       {:ok, _view, _html} = live(conn, "/articles/#{edit_article.slug}")
     end
-  end
-
-  defp add_authentication(conn, username, password) do
-    put_req_header(conn, "authorization", "Basic " <> Base.encode64("#{username}:#{password}"))
   end
 end

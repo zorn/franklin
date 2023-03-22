@@ -39,7 +39,6 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
                 }} = Articles.fetch_article(edit_article_id)
       end)
 
-    conn = add_authentication(conn, "zorn", "Pass1234")
     {:ok, create_view, _html} = live(conn, "/admin/articles/editor/new")
     {:ok, edit_view, _html} = live(conn, "/admin/articles/editor/#{edit_article.id}")
 
@@ -250,9 +249,5 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
 
   defp error_feedback_query(field_name) do
     "div[phx-feedback-for='article_form[#{field_name}]']"
-  end
-
-  defp add_authentication(conn, username, password) do
-    put_req_header(conn, "authorization", "Basic " <> Base.encode64("#{username}:#{password}"))
   end
 end
