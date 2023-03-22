@@ -7,8 +7,6 @@ defmodule FranklinWeb.AdminUserStories.CanVisitArticleViewerTest do
   use FranklinWeb.ConnCase
 
   setup %{conn: conn} do
-    conn = add_authentication(conn, "zorn", "Pass1234")
-
     title = "An article test headline."
 
     body = """
@@ -29,9 +27,5 @@ defmodule FranklinWeb.AdminUserStories.CanVisitArticleViewerTest do
     assert has_element?(view, "#article-headline", "An article test headline.")
     assert has_element?(view, "#article-body h1", "Markdown Headline")
     assert has_element?(view, ~s(#article-body a[href="http://example.com"]), "link")
-  end
-
-  defp add_authentication(conn, username, password) do
-    put_req_header(conn, "authorization", "Basic " <> Base.encode64("#{username}:#{password}"))
   end
 end
