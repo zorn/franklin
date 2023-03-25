@@ -34,7 +34,7 @@ defmodule FranklinWeb.AdminUserStories.CanNilArticlePublishedAtToRemoveFromPubli
     end
 
     edit_view
-    |> form("#new-article", article_form: %{published_at: ""})
+    |> form("#new_article", article_form: %{published_at: ""})
     |> render_submit()
 
     # After hitting save, the `nil` value is projected.

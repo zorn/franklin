@@ -15,6 +15,7 @@
 //     import "some-package"
 //
 import Uploaders from './uploaders';
+import AdminHooks from './admin/hooks';
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
@@ -33,9 +34,11 @@ liveSocketConfig = {
 // Only add the Prompt and Session hooks of Primer if they are present (which
 // should only be for the admin section).
 if (typeof Prompt !== 'undefined' && typeof Session !== 'undefined') {
+    console.log('Adding Prompt and Session hooks.')
     liveSocketConfig.hooks = {
         Prompt,
-        Session
+        Session,
+        ...AdminHooks
     }
 }
 
