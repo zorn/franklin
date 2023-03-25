@@ -124,16 +124,18 @@ defmodule Franklin.MixProject do
 
   defp extras do
     [
+      "guides/philosophy/testing.md",
+      "guides/code_style/context_accessors.md",
       "decisions/about.md",
       "decisions/datetime_column_types.md",
-      "decisions/s3_will_not_enforce_file_constraints.md",
-      "guides/testing_values.md"
+      "decisions/s3_will_not_enforce_file_constraints.md"
     ]
   end
 
   defp groups_for_extras do
     [
-      Guides: ~r/guides\/[^\/]+\.md/,
+      Philosophy: ~r/guides\/philosophy\/[^\/]+\.md/,
+      "Code Style": ~r/guides\/code_style\/[^\/]+\.md/,
       Decisions: ~r/decisions\/[^\/]+\.md/
     ]
   end
