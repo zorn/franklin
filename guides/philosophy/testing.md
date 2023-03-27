@@ -1,75 +1,58 @@
 # Testing in Franklin 
 
-Testing is a broad and easily conflated topic of discussion. 
-
-The following document seeks to define a particular perspective this projects takes towards testing. By having this documented, future and returning contributors can better align their work to a common goal.
+The following document defines a particular perspective this project takes toward testing. By documenting this, future and returning contributors can better align their work to a common goal.
 
 ## High-level project values
 
-Writing automated test code is not a goal unto itself. It is a particular practice, mixed with other team behaviors, that ultimately work towards the project's core values. 
-
-For Franklin this is summarized as: "we value building reliable and sustainable software".
+Writing test code is not a goal in itself. It is a particular practice, mixed with other team behaviors, that works towards the project's core values: "we value building reliable and sustainable software."
 
 * **Reliable** in that the software provides correct and consistent value to its users. 
-* **Sustainable** in that the software is easy to change and maintain; overcoming an an ever changing team of contributors, the human condition of forgetfulness, every growing requirements, and never ending updates to dependencies.
+* **Sustainable** in that the software is easy to change and maintain with confidence, overcoming a diverse team of contributors, the human condition of forgetfulness, ever-growing requirements, and never-ending dependency updates.
 
-In addition to writing automated tests to fullfil these values, we also expect:
+In addition to writing automated tests to satisfy these values, we also expect the following:
 
 * **manual testing** as part of a quality assurance process.
-* **system observability** of production deployments to better see and understand what is happening in the real world.
-* **code-level collaboration and review** with other developers to make sure the code being contributed meets the domain requirements while also being expressed with a professional level of clarity.
+* **system observability** of production deployments (error and logging capture, uptime, telemetry, etc.) to better see and understand what is happening in the real world.
+* **code-level collaboration and review** to make sure the code contributed meets the domain requirements while also being expressed with a professional level of clarity.
 
 ## Franklin's testing approach
 
-So with all of the context out in the open, how do we approach testing in Franklin?
+### Automated in CI
 
+The project is configured to run all tests and other code quality checks during merges into `main` and proposed pull requests. We value the consistency of running these checks often and with haste. The CI checks are broken into isolated steps to provide the most helpful signals in a single pass allowing contributors to fix multiple issues before the next round of code updates on their branch.
 
+## We prioritize testing our contracts with the user
 
-## What makes a successful automated test suite?
+Tests are written from the perspective of the user. Our software provides a user contract expressed in a domain. We write our tests in the language of that contract and, when possible, test using the user's interface (i.e.: a LiveView experience, an API call, etc.) to verify the contract works as expected.
 
+**We are not interested in using tests to verify the implementation of the contract.** As an example, the current version of the app might persist a user's profile in Postgres, but that might change in the future. If the user contract states they can read and write their profile via an API call, that is what we test. If we swap out Postress for something else in the future, the test should still work.
 
-1. It's integrated into the development cycle.
-2. It targets only the most important parts of your code base.
-3. It provides maximum value with minimum maintenance costs.
+> Aside: Sometimes, starting a new feature and testing at the user contract level can be challenging. In these cases, it can be helpful to focus on smaller implementation modules and write tests against those to keep things simple and focused at the start. Do this, write headless tests against your domain logic, and then over time, as the user's interface becomes available, refactor them into user-contract level tests and delete the original.
 
-### 1. It's integrated into the development cycle.
+## Arrange the system state with the user contracts too
 
-Writing automated tests and not automating their regular execution is madness. Tests should be ran as part of the project's CI cycle, including the main branch and pull requests.
+In that same spirit, as you _arrange_ the system's state in preparation for an _act_ and _assert_ inside a test, the _arrange_ should also, when possible, use the user perspective to set up that data. Yes, this results in slower tests, but we want to avoid coupling the tests to implementation assumptions to allow the codebase to evolve. If your tests were raw injecting rows into a Postgres database before our change, we would need to update all your tests during our refactor.
 
-### 2. It targets only the most important parts of your code base.
+Like all things, this is a tradeoff, and there may be times when this rule needs to be broken. If you decide to couple the tests to implementation, please do it with awareness and caution. Document why you chose this tradeoff so it can be considered in future work.
 
+### Code coverage
 
+We are not interested in 100% code coverage. We may provide code coverage numbers are part of our CI suite, but it is a signal to be interpreted by humans and not an automated blocker to contributions.
 
-### 3. It provides maximum value with minimum maintenance costs.
+### Test file layout and design 
 
+Test file layout and design should be consistent within a single file. Over time we expect most of our test files to feel similar, but we also recognize that it takes time for that style to come to light. Contributors should feel free to experiment with the format and layout of test files, but in general, we ask for consistency within any single test file.
 
-# What makes a successful test suite?
+## Summary: Maximum value with minimum maintenance costs
 
+All roads have led to this core testing value, which is probably the most challenging part. We want to write **valuable tests** and understand the maintenance cost of the test code we contribute. Code is a liability, not an asset. A few valuable tests will better protect the project from bugs than many mediocre tests.
 
+Over-testing with excessive implementation coupling leads to systems you can't refactor or update with speed. Low or no testing leads to unexpected regressions and low confidence about system stability.
 
-Why it's important to state the testing values of a project.
+Hopefully, the guidance of this document helps you find the productive balance when thinking about testing here within the Franklin project and others.
 
-What our values are.
+## More Info
 
-Code is a liability, not an asset. A small number of highly valuable tests will do a much better job protecting the project from bugs than a large number of mediocre tests. They couple tests to the class's implementation details, as opposed to its observable behavior.
+This approach to testing was highly inspired by the language agnostic book [Unit Testing Principles, Practices, and Patterns](https://www.manning.com/books/unit-testing). I highly recommend it if you want to refine your approach to testing.
 
-Mocks aren't your friend. Mostly. This is the road to brittle tests, paved with good intentions.
-
-
-How you can observe these values in action.
-
-These values drew heavy inspiration from Clarity, TDD what when wrong and the book.
-
-
-My goal concerning testing is to shoot for the maximum about of system confidence while writing the fewest tests as possible. I highly prefer my test be written in the language of my contract with the user, with small exceptions for tricky implementation details.
-
-I'm fine writing tests against the implementation if I can in a TDD session, those help me in the moment but when it comes time to merge things, I want to refactor those tests into the language of the user.
-
-I want to embrace the full spectrum of tools (not just testing) to verify the correctness and successful use of my software. This includes manual QA, error capture (Sentry), uptime, and other general observability.
-
-Why we avoid testing implementation: it will change and as we refactor implementation (that does not change the user contract) we should not have to edit a bunch of tests.
-
-Things to capture:
-
-    Work hard to follow a single Arrange/Act/Assert flow. If you are doing more acts after asserts, you might be breaking this ideal.
-    Multiple asserts are allowed, as we are testing a unit of domain behavior, not a line of code.
+I also recommend the talk [Clarity](https://www.youtube.com/watch?v=6sNmJtoKDCo&t=2277s) by Saša Jurić | ElixirConf EU 2021.
