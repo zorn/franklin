@@ -1,4 +1,4 @@
-# Code Style: Context Accessors
+# Context Accessors
 
 The following patterns are preferred when building a domain context and providing access functions.
 
