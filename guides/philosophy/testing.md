@@ -21,7 +21,7 @@ In addition to writing automated tests to satisfy these values, we also expect t
 
 The project is configured to run all tests and other code quality checks during merges into `main` and proposed pull requests. We value the consistency of running these checks often and with haste. The CI checks are broken into isolated steps to provide helpful signals in a single CI pass allowing contributors to fix multiple issues before the next round of code updates on their branch.
 
-## We prioritize testing our contracts with the user
+### We prioritize testing our contracts with the user
 
 Our software provides a user contract expressed in a domain. We write our tests in the language of that contract and, when possible, test using the user's interface (i.e.: a LiveView experience, an API call, etc.) to verify the contract works as expected.
 
@@ -29,7 +29,7 @@ Our software provides a user contract expressed in a domain. We write our tests 
 
 > Aside: Sometimes, starting a new feature and testing at the user contract level can be challenging. In these cases, it can be helpful to focus on smaller implementation modules and write tests against those to keep things simple and focused at the start. Do this, write headless tests against your domain logic, and then over time, as the user's interface becomes available, refactor them into user-contract level tests and delete the original.
 
-## Arrange the system state with the user contracts too
+### Arrange the system state with the user contracts too
 
 In that same spirit, as you _arrange_ the system's state in preparation for an _act_ and _assert_ inside a test, the _arrange_ should also, when possible, use the user perspective to set up that data. Yes, this results in slower tests, but we want to avoid coupling the tests to implementation assumptions to allow the codebase to evolve. If your tests were raw injecting rows into a Postgres database before our change, we would need to update all your tests during our refactor.
 
