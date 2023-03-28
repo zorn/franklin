@@ -126,9 +126,9 @@ defmodule Franklin.MixProject do
     [
       "guides/philosophy/testing.md",
       "guides/code_style/context_accessors.md",
-      "decisions/about.md",
-      "decisions/datetime_column_types.md",
-      "decisions/s3_will_not_enforce_file_constraints.md"
+      "guides/decisions/about.md",
+      "guides/decisions/datetime_column_types.md",
+      "guides/decisions/s3_will_not_enforce_file_constraints.md"
     ]
   end
 
@@ -136,7 +136,7 @@ defmodule Franklin.MixProject do
     [
       Philosophy: ~r/guides\/philosophy\/[^\/]+\.md/,
       "Code Style": ~r/guides\/code_style\/[^\/]+\.md/,
-      Decisions: ~r/decisions\/[^\/]+\.md/
+      Decisions: ~r/guides\/decisions\/[^\/]+\.md/
     ]
   end
 
