@@ -43,7 +43,7 @@ defmodule Franklin.MixProject do
     [
       # Core Phoenix Deps
       {:ecto_sql, "~> 3.6"},
-      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
       {:finch, "~> 0.14"},
       {:floki, ">= 0.30.0", only: :test},
       {:gettext, "~> 0.20"},
@@ -53,7 +53,7 @@ defmodule Franklin.MixProject do
       {:phoenix_live_dashboard, "~> 0.7.2"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.18.16"},
-      {:phoenix, "~> 1.7.1"},
+      {:phoenix, "~> 1.7.2"},
       {:plug_cowboy, "~> 2.5"},
       {:postgrex, ">= 0.0.0"},
       {:swoosh, "~> 1.3"},
