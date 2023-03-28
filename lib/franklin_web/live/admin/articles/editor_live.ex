@@ -354,7 +354,8 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     dbg(current_body)
     # TODO: It would be better if this did not add a new line if the body was previously empty.
     # TODO: When the attachment is an image we should add some markdown image syntax.
-    # TODO: Maybe we should push this as event to the JS client so it can insert at the cursor location and is not effected by the LiveView focus lock?
+    # TODO: Maybe we should push this as event to the JS client so it can insert
+    # at the cursor location and is not effected by the LiveView focus lock?
     new_body = current_body <> "\n#{attachment_url}"
     new_changeset = Ecto.Changeset.put_change(socket.assigns.form_changeset, :body, new_body)
 
