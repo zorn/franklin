@@ -48,7 +48,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   test "creation succeeds with all required form fields", ~M{create_view} do
     valid_params = %{
       title: "A valid new article title.",
-      slug: "slug/a-valid-new_article-title",
+      slug: "slug/a-valid-new-article-title",
       slug_autogenerate: false,
       body: "A valid new article body."
     }
@@ -56,6 +56,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     create_view
     |> form("#new_article", article_form: valid_params)
     |> render_submit()
+    |> dbg()
 
     # Because the data projection can take time, we need to wait_for_passing.
     article =
@@ -69,7 +70,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
                    %Article{
                      title: "A valid new article title.",
                      body: "A valid new article body.",
-                     slug: "slug/a-valid-new_article-title",
+                     slug: "slug/a-valid-new-article-title",
                      published_at: %DateTime{}
                    },
                    article
