@@ -1,4 +1,8 @@
 defmodule FranklinWeb.Components.Admin.AnimatedSpinner do
+  @moduledoc """
+  Renders a forever spinning semi-circle.
+  """
+
   use Phoenix.Component
 
   def admin_animated_spinner(assigns) do
