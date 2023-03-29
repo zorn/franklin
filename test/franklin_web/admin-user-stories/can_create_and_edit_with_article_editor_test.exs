@@ -54,7 +54,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     }
 
     create_view
-    |> form("#new-article", article_form: valid_params)
+    |> form("#new_article", article_form: valid_params)
     |> render_submit()
 
     # Because the data projection can take time, we need to wait_for_passing.
@@ -90,7 +90,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     }
 
     create_view
-    |> form("#new-article", article_form: valid_params)
+    |> form("#new_article", article_form: valid_params)
     |> render_submit()
 
     # Because the data projection can take time, we need to wait_for_passing.
@@ -132,7 +132,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     }
 
     edit_view
-    |> form("#new-article", article_form: edited_params)
+    |> form("#new_article", article_form: edited_params)
     |> render_submit()
 
     # Because the data projection can take time, we need to wait_for_passing.
@@ -154,7 +154,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     test "fails without a required title value", ~M{create_view, edit_view} do
       for view <- [create_view, edit_view] do
         view
-        |> form("#new-article", article_form: %{title: ""})
+        |> form("#new_article", article_form: %{title: ""})
         |> render_submit()
 
         assert has_element?(view, error_feedback_query(:title), "can't be blank")
@@ -166,7 +166,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
 
       for view <- [create_view, edit_view] do
         view
-        |> form("#new-article", article_form: %{title: invalid_title})
+        |> form("#new_article", article_form: %{title: invalid_title})
         |> render_submit()
 
         # FIXME: The new component system seems to fail at showing the number
@@ -190,7 +190,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
 
       for view <- [create_view, edit_view] do
         view
-        |> form("#new-article",
+        |> form("#new_article",
           article_form: %{
             slug: invalid_slug,
             slug_autogenerate: false
@@ -211,7 +211,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     test "fails without a date-specific string published_at value", ~M{create_view, edit_view} do
       for view <- [create_view, edit_view] do
         view
-        |> form("#new-article", article_form: %{published_at: "not a date"})
+        |> form("#new_article", article_form: %{published_at: "not a date"})
         |> render_submit()
 
         assert has_element?(view, error_feedback_query(:published_at), "is invalid")
@@ -223,7 +223,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     test "fails without a required body value", ~M{create_view, edit_view} do
       for view <- [create_view, edit_view] do
         view
-        |> form("#new-article", article_form: %{body: ""})
+        |> form("#new_article", article_form: %{body: ""})
         |> render_submit()
 
         assert has_element?(view, error_feedback_query(:body), "can't be blank")
@@ -235,7 +235,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
 
       for view <- [create_view, edit_view] do
         view
-        |> form("#new-article", article_form: %{body: invalid_body})
+        |> form("#new_article", article_form: %{body: invalid_body})
         |> render_submit()
 
         assert has_element?(

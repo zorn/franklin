@@ -20,6 +20,6 @@ defmodule Franklin.S3Storage do
   end
 
   defp config() do
-    ExAws.Config.new(:s3) |> dbg()
+    ExAws.Config.new(:s3)
   end
 end

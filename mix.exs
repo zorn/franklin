@@ -43,7 +43,7 @@ defmodule Franklin.MixProject do
     [
       # Core Phoenix Deps
       {:ecto_sql, "~> 3.6"},
-      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
       {:finch, "~> 0.14"},
       {:floki, ">= 0.30.0", only: :test},
       {:gettext, "~> 0.20"},
@@ -53,7 +53,7 @@ defmodule Franklin.MixProject do
       {:phoenix_live_dashboard, "~> 0.7.2"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.18.16"},
-      {:phoenix, "~> 1.7.1"},
+      {:phoenix, "~> 1.7.2"},
       {:plug_cowboy, "~> 2.5"},
       {:postgrex, ">= 0.0.0"},
       {:swoosh, "~> 1.3"},
@@ -124,17 +124,19 @@ defmodule Franklin.MixProject do
 
   defp extras do
     [
-      "decisions/about.md",
-      "decisions/datetime_column_types.md",
-      "decisions/s3_will_not_enforce_file_constraints.md",
-      "guides/testing_values.md"
+      "guides/philosophy/testing.md",
+      "guides/code_style/context_accessors.md",
+      "guides/decisions/about.md",
+      "guides/decisions/datetime_column_types.md",
+      "guides/decisions/s3_will_not_enforce_file_constraints.md"
     ]
   end
 
   defp groups_for_extras do
     [
-      Guides: ~r/guides\/[^\/]+\.md/,
-      Decisions: ~r/decisions\/[^\/]+\.md/
+      Philosophy: ~r/guides\/philosophy\/[^\/]+\.md/,
+      "Code Style": ~r/guides\/code_style\/[^\/]+\.md/,
+      Decisions: ~r/guides\/decisions\/[^\/]+\.md/
     ]
   end
 
