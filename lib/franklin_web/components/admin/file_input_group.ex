@@ -12,6 +12,7 @@ defmodule FranklinWeb.Components.Admin.FileInputGroup do
   # FIXME: These attribute types are currently very coupled with the specific
   # module `FranklinWeb.Admin.Articles.EditorLive`. We should consider
   # refactoring them to be more general in the future.
+  # https://github.com/zorn/franklin/issues/227
   attr :upload, :map, required: true
   attr :upload_progress, :map, required: true
 
