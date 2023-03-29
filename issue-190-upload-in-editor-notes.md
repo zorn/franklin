@@ -8,3 +8,4 @@
 - [] Write a ticket to consider breaking out a dedicated app.js file for the admin section.
 - [] Refactor upload bar to use a component.
 - [] Remove mention of pasting in a file.
+- [] Should a user be able to start a new upload while one is already in progress? 
