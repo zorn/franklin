@@ -117,6 +117,9 @@ defmodule FranklinWeb do
       import FranklinWeb.Components.AdminFormError
       import FranklinWeb.Components.AdminFormInput
 
+      import FranklinWeb.Components.Admin.FileInputGroup
+      import FranklinWeb.Components.Admin.AnimatedSpinner
+
       @doc """
       Generates tag for inlined form input errors.
       """
