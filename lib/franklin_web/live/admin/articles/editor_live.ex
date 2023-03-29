@@ -1,9 +1,11 @@
 defmodule FranklinWeb.Admin.Articles.EditorLive do
   @moduledoc """
-  Presents a form allowing an admin to create or edit a `Article` entity.
+  Presents a form allowing an admin to create or edit an `Article` entity.
   """
 
   use FranklinWeb, :admin_live_view
+
+  require Logger
 
   alias Franklin.Articles
   alias Franklin.Articles.Article
@@ -12,11 +14,60 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
   alias Phoenix.LiveView.Socket
   alias Phoenix.LiveView.Socket
 
+  def render(assigns) do
+    ~H"""
+    <h2 class="text-xl font-bold my-4">Article Editor</h2>
+
+    <.form
+      :let={f}
+      for={@form_changeset}
+      id="new_article"
+      autocomplete="off"
+      phx-submit="save_form"
+      phx-change="form_changed"
+    >
+      <!-- Title -->
+      <.text_input form={f} field={:title} is_form_group is_full_width />
+      <!-- Slug -->
+      <.form_group field="slug">
+        <fieldset disabled={Phoenix.HTML.Form.input_value(f, :slug_autogenerate)}>
+          <.text_input form={f} field={:slug} is_full_width />
+        </fieldset>
+
+        <.form_group field="slug_autogenerate" is_hide_label class="mt-1">
+          <.checkbox form={f} field={:slug_autogenerate}>
+            <:label>Autogenerate slug from title.</:label>
+          </.checkbox>
+        </.form_group>
+      </.form_group>
+      <!-- Published at -->
+      <.text_input form={f} field={:published_at} is_form_group is_full_width />
+      <!-- Body -->
+      <.form_group field="body">
+        <section phx-drop-target={@uploads.attachment.ref}>
+          <.textarea
+            form={f}
+            field={:body}
+            rows="10"
+            is_large
+            is_full_width
+            phx-hook="TextareaMutation"
+          />
+          <.admin_file_input_group upload={@uploads.attachment} upload_progress={@upload_progress} />
+        </section>
+      </.form_group>
+      <.button is_submit is_primary>Save Article</.button>
+    </.form>
+    """
+  end
+
   def mount(params, _session, socket) do
     socket
     |> assign_article(params)
     |> assign_form()
     |> assign_form_changeset(%{})
+    |> assign_uploaded_files()
+    |> assign_upload_progress()
     |> setup_subscription(params)
     |> ok()
   end
@@ -57,6 +108,46 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     assign(socket, form_changeset: ArticleForm.changeset(form, attrs))
   end
 
+  defp assign_uploaded_files(socket) do
+    socket
+    |> assign(:uploaded_files, [])
+    |> allow_upload(:attachment,
+      accept: ~w(.jpg .jpeg .png .gif .mp4),
+      max_entries: 10,
+      external: &presign_upload/2,
+      progress: &handle_progress/3,
+      auto_upload: true
+    )
+  end
+
+  defp assign_upload_progress(socket) do
+    # A simple map where the keys are the `entity_uuid` and the values are the
+    # upload progress percentage as an integer.
+    assign(socket, :upload_progress, %{})
+  end
+
+  defp assign_upload_progress(socket, entity_uuid, percent) when is_integer(percent) do
+    %{assigns: %{upload_progress: upload_progress}} = socket
+
+    upload_progress =
+      upload_progress
+      |> Map.put(entity_uuid, percent)
+      |> clear_upload_progress_when_all_progress_is_100_percent()
+
+    assign(socket, upload_progress: upload_progress)
+  end
+
+  defp clear_upload_progress_when_all_progress_is_100_percent(upload_progress) do
+    # Because a user might upload multiple groups of files in different batches
+    # and we need a way to present overall upload progress of a single batch, we
+    # need to clear out our progress tracking map when all the progress is 100%.
+    if Enum.all?(upload_progress, fn {_key, value} -> value == 100 end) do
+      %{}
+    else
+      upload_progress
+    end
+  end
+
   @spec setup_subscription(Socket.t(), map() | nil) :: Socket.t()
   defp setup_subscription(socket, %{"id" => id}) do
     Articles.subscribe(id)
@@ -69,6 +160,18 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     id = Ecto.UUID.generate()
     Articles.subscribe(id)
     assign(socket, subscription_id: id)
+  end
+
+  def handle_event("update_body", %{"body" => body}, socket) do
+    # Via this somewhat hack of an event the frontend Javascript hooks can tell
+    # the LiveView to update the body value explicitly. This is needed to
+    # accomplish some specific editor features around presenting an in-progress
+    # upload comment and then later updating it with the final URL.
+    new_changeset = Ecto.Changeset.put_change(socket.assigns.form_changeset, :body, body)
+
+    socket
+    |> assign(form_changeset: new_changeset)
+    |> noreply()
   end
 
   def handle_event("form_changed", %{"article_form" => form_params}, socket) do
@@ -192,45 +295,101 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     |> noreply()
   end
 
-  def render(assigns) do
-    ~H"""
-    <h2 class="text-xl font-bold my-4">Article Editor</h2>
+  defp handle_progress(:attachment, %Phoenix.LiveView.UploadEntry{done?: done?} = entry, socket)
+       when done? do
+    attachment_url =
+      consume_uploaded_entry(socket, entry, fn %{url: url} ->
+        url =
+          url
+          |> remove_presign_url_parameters()
+          |> maybe_add_markdown_image_syntax()
 
-    <.form
-      :let={f}
-      for={@form_changeset}
-      id="new-article"
-      autocomplete="off"
-      phx-submit="save_form"
-      phx-change="form_changed"
-    >
-      <!-- Title -->
-      <.form_group field="title">
-        <.text_input form={f} field={:title} is_full_width />
-      </.form_group>
-      <!-- Slug -->
-      <.form_group field="slug">
-        <fieldset disabled={Phoenix.HTML.Form.input_value(f, :slug_autogenerate)}>
-          <.text_input form={f} field={:slug} is_full_width />
-        </fieldset>
+        {:ok, url}
+      end)
 
-        <.form_group field="slug_autogenerate" is_hide_label class="mt-1">
-          <.checkbox form={f} field={:slug_autogenerate}>
-            <:label>Autogenerate slug from title.</:label>
-          </.checkbox>
-        </.form_group>
-      </.form_group>
-      <!-- Published At -->
-      <.form_group field="published_at">
-        <.text_input form={f} field={:published_at} is_full_width />
-      </.form_group>
-      <!-- Body -->
-      <.form_group field="body">
-        <.textarea form={f} field={:body} rows="10" is_large is_full_width />
-      </.form_group>
-      <.button is_submit is_primary>Save Article</.button>
-    </.form>
-    """
+    socket
+    |> assign_upload_progress(entry.uuid, 100)
+    |> replace_upload_progress_description_in_body(entry.client_name, attachment_url)
+    |> noreply()
+  end
+
+  defp handle_progress(
+         :attachment,
+         %Phoenix.LiveView.UploadEntry{progress: progress} = entry,
+         socket
+       ) do
+    socket
+    |> assign_upload_progress(entry.uuid, progress)
+    |> noreply()
+  end
+
+  defp maybe_add_markdown_image_syntax(url) do
+    if String.ends_with?(url, [".jpg", ".jpeg", ".gif", ".png"]) do
+      "![](#{url})"
+    else
+      url
+    end
+  end
+
+  defp presign_upload(entry, socket) do
+    unique_filename = "#{entry.uuid}/#{entry.client_name}"
+
+    case Franklin.S3Storage.generate_presigned_url(unique_filename) do
+      {:ok, presigned_url} ->
+        socket =
+          socket
+          |> assign_upload_progress(entry.uuid, 0)
+          |> push_event("textarea_inject_request", %{
+            content: upload_progress_description(entry.client_name)
+          })
+
+        {:ok, %{uploader: "S3", url: presigned_url}, socket}
+
+      {:error, reason} ->
+        # Even though we could not generate a presigned URL, we still need to
+        # return an `{:ok, metadata, socket}` shaped value, else LiveView enters
+        # a never ending crash/reload/crash loop. We will log the error for
+        # observation.
+
+        Logger.error(
+          message: "Failed to generate presigned URL for entry",
+          entry: entry,
+          reason: reason
+        )
+
+        {:ok, %{uploader: "S3", error: reason}, socket}
+    end
+  end
+
+  defp replace_upload_progress_description_in_body(socket, filename, new_content) do
+    # This function will update the LiveView body assign as well as push an
+    # event to the frontend JavaScript to do the same. We are doing it in two
+    # places because the upload feature needs to work when the body textarea is
+    # in focus and when it is not. This is not ideal, and a is a hacky way
+    # around the LiveView focus lock.
+    current_body = Ecto.Changeset.fetch_field!(socket.assigns.form_changeset, :body) || ""
+    upload_description = upload_progress_description(filename)
+    new_body = String.replace(current_body, upload_description, new_content)
+    new_changeset = Ecto.Changeset.put_change(socket.assigns.form_changeset, :body, new_body)
+
+    socket
+    |> assign(:form_changeset, new_changeset)
+    |> push_event("textarea_replace_request", %{
+      target: upload_description,
+      replacement: new_content
+    })
+  end
+
+  defp upload_progress_description(filename) do
+    "<!-- Uploading #{filename}... -->"
+  end
+
+  defp remove_presign_url_parameters(url) do
+    if String.contains?(url, "?") do
+      url |> String.split("?") |> hd()
+    else
+      url
+    end
   end
 
   @spec ok(Socket.t()) :: {:ok, Socket.t()}
