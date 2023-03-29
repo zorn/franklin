@@ -48,7 +48,6 @@ defmodule FranklinWeb.Components.Admin.FileInputGroup do
   defp overall_upload_progress(upload_progress) do
     number_of_entries = Enum.count(upload_progress)
     all_values = Map.values(upload_progress)
-    dbg(all_values)
     (Enum.sum(all_values) / number_of_entries) |> floor()
   end
 end
