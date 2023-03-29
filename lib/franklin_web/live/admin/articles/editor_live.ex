@@ -314,14 +314,6 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     |> noreply()
   end
 
-  defp maybe_add_markdown_image_syntax(url) do
-    if String.ends_with?(url, [".jpg", ".jpeg", ".gif", ".png"]) do
-      "![](#{url})"
-    else
-      url
-    end
-  end
-
   defp handle_progress(
          :attachment,
          %Phoenix.LiveView.UploadEntry{progress: progress} = entry,
@@ -330,6 +322,14 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     socket
     |> assign_upload_progress(entry.uuid, progress)
     |> noreply()
+  end
+
+  defp maybe_add_markdown_image_syntax(url) do
+    if String.ends_with?(url, [".jpg", ".jpeg", ".gif", ".png"]) do
+      "![](#{url})"
+    else
+      url
+    end
   end
 
   defp presign_upload(entry, socket) do
