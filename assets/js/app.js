@@ -1,19 +1,3 @@
-// If you want to use Phoenix channels, run `mix help phx.gen.channel`
-// to get started and then uncomment the line below.
-// import "./user_socket.js"
-
-// You can include dependencies in two ways.
-//
-// The simplest option is to put them in assets/vendor and
-// import them using relative paths:
-//
-//     import "../vendor/some-package.js"
-//
-// Alternatively, you can `npm install some-package --prefix assets` and import
-// them using a path starting with the package name:
-//
-//     import "some-package"
-//
 import Uploaders from './uploaders';
 import AdminHooks from './admin/hooks';
 
@@ -31,10 +15,13 @@ liveSocketConfig = {
     uploaders: Uploaders,
     params: { _csrf_token: csrfToken }
 }
-// Only add the Prompt and Session hooks of Primer if they are present (which
-// should only be for the admin section).
+
+// FIXME: These hooks are only needed for the admin pages, so we look for
+// Primer's Session and Prompt objects before assigning the hooks. In the
+// future, we should consider making an admin-only specific app.js file to avoid
+// this clunky logic.
+// https://github.com/zorn/franklin/issues/226
 if (typeof Prompt !== 'undefined' && typeof Session !== 'undefined') {
-    console.log('Adding Prompt and Session hooks.')
     liveSocketConfig.hooks = {
         Prompt,
         Session,
