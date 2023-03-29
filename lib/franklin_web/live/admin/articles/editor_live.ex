@@ -67,7 +67,6 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
     |> assign_form()
     |> assign_form_changeset(%{})
     |> assign_uploaded_files()
-    # TODO: `upload_progress` is a poor name.
     |> assign_upload_progress()
     |> setup_subscription(params)
     |> ok()
@@ -122,29 +121,31 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
   end
 
   defp assign_upload_progress(socket) do
-    # We'll use this map to track the progress of each upload.
-    # Q: When should we clear this map?
+    # A simple map where the keys are the `entity_uuid` and the values are the
+    # upload progress percentage as an integer.
     assign(socket, :upload_progress, %{})
   end
 
-  defp assign_upload_progress(
-         %{assigns: %{upload_progress: upload_progress}} = socket,
-         entity_uuid,
-         percent
-       )
-       when is_integer(percent) do
-    upload_progress = Map.put(upload_progress, entity_uuid, percent)
-    dbg(upload_progress)
+  defp assign_upload_progress(socket, entity_uuid, percent) when is_integer(percent) do
+    %{assigns: %{upload_progress: upload_progress}} = socket
 
-    # TODO: make this a named function.
     upload_progress =
-      if Enum.all?(upload_progress, fn {_key, value} -> value == 100 end) do
-        %{}
-      else
-        upload_progress
-      end
+      upload_progress
+      |> Map.put(entity_uuid, percent)
+      |> clear_upload_progress_when_all_progress_is_100_percent()
 
     assign(socket, upload_progress: upload_progress)
+  end
+
+  defp clear_upload_progress_when_all_progress_is_100_percent(upload_progress) do
+    # Because a user might upload multiple groups of files in different batches
+    # and we need a way to present overall upload progress of a single batch, we
+    # need to clear out our progress tracking map when all the progress is 100%.
+    if Enum.all?(upload_progress, fn {_key, value} -> value == 100 end) do
+      %{}
+    else
+      upload_progress
+    end
   end
 
   @spec setup_subscription(Socket.t(), map() | nil) :: Socket.t()
@@ -299,24 +300,26 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
        when done? do
     attachment_url =
       consume_uploaded_entry(socket, entry, fn %{url: url} ->
-        {:ok, remove_presign_url_parameters(url)}
-      end)
+        url =
+          url
+          |> remove_presign_url_parameters()
+          |> maybe_add_markdown_image_syntax()
 
-    dbg(attachment_url)
-    # Add the url to the body of the article.
-    # current_body = Ecto.Changeset.fetch_field!(socket.assigns.form_changeset, :body) || ""
-    # dbg(current_body)
-    # TODO: It would be better if this did not add a new line if the body was previously empty.
-    # TODO: When the attachment is an image we should add some markdown image syntax.
-    # TODO: Maybe we should push this as event to the JS client so it can insert
-    # at the cursor location and is not effected by the LiveView focus lock?
-    # new_body = current_body <> "\n#{attachment_url}"
-    # new_changeset = Ecto.Changeset.put_change(socket.assigns.form_changeset, :body, new_body)
+        {:ok, url}
+      end)
 
     socket
     |> assign_upload_progress(entry.uuid, 100)
     |> replace_upload_progress_description_in_body(entry.client_name, attachment_url)
     |> noreply()
+  end
+
+  defp maybe_add_markdown_image_syntax(url) do
+    if String.ends_with?(url, [".jpg", ".jpeg", ".gif", ".png"]) do
+      "![](#{url})"
+    else
+      url
+    end
   end
 
   defp handle_progress(
