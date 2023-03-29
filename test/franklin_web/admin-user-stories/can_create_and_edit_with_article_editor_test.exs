@@ -56,7 +56,6 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
     create_view
     |> form("#new_article", article_form: valid_params)
     |> render_submit()
-    |> dbg()
 
     # Because the data projection can take time, we need to wait_for_passing.
     article =
