@@ -1,6 +1,6 @@
 defmodule FranklinWeb.Admin.Articles.EditorLive do
   @moduledoc """
-  Presents a form allowing an admin to create or edit a `Article` entity.
+  Presents a form allowing an admin to create or edit an `Article` entity.
   """
 
   use FranklinWeb, :admin_live_view
@@ -27,9 +27,7 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
       phx-change="form_changed"
     >
       <!-- Title -->
-      <.form_group field="title">
-        <.text_input form={f} field={:title} is_full_width />
-      </.form_group>
+      <.text_input form={f} field={:title} is_form_group is_full_width />
       <!-- Slug -->
       <.form_group field="slug">
         <fieldset disabled={Phoenix.HTML.Form.input_value(f, :slug_autogenerate)}>
@@ -42,14 +40,10 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
           </.checkbox>
         </.form_group>
       </.form_group>
-      <!-- Published At -->
-      <.form_group field="published_at">
-        <.text_input form={f} field={:published_at} is_full_width />
-      </.form_group>
+      <!-- Published at -->
+      <.text_input form={f} field={:published_at} is_form_group is_full_width />
       <!-- Body -->
       <.form_group field="body">
-        <%!-- I feel like I'm going to have to drop the Primer `textarea` and do my own because I'm going to want to wrap the error ring around the textarea and the footer part. In time I might be able to come back and make this a legit `MarkdownEditor` -- though I'm folling the issue markdown editor style while the other components seem to be using the newer Project style MarkdownEditor. --%>
-        <%!-- It's probably important to work on a short term design here, to get uploads wokring in a reasonabe way and make new issue to come back and make the component design better. --%>
         <section phx-drop-target={@uploads.attachment.ref}>
           <.textarea
             form={f}
@@ -59,71 +53,12 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
             is_full_width
             phx-hook="TextareaMutation"
           />
+          <.admin_file_input_group upload={@uploads.attachment} upload_progress={@upload_progress} />
         </section>
-        <%!-- TODO: Should a user be able to start a new upload while one is already in progress? --%>
-        <div class="mt-1 py-1 flex items-center justify-between bg-gray-100 border border-gray-400 border-solid rounded">
-          <div class="ml-2 text-gray-600">
-            <label class="font-normal">
-              <%= if show_upload_progress?(@upload_progress) do %>
-                <%!-- todo: for those files in progress figure out overall progress --%>
-                <%!-- <svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-                  <!-- ... -->
-                </svg> --%>
-                <%!-- TODO: Break this out into it's own component. --%>
-                <div class="flex items-center">
-                  <svg
-                    class="animate-spin mr-1 h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    >
-                    </circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    >
-                    </path>
-                  </svg>
-                  Files uploading... (<%= overall_upload_progress(@upload_progress) %>%)
-                </div>
-              <% else %>
-                Attach files by dragging & dropping, <span class="underline">selecting</span>
-                or pasting them.
-              <% end %>
-
-              <.live_file_input class="hidden" upload={@uploads.attachment} />
-            </label>
-          </div>
-          <.octicon name="markdown-16" class="mr-2" />
-        </div>
       </.form_group>
       <.button is_submit is_primary>Save Article</.button>
     </.form>
     """
-  end
-
-  defp show_upload_progress?(upload_progress) do
-    upload_progress
-    |> Map.values()
-    |> Enum.any?(fn progress -> progress < 100 end)
-  end
-
-  defp overall_upload_progress(upload_progress) when map_size(upload_progress) == 0, do: 0
-
-  defp overall_upload_progress(upload_progress) do
-    number_of_entries = Enum.count(upload_progress)
-    all_values = Map.values(upload_progress)
-    dbg(all_values)
-    (Enum.sum(all_values) / number_of_entries) |> floor()
   end
 
   def mount(params, _session, socket) do
