@@ -163,7 +163,6 @@ defmodule FranklinWeb.Admin.Articles.EditorLive do
   end
 
   def handle_event("update_body", %{"body" => body}, socket) do
-    IO.puts("update_body: #{body}")
     # Via this somewhat hack of an event the frontend Javascript hooks can tell
     # the LiveView to update the body value explicitly. This is needed to
     # accomplish some specific editor features around presenting an in-progress
