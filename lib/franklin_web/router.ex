@@ -83,7 +83,7 @@ defmodule FranklinWeb.Router do
   ## Authentication routes
 
   scope "/admin", FranklinWeb.Admin, as: :admin do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+    pipe_through [:browser, :assign_root_layout_admin, :redirect_if_user_is_authenticated]
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{FranklinWeb.Admin.UserAuth, :redirect_if_user_is_authenticated}] do
@@ -97,7 +97,7 @@ defmodule FranklinWeb.Router do
   end
 
   scope "/admin", FranklinWeb.Admin, as: :admin do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :assign_root_layout, :require_authenticated_user]
 
     live_session :require_authenticated_user,
       on_mount: [{FranklinWeb.Admin.UserAuth, :ensure_authenticated}] do
@@ -107,7 +107,7 @@ defmodule FranklinWeb.Router do
   end
 
   scope "/admin", FranklinWeb.Admin, as: :admin do
-    pipe_through [:browser]
+    pipe_through [:browser, :assign_root_layout]
 
     delete "/users/log_out", UserSessionController, :delete
 
