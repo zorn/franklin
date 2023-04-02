@@ -4,12 +4,20 @@ defmodule FranklinWeb.Admin.UserLoginLive do
   def render(assigns) do
     ~H"""
     <div class="mt-8 mb-4">
-      <h1 class="text-center font-light">Sign in to Franklin</h1>
-
-      <%!-- FIXME: Not sure why but when I try to customize this border color it never works. --%>
       <div class="mx-auto w-96">
+        <h1 class="text-center font-light mb-4">Sign in to Franklin</h1>
+
+        <p class="text-center">
+          Don't have an account? <%!-- FIXME: Align url link with "sign up" terminology. --%>
+          <.link navigate={~p"/admin/users/register"} class="hover:underline">
+            Sign up
+          </.link>
+          for an account now.
+        </p>
+
         <.admin_flash_messages flash={@flash} />
 
+        <%!-- FIXME: When I try to customize this border color it never works. --%>
         <div class="bg-gray-100 border rounded mt-4 px-4 pb-4">
           <.form
             :let={f}
@@ -19,42 +27,25 @@ defmodule FranklinWeb.Admin.UserLoginLive do
             phx-update="ignore"
           >
             <.text_input form={f} field={:email} is_form_group is_full_width />
-            <.text_input form={f} field={:password} is_form_group is_full_width />
+            <.text_input form={f} field={:password} type="password" is_form_group is_full_width />
+
+            <.form_group form={f} field={:remember_me} is_hide_label>
+              <.checkbox form={f} field={:remember_me}>
+                <:label>Keep me signed in</:label>
+              </.checkbox>
+            </.form_group>
+
             <.button is_submit is_primary is_full_width>Sign in</.button>
           </.form>
         </div>
+
+        <div class="mt-4 text-center">
+          <.link href={~p"/admin/users/reset_password"} class="text-sm">
+            Reset your password
+          </.link>
+        </div>
       </div>
     </div>
-
-    <%!-- <div class="mx-auto max-w-sm">
-      <.header class="text-center">
-        Sign in to account
-        <:subtitle>
-          Don't have an account?
-          <.link navigate={~p"/admin/users/register"} class="font-semibold text-brand hover:underline">
-            Sign up
-          </.link>
-          for an account now.
-        </:subtitle>
-      </.header>
-
-      <.simple_form for={@form} id="login_form" action={~p"/admin/users/log_in"} phx-update="ignore">
-        <.input field={@form[:email]} type="email" label="Email" required />
-        <.input field={@form[:password]} type="password" label="Password" required />
-
-        <:actions>
-          <.input field={@form[:remember_me]} type="checkbox" label="Keep me logged in" />
-          <.link href={~p"/admin/users/reset_password"} class="text-sm font-semibold">
-            Forgot your password?
-          </.link>
-        </:actions>
-        <:actions>
-          <.button phx-disable-with="Signing in..." class="w-full">
-            Sign in <span aria-hidden="true">→</span>
-          </.button>
-        </:actions>
-      </.simple_form>
-    </div> --%>
     """
   end
 
