@@ -1,6 +1,6 @@
 <.header>
   <:item :let={classes}>
-    <.link navigate={~p"/admin/"} class={[classes.link, "f4 d-flex flex-items-center mr-4"]}>
+    <.link navigate={~p"/admin/"} class={[classes.link, "f4 d-flex flex-items-center ml-4 mr-4"]}>
       <.octicon name="star-fill-24" width="32" height="32" class="mr-2" />
       <span>Franklin Admin</span>
     </.link>
@@ -8,8 +8,12 @@
   <:item :let={classes}>
     <.link navigate={~p"/admin/"} class={classes.link}>Launchpad</.link>
   </:item>
-  <:item :let={classes}>
+  <:item :let={classes} is_full>
     <.link navigate={~p"/admin/articles"} class={classes.link}>Articles</.link>
+  </:item>
+  <:item :let={classes}>
+    <%!-- TODO: rename to `/admin/sign-in --%>
+    <.link navigate={~p"/admin/users/log_in"} class={[classes.link, "mr-4"]}>Sign in</.link>
   </:item>
 </.header>
 
