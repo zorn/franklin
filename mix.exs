@@ -41,7 +41,6 @@ defmodule Franklin.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:argon2_elixir, "~> 3.0"},
       # Core Phoenix Deps
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
@@ -60,6 +59,9 @@ defmodule Franklin.MixProject do
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
+
+      # Used alongside the generated phx.gen.auth code.
+      {:argon2_elixir, "~> 3.0"},
 
       # To help build the HTML documentation.
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
