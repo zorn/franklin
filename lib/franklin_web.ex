@@ -132,6 +132,7 @@ defmodule FranklinWeb do
 
       import FranklinWeb.Components.Admin.FileInputGroup
       import FranklinWeb.Components.Admin.AnimatedSpinner
+      import FranklinWeb.Components.Admin.FlashMessages
 
       @doc """
       Generates tag for inlined form input errors.
