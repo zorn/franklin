@@ -1,10 +1,11 @@
 defmodule FranklinWeb.Admin.UserAuthTest do
   use FranklinWeb.ConnCase, async: false
 
-  alias Phoenix.LiveView
+  import Franklin.AccountsFixtures
+
   alias Franklin.Accounts
   alias FranklinWeb.Admin.UserAuth
-  import Franklin.AccountsFixtures
+  alias Phoenix.LiveView
 
   @remember_me_cookie "_franklin_web_user_remember_me"
 

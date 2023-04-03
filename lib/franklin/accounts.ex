@@ -4,9 +4,11 @@ defmodule Franklin.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias Franklin.Repo
 
-  alias Franklin.Accounts.{User, UserToken, UserNotifier}
+  alias Franklin.Accounts.User
+  alias Franklin.Accounts.UserNotifier
+  alias Franklin.Accounts.UserToken
+  alias Franklin.Repo
 
   ## Database getters
 
