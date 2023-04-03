@@ -6,6 +6,8 @@ defmodule FranklinWeb.AdminUserStories.CanVisitArticleViewerTest do
 
   use FranklinWeb.ConnCase
 
+  setup :register_and_log_in_user
+
   setup %{conn: conn} do
     title = "An article test headline."
 
