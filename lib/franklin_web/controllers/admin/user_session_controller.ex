@@ -4,16 +4,6 @@ defmodule FranklinWeb.Admin.UserSessionController do
   alias Franklin.Accounts
   alias FranklinWeb.Admin.UserAuth
 
-  def create(conn, %{"_action" => "registered"} = params) do
-    create(conn, params, "Account created successfully!")
-  end
-
-  def create(conn, %{"_action" => "password_updated"} = params) do
-    conn
-    |> put_session(:user_return_to, ~p"/admin/users/settings")
-    |> create(params, "Password updated successfully!")
-  end
-
   def create(conn, params) do
     create(conn, params, "Welcome back!")
   end
