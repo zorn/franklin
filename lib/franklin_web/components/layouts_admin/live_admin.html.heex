@@ -6,14 +6,30 @@
     </.link>
   </:item>
   <:item :let={classes}>
-    <.link navigate={~p"/admin/"} class={classes.link}>Launchpad</.link>
-  </:item>
-  <:item :let={classes} is_full>
-    <.link navigate={~p"/admin/articles"} class={classes.link}>Articles</.link>
+    <%= if @current_user do %>
+      <.link navigate={~p"/admin/"} class={classes.link}>Launchpad</.link>
+    <% end %>
   </:item>
   <:item :let={classes}>
-    <%!-- TODO: rename to `/admin/sign-in --%>
-    <.link navigate={~p"/admin/users/log_in"} class={[classes.link, "mr-4"]}>Sign in</.link>
+    <%= if @current_user do %>
+      <.link navigate={~p"/admin/articles"} class={classes.link}>Articles</.link>
+    <% end %>
+  </:item>
+  <:item :let={classes} is_full>
+    <%= if @current_user do %>
+      <.link navigate={~p"/admin/users/settings"} class={classes.link}>Settings</.link>
+    <% end %>
+  </:item>
+  <:item :let={classes}>
+    <%= if @current_user do %>
+      <%!-- TODO: rename to `/admin/sign-out --%>
+      <.link href={~p"/admin/users/log_out"} method="delete" class={[classes.link, "mr-4"]}>
+        Sign out
+      </.link>
+    <% else %>
+      <%!-- TODO: rename to `/admin/sign-in --%>
+      <.link navigate={~p"/admin/users/log_in"} class={[classes.link, "mr-4"]}>Sign in</.link>
+    <% end %>
   </:item>
 </.header>
 
