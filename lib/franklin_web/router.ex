@@ -45,16 +45,21 @@ defmodule FranklinWeb.Router do
   end
 
   scope "/admin", FranklinWeb.Admin do
-    pipe_through [:browser, :assign_root_layout_admin]
+    pipe_through [:browser, :assign_root_layout_admin, :require_authenticated_user]
 
-    live "/", IndexLive, :index, as: :admin_index
-    live "/upload-demo", UploadDemoLive, :index, as: :admin_upload_demo
+    live_session :require_authenticated_user,
+      on_mount: [{FranklinWeb.Admin.UserAuth, :ensure_authenticated}] do
+      live "/", IndexLive, :index, as: :admin_index
+      live "/upload-demo", UploadDemoLive, :index, as: :admin_upload_demo
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
-    scope "/articles", Articles do
-      live "/", IndexLive, :index, as: :admin_article_index
-      live "/:id", ViewerLive, :show, as: :admin_article_viewer
-      live "/editor/new", EditorLive, :new, as: :admin_article_editor
-      live "/editor/:id", EditorLive, :edit, as: :admin_article_editor
+      scope "/articles", Articles do
+        live "/", IndexLive, :index, as: :admin_article_index
+        live "/:id", ViewerLive, :show, as: :admin_article_viewer
+        live "/editor/new", EditorLive, :new, as: :admin_article_editor
+        live "/editor/:id", EditorLive, :edit, as: :admin_article_editor
+      end
     end
   end
 
@@ -91,16 +96,6 @@ defmodule FranklinWeb.Router do
     end
 
     post "/users/log_in", UserSessionController, :create
-  end
-
-  scope "/admin", FranklinWeb.Admin, as: :admin do
-    pipe_through [:browser, :assign_root_layout_admin, :require_authenticated_user]
-
-    live_session :require_authenticated_user,
-      on_mount: [{FranklinWeb.Admin.UserAuth, :ensure_authenticated}] do
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-    end
   end
 
   scope "/admin", FranklinWeb.Admin, as: :admin do
