@@ -13,7 +13,6 @@ defmodule FranklinWeb.Components.Admin.FlashMessages do
     <%= for type <- expected_flash_types() do %>
       <%= if has_flash_message_for_type(@flash, type) do %>
         <div class="my-3">
-          <% dbg(type) %>
           <.alert state={to_string(type)}>
             <.octicon name={icon_name(type)} /> <%= Phoenix.Flash.get(@flash, type) %>
             <%!-- TODO: It would be nice to have a close button here,
