@@ -7,14 +7,6 @@ defmodule FranklinWeb.Admin.UserLoginLive do
       <div class="mx-auto w-96">
         <h1 class="text-center font-light mb-4">Sign in to Franklin</h1>
 
-        <p class="text-center">
-          Don't have an account? <%!-- FIXME: Align url link with "sign up" terminology. --%>
-          <.link navigate={~p"/admin/users/register"} class="hover:underline">
-            Sign up
-          </.link>
-          for an account now.
-        </p>
-
         <.admin_flash_messages flash={@flash} />
 
         <%!-- FIXME: When I try to customize this border color it never works. --%>
@@ -37,12 +29,6 @@ defmodule FranklinWeb.Admin.UserLoginLive do
 
             <.button is_submit is_primary is_full_width>Sign in</.button>
           </.form>
-        </div>
-
-        <div class="mt-4 text-center">
-          <.link href={~p"/admin/users/reset_password"} class="text-sm">
-            Reset your password
-          </.link>
         </div>
       </div>
     </div>

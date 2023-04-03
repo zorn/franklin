@@ -87,17 +87,14 @@ defmodule FranklinWeb.Router do
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{FranklinWeb.Admin.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
-      live "/users/reset_password", UserForgotPasswordLive, :new
-      live "/users/reset_password/:token", UserResetPasswordLive, :edit
     end
 
     post "/users/log_in", UserSessionController, :create
   end
 
   scope "/admin", FranklinWeb.Admin, as: :admin do
-    pipe_through [:browser, :assign_root_layout, :require_authenticated_user]
+    pipe_through [:browser, :assign_root_layout_admin, :require_authenticated_user]
 
     live_session :require_authenticated_user,
       on_mount: [{FranklinWeb.Admin.UserAuth, :ensure_authenticated}] do
