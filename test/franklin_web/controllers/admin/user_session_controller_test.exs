@@ -1,5 +1,5 @@
 defmodule FranklinWeb.Admin.UserSessionControllerTest do
-  use FranklinWeb.ConnCase, async: true
+  use FranklinWeb.ConnCase, async: false
 
   import Franklin.AccountsFixtures
 

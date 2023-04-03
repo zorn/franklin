@@ -1,5 +1,5 @@
 defmodule FranklinWeb.Admin.UserAuthTest do
-  use FranklinWeb.ConnCase, async: true
+  use FranklinWeb.ConnCase, async: false
 
   alias Phoenix.LiveView
   alias Franklin.Accounts
