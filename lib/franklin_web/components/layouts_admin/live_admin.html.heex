@@ -23,12 +23,12 @@
   <:item :let={classes}>
     <%= if @current_user do %>
       <%!-- TODO: rename to `/admin/sign-out --%>
-      <.link href={~p"/admin/users/log_out"} method="delete" class={[classes.link, "mr-4"]}>
+      <.link href={~p"/admin/sign-out"} method="delete" class={[classes.link, "mr-4"]}>
         Sign out
       </.link>
     <% else %>
       <%!-- TODO: rename to `/admin/sign-in --%>
-      <.link navigate={~p"/admin/users/log_in"} class={[classes.link, "mr-4"]}>Sign in</.link>
+      <.link navigate={~p"/admin/sign-in"} class={[classes.link, "mr-4"]}>Sign in</.link>
     <% end %>
   </:item>
 </.header>

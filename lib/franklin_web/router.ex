@@ -92,16 +92,16 @@ defmodule FranklinWeb.Router do
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{FranklinWeb.Admin.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/users/log_in", UserLoginLive, :new
+      live "/sign-in", UserLoginLive, :new
     end
 
-    post "/users/log_in", UserSessionController, :create
+    post "/sign-in", UserSessionController, :create
   end
 
   scope "/admin", FranklinWeb.Admin, as: :admin do
     pipe_through [:browser, :assign_root_layout]
 
-    delete "/users/log_out", UserSessionController, :delete
+    delete "/sign-out", UserSessionController, :delete
 
     live_session :current_user,
       on_mount: [{FranklinWeb.Admin.UserAuth, :mount_current_user}] do

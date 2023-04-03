@@ -20,7 +20,7 @@ defmodule FranklinWeb.Admin.UserSettingsLiveTest do
       assert {:error, redirect} = live(conn, ~p"/admin/users/settings")
 
       assert {:redirect, %{to: path, flash: flash}} = redirect
-      assert path == ~p"/admin/users/log_in"
+      assert path == ~p"/admin/sign-in"
       assert %{"error" => "You must log in to access this page."} = flash
     end
   end
@@ -202,7 +202,7 @@ defmodule FranklinWeb.Admin.UserSettingsLiveTest do
       conn = build_conn()
       {:error, redirect} = live(conn, ~p"/admin/users/settings/confirm_email/#{token}")
       assert {:redirect, %{to: path, flash: flash}} = redirect
-      assert path == ~p"/admin/users/log_in"
+      assert path == ~p"/admin/sign-in"
       assert %{"error" => message} = flash
       assert message == "You must log in to access this page."
     end

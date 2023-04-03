@@ -11,13 +11,7 @@ defmodule FranklinWeb.Admin.UserLoginLive do
 
         <%!-- FIXME: When I try to customize this border color it never works. --%>
         <div class="bg-gray-100 border rounded mt-4 px-4 pb-4">
-          <.form
-            :let={f}
-            for={@form}
-            id="login_form"
-            action={~p"/admin/users/log_in"}
-            phx-update="ignore"
-          >
+          <.form :let={f} for={@form} id="login_form" action={~p"/admin/sign-in"} phx-update="ignore">
             <.text_input form={f} field={:email} is_form_group is_full_width />
             <.text_input form={f} field={:password} type="password" is_form_group is_full_width />
 

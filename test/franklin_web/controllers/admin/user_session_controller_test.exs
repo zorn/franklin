@@ -10,7 +10,7 @@ defmodule FranklinWeb.Admin.UserSessionControllerTest do
   describe "POST /admin/users/log_in" do
     test "logs the user in", %{conn: conn, user: user} do
       conn =
-        post(conn, ~p"/admin/users/log_in", %{
+        post(conn, ~p"/admin/sign-in", %{
           "user" => %{"email" => user.email, "password" => valid_user_password()}
         })
 
@@ -22,12 +22,12 @@ defmodule FranklinWeb.Admin.UserSessionControllerTest do
       response = html_response(conn, 200)
       assert response =~ user.email
       assert response =~ ~p"/admin/users/settings"
-      assert response =~ ~p"/admin/users/log_out"
+      assert response =~ ~p"/admin/sign-out"
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do
       conn =
-        post(conn, ~p"/admin/users/log_in", %{
+        post(conn, ~p"/admin/sign-in", %{
           "user" => %{
             "email" => user.email,
             "password" => valid_user_password(),
@@ -43,7 +43,7 @@ defmodule FranklinWeb.Admin.UserSessionControllerTest do
       conn =
         conn
         |> init_test_session(user_return_to: "/foo/bar")
-        |> post(~p"/admin/users/log_in", %{
+        |> post(~p"/admin/sign-in", %{
           "user" => %{
             "email" => user.email,
             "password" => valid_user_password()
@@ -57,7 +57,7 @@ defmodule FranklinWeb.Admin.UserSessionControllerTest do
     test "login following registration", %{conn: conn, user: user} do
       conn =
         conn
-        |> post(~p"/admin/users/log_in", %{
+        |> post(~p"/admin/sign-in", %{
           "_action" => "registered",
           "user" => %{
             "email" => user.email,
@@ -72,7 +72,7 @@ defmodule FranklinWeb.Admin.UserSessionControllerTest do
     test "login following password update", %{conn: conn, user: user} do
       conn =
         conn
-        |> post(~p"/admin/users/log_in", %{
+        |> post(~p"/admin/sign-in", %{
           "_action" => "password_updated",
           "user" => %{
             "email" => user.email,
@@ -86,25 +86,25 @@ defmodule FranklinWeb.Admin.UserSessionControllerTest do
 
     test "redirects to login page with invalid credentials", %{conn: conn} do
       conn =
-        post(conn, ~p"/admin/users/log_in", %{
+        post(conn, ~p"/admin/sign-in", %{
           "user" => %{"email" => "invalid@email.com", "password" => "invalid_password"}
         })
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) == "Invalid email or password"
-      assert redirected_to(conn) == ~p"/admin/users/log_in"
+      assert redirected_to(conn) == ~p"/admin/sign-in"
     end
   end
 
   describe "DELETE /admin/users/log_out" do
     test "logs the user out", %{conn: conn, user: user} do
-      conn = conn |> log_in_user(user) |> delete(~p"/admin/users/log_out")
+      conn = conn |> log_in_user(user) |> delete(~p"/admin/sign-out")
       assert redirected_to(conn) == ~p"/"
       refute get_session(conn, :user_token)
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Logged out successfully"
     end
 
     test "succeeds even if the user is not logged in", %{conn: conn} do
-      conn = delete(conn, ~p"/admin/users/log_out")
+      conn = delete(conn, ~p"/admin/sign-out")
       assert redirected_to(conn) == ~p"/"
       refute get_session(conn, :user_token)
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Logged out successfully"

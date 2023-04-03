@@ -231,7 +231,7 @@ defmodule FranklinWeb.Admin.UserAuthTest do
       conn = conn |> fetch_flash() |> UserAuth.require_authenticated_user([])
       assert conn.halted
 
-      assert redirected_to(conn) == ~p"/admin/users/log_in"
+      assert redirected_to(conn) == ~p"/admin/sign-in"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) ==
                "You must log in to access this page."

@@ -79,7 +79,7 @@ defmodule FranklinWeb.Admin.UserRegistrationLiveTest do
         lv
         |> element(~s|main a:fl-contains("Sign in")|)
         |> render_click()
-        |> follow_redirect(conn, ~p"/admin/users/log_in")
+        |> follow_redirect(conn, ~p"/admin/sign-in")
 
       assert login_html =~ "Log in"
     end

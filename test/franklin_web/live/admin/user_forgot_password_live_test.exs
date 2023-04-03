@@ -13,7 +13,7 @@ defmodule FranklinWeb.Admin.UserForgotPasswordLiveTest do
 
       assert html =~ "Forgot your password?"
       assert has_element?(lv, ~s|a[href="#{~p"/admin/users/register"}"]|, "Register")
-      assert has_element?(lv, ~s|a[href="#{~p"/admin/users/log_in"}"]|, "Log in")
+      assert has_element?(lv, ~s|a[href="#{~p"/admin/sign-in"}"]|, "Log in")
     end
 
     test "redirects if already logged in", %{conn: conn} do
