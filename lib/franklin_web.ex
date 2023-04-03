@@ -55,6 +55,7 @@ defmodule FranklinWeb do
       use Phoenix.LiveView,
         layout: {FranklinWeb.Layouts, :live}
 
+      import FranklinWeb.CoreComponents
       unquote(html_helpers())
     end
   end
@@ -73,11 +74,26 @@ defmodule FranklinWeb do
     quote do
       use Phoenix.LiveComponent
 
+      import FranklinWeb.CoreComponents
       unquote(html_helpers())
     end
   end
 
   def html do
+    quote do
+      use Phoenix.Component
+
+      # Import convenience functions from controllers
+      import Phoenix.Controller,
+        only: [get_csrf_token: 0, view_module: 1, view_template: 1]
+
+      # Include general helpers for rendering HTML
+      import FranklinWeb.CoreComponents
+      unquote(html_helpers())
+    end
+  end
+
+  def admin_html do
     quote do
       use Phoenix.Component
 
@@ -95,10 +111,7 @@ defmodule FranklinWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import FranklinWeb.CoreComponents
       import FranklinWeb.Gettext
-
-      import FranklinWeb.CoreComponents, only: [translate_error: 1]
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
@@ -119,13 +132,14 @@ defmodule FranklinWeb do
 
       import FranklinWeb.Components.Admin.FileInputGroup
       import FranklinWeb.Components.Admin.AnimatedSpinner
+      import FranklinWeb.Components.Admin.FlashMessages
 
       @doc """
       Generates tag for inlined form input errors.
       """
       def error_tag(form, field, class \\ "invalid-feedback") do
         Enum.map(Keyword.get_values(form.errors, field), fn error ->
-          Phoenix.HTML.Tag.content_tag(:span, translate_error(error),
+          Phoenix.HTML.Tag.content_tag(:span, FranklinWeb.CoreComponents.translate_error(error),
             class: class,
             phx_feedback_for: Phoenix.HTML.Form.input_name(form, field)
           )

@@ -1,15 +1,35 @@
 <.header>
   <:item :let={classes}>
-    <.link navigate={~p"/admin/"} class={[classes.link, "f4 d-flex flex-items-center mr-4"]}>
+    <.link navigate={~p"/admin/"} class={[classes.link, "f4 d-flex flex-items-center ml-4 mr-4"]}>
       <.octicon name="star-fill-24" width="32" height="32" class="mr-2" />
       <span>Franklin Admin</span>
     </.link>
   </:item>
   <:item :let={classes}>
-    <.link navigate={~p"/admin/"} class={classes.link}>Launchpad</.link>
+    <%= if @current_user do %>
+      <.link navigate={~p"/admin/"} class={classes.link}>Launchpad</.link>
+    <% end %>
   </:item>
   <:item :let={classes}>
-    <.link navigate={~p"/admin/articles"} class={classes.link}>Articles</.link>
+    <%= if @current_user do %>
+      <.link navigate={~p"/admin/articles"} class={classes.link}>Articles</.link>
+    <% end %>
+  </:item>
+  <:item :let={classes} is_full>
+    <%= if @current_user do %>
+      <.link navigate={~p"/admin/users/settings"} class={classes.link}>Settings</.link>
+    <% end %>
+  </:item>
+  <:item :let={classes}>
+    <%= if @current_user do %>
+      <%!-- TODO: rename to `/admin/sign-out --%>
+      <.link href={~p"/admin/sign-out"} method="delete" class={[classes.link, "mr-4"]}>
+        Sign out
+      </.link>
+    <% else %>
+      <%!-- TODO: rename to `/admin/sign-in --%>
+      <.link navigate={~p"/admin/sign-in"} class={[classes.link, "mr-4"]}>Sign in</.link>
+    <% end %>
   </:item>
 </.header>
 

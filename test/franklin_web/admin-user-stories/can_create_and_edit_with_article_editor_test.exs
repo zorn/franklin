@@ -9,6 +9,8 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
   alias Franklin.Articles
   alias Franklin.Articles.Article
 
+  setup :register_and_log_in_user
+
   setup %{conn: conn} do
     # Because the article editor is used for both the creation and editing of
     # articles, we'll construct two instances of the live view, allowing us to
@@ -169,15 +171,10 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
         |> form("#new_article", article_form: %{title: invalid_title})
         |> render_submit()
 
-        # FIXME: The new component system seems to fail at showing the number
-        # value in place of the `%{count}` token. Updating the test for the
-        # moment to accept the token in the message. Not a big deal since this
-        # is internal facing.
-        # https://github.com/ArthurClemens/primer_live/issues/36
         assert has_element?(
                  view,
                  error_feedback_query(:title),
-                 "should be at most %{count} character(s)"
+                 "should be at most 255 character(s)"
                )
       end
     end
@@ -241,7 +238,7 @@ defmodule FranklinWeb.AdminUserStories.CanCreateAndEditWithArticleEditor do
         assert has_element?(
                  view,
                  error_feedback_query(:body),
-                 "should be at most %{count} character(s)"
+                 "should be at most 30000 character(s)"
                )
       end
     end

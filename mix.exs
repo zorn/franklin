@@ -60,6 +60,9 @@ defmodule Franklin.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
 
+      # Used alongside the generated phx.gen.auth code.
+      {:argon2_elixir, "~> 3.0"},
+
       # To help build the HTML documentation.
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
 
@@ -109,7 +112,7 @@ defmodule Franklin.MixProject do
       # GitHub-like components to help style the admin.
       # {:primer_live, "~> 0.2.2"}
       {:primer_live,
-       git: "https://github.com/zorn/primer_live", branch: "zorn-phoenix-html-update"}
+       git: "https://github.com/zorn/primer_live", branch: "zorn-forgiving-error-helper"}
     ]
   end
 

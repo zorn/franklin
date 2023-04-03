@@ -1,5 +1,5 @@
 defmodule FranklinWeb.LayoutsAdmin do
-  use FranklinWeb, :html
+  use FranklinWeb, :admin_html
 
   use PrimerLive
 

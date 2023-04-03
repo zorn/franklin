@@ -10,6 +10,8 @@ defmodule FranklinWeb.AdminUserStories.CanNilArticlePublishedAtToRemoveFromPubli
   alias Franklin.Articles
   alias Franklin.Articles.Article
 
+  setup :register_and_log_in_user
+
   test "previously public articles are no longer visible on public site after published_at value is set to nil",
        ~M{conn} do
     articles = [
