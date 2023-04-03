@@ -21,7 +21,7 @@ defmodule FranklinWeb.Admin.UserSettingsLiveTest do
 
       assert {:redirect, %{to: path, flash: flash}} = redirect
       assert path == ~p"/admin/sign-in"
-      assert %{"error" => "You must log in to access this page."} = flash
+      assert %{"error" => "You must sign in to access this page."} = flash
     end
   end
 
@@ -204,7 +204,7 @@ defmodule FranklinWeb.Admin.UserSettingsLiveTest do
       assert {:redirect, %{to: path, flash: flash}} = redirect
       assert path == ~p"/admin/sign-in"
       assert %{"error" => message} = flash
-      assert message == "You must log in to access this page."
+      assert message == "You must sign in to access this page."
     end
   end
 end
