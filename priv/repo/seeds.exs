@@ -22,6 +22,7 @@ end
 
 alias Franklin.Articles.Slugs
 alias Franklin.Articles.Commands.CreateArticle
+alias Franklin.Accounts
 
 sample_article_markdown = """
 
@@ -97,3 +98,10 @@ CreateArticle.new(%{
   published_at: published_at
 })
 |> SeedTools.dispatch_command()
+
+# Setup the default admin user.
+{:ok, _default_admin} =
+  Accounts.register_user(%{
+    email: "admin@example.com",
+    password: "Password1234"
+  })

@@ -1,5 +1,7 @@
 defmodule FranklinWeb.Router do
   use FranklinWeb, :router
+
+  import FranklinWeb.Admin.UserAuth
   import PhoenixStorybook.Router
 
   pipeline :browser do
@@ -8,6 +10,7 @@ defmodule FranklinWeb.Router do
     plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :assign_root_layout do
@@ -42,16 +45,21 @@ defmodule FranklinWeb.Router do
   end
 
   scope "/admin", FranklinWeb.Admin do
-    pipe_through [:browser, :assign_root_layout_admin]
+    pipe_through [:browser, :assign_root_layout_admin, :require_authenticated_user]
 
-    live "/", IndexLive, :index, as: :admin_index
-    live "/upload-demo", UploadDemoLive, :index, as: :admin_upload_demo
+    live_session :require_authenticated_user,
+      on_mount: [{FranklinWeb.Admin.UserAuth, :ensure_authenticated}] do
+      live "/", IndexLive, :index, as: :admin_index
+      live "/upload-demo", UploadDemoLive, :index, as: :admin_upload_demo
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
-    scope "/articles", Articles do
-      live "/", IndexLive, :index, as: :admin_article_index
-      live "/:id", ViewerLive, :show, as: :admin_article_viewer
-      live "/editor/new", EditorLive, :new, as: :admin_article_editor
-      live "/editor/:id", EditorLive, :edit, as: :admin_article_editor
+      scope "/articles", Articles do
+        live "/", IndexLive, :index, as: :admin_article_index
+        live "/:id", ViewerLive, :show, as: :admin_article_viewer
+        live "/editor/new", EditorLive, :new, as: :admin_article_editor
+        live "/editor/:id", EditorLive, :edit, as: :admin_article_editor
+      end
     end
   end
 
@@ -61,7 +69,7 @@ defmodule FranklinWeb.Router do
   # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
-  if Application.compile_env(:franklin_app, :dev_routes) do
+  if Application.compile_env(:franklin, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
     # it behind authentication and allow only admins to access it.
     # If your application does not have an admins-only section yet,
@@ -74,6 +82,31 @@ defmodule FranklinWeb.Router do
 
       live_dashboard "/dashboard", metrics: FranklinWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  ## Authentication routes
+
+  scope "/admin", FranklinWeb.Admin, as: :admin do
+    pipe_through [:browser, :assign_root_layout_admin, :redirect_if_user_is_authenticated]
+
+    live_session :redirect_if_user_is_authenticated,
+      on_mount: [{FranklinWeb.Admin.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/sign-in", UserLoginLive, :new
+    end
+
+    post "/sign-in", UserSessionController, :create
+  end
+
+  scope "/admin", FranklinWeb.Admin, as: :admin do
+    pipe_through [:browser, :assign_root_layout]
+
+    delete "/sign-out", UserSessionController, :delete
+
+    live_session :current_user,
+      on_mount: [{FranklinWeb.Admin.UserAuth, :mount_current_user}] do
+      live "/users/confirm/:token", UserConfirmationLive, :edit
+      live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
   end
 end
