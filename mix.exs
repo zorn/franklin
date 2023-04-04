@@ -110,9 +110,7 @@ defmodule Franklin.MixProject do
       {:sweet_xml, "~> 0.6"},
 
       # GitHub-like components to help style the admin.
-      # {:primer_live, "~> 0.2.2"}
-      {:primer_live,
-       git: "https://github.com/zorn/primer_live", branch: "zorn-forgiving-error-helper"}
+      {:primer_live, "~> 0.2.6"}
     ]
   end
 
