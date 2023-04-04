@@ -63,11 +63,6 @@ defmodule FranklinWeb.Router do
     end
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", FranklinWeb do
-  #   pipe_through :api
-  # end
-
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:franklin, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
@@ -83,6 +78,14 @@ defmodule FranklinWeb.Router do
       live_dashboard "/dashboard", metrics: FranklinWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  ## API routes
+
+  scope "/api" do
+    pipe_through :api
+    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: FranklinWeb.Schema
+    forward "/", Absinthe.Plug, schema: FranklinWeb.Schema
   end
 
   ## Authentication routes
