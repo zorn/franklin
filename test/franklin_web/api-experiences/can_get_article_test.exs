@@ -47,6 +47,4 @@ defmodule FranklinWeb.ApiExperiences.CanGetArticleTest do
              ]
            }
   end
-
-  # SOMEDAY MAYBE: Add test for non uuid looking string "not-a-uuid".
 end
