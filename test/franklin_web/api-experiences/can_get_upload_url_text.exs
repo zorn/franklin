@@ -1,4 +1,4 @@
-defmodule FranklinWeb.ApiExperiences.CanGetUploadUrl do
+defmodule FranklinWeb.ApiExperiences.CanGetUploadUrlTest do
   use FranklinWeb.ConnCase
 
   @query """
