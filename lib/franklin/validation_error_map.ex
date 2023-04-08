@@ -8,7 +8,7 @@ defmodule Franklin.ValidationErrorMap do
   ## Example:
 
       iex> new(changeset)
-      %Franklin.ValidationErrorMap{
+      %{
         id: ["is invalid"],
         published_at: ["can't be blank"],
         title: ["should be at least 3 character(s)"]
