@@ -17,4 +17,12 @@ defmodule FranklinWeb.Schema do
       resolve(&Resolvers.Content.find_article/3)
     end
   end
+
+  mutation do
+    @desc "Generate a presigned url for uploading a file to S3."
+    field :generate_upload_url, :upload_url do
+      arg(:filename, non_null(:string))
+      resolve(&Resolvers.Content.generate_upload_url/3)
+    end
+  end
 end

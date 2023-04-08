@@ -8,4 +8,8 @@ defmodule FranklinWeb.Schema.ContentTypes do
     field :slug, :string
     field :published_at, :datetime
   end
+
+  object :upload_url do
+    field :url, :string
+  end
 end
