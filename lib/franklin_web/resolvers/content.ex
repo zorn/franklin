@@ -15,4 +15,25 @@ defmodule FranklinWeb.Resolvers.Content do
       {:error, _} -> {:error, "Could not generate presigned url."}
     end
   end
+
+  def create_article(_parent, %{input: input}, _resolution) do
+    input
+    |> Articles.create_article()
+    |> format_payload()
+  end
+
+  defp format_payload({:ok, article_id}) do
+    {:ok, %{article_id: article_id}}
+  end
+
+  defp format_payload({:error, validation_error_map}) do
+    validation_error_map = stringify_keys(validation_error_map)
+    {:error, message: "A database error occurred", details: validation_error_map}
+  end
+
+  defp stringify_keys(map) do
+    Enum.reduce(map, %{}, fn {key, value}, acc ->
+      Map.put(acc, to_string(key), value)
+    end)
+  end
 end
