@@ -7,7 +7,7 @@ defmodule FranklinWeb.ApiExperiences.CanGetArticlesTest do
     article1 = create_article!(%{published_at: now})
     article2 = create_article!(%{published_at: yesterday})
     article3 = create_article!(%{published_at: nil})
-    ~M{conn, article1, article2, article3, now, yesterday}
+    ~M{conn, article1, article2, article3}
   end
 
   @query """
@@ -18,12 +18,16 @@ defmodule FranklinWeb.ApiExperiences.CanGetArticlesTest do
     }
   }
   """
-  test "returns a list of published articles", ~M{conn, article1, article2} do
+  test "returns a list of published articles", ~M{conn, article1, article2, article3} do
     conn = get(conn, "/api", query: @query)
 
     assert json_response(conn, 200) == %{
              "data" => %{
                "articles" => [
+                 %{
+                   "id" => article3.id,
+                   "publishedAt" => nil
+                 },
                  %{
                    "id" => article1.id,
                    "publishedAt" => DateTime.to_iso8601(article1.published_at)
