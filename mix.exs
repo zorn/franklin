@@ -110,7 +110,7 @@ defmodule Franklin.MixProject do
       {:sweet_xml, "~> 0.6"},
 
       # GitHub-like components to help style the admin.
-      {:primer_live, "~> 0.2.6"},
+      {:primer_live, "~> 0.3.0"},
 
       # For providing graphql.
       {:absinthe, "~> 1.7"},
