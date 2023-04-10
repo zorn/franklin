@@ -29,7 +29,10 @@ defmodule Franklin.ArrangeArticleHelpers do
     end)
   end
 
-  defp required_new_article_attributes(custom_values) do
+  @doc """
+  Returns a map of attributes that are required to create a new article.
+  """
+  def required_new_article_attributes(custom_values \\ %{}) do
     now = DateTime.utc_now()
 
     sample_markdown = """
