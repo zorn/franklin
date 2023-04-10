@@ -5,7 +5,7 @@ defmodule FranklinWeb.Resolvers.Content do
     {:ok, Articles.list_articles()}
   end
 
-  def find_article(_parent, %{id: id}, _resolution) do
+  def fetch_article(_parent, %{id: id}, _resolution) do
     Articles.fetch_article(id)
   end
 

@@ -14,7 +14,7 @@ defmodule FranklinWeb.Schema do
     @desc "Get an article by its id value."
     field :article, :article do
       arg(:id, :id)
-      resolve(&Resolvers.Content.find_article/3)
+      resolve(&Resolvers.Content.fetch_article/3)
     end
   end
 
