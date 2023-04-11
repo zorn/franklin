@@ -1,4 +1,4 @@
-name: Generate Elixir documentation and publish to GitHub Pages
+name: Elixir Generate and Publish Documentation
 
 on:
   push:
