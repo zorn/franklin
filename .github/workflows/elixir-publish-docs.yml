@@ -32,7 +32,7 @@ jobs:
           otp-version: 25.2.1
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      - name: Run EcDoc
+      - name: Run ExDoc
         run: mix docs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
