@@ -11,17 +11,12 @@ Franklin is written in [Elixir], [Phoenix], and [LiveView] and is an intentional
 
 Franklin currently remains in a very hacky state and many things are incomplete or only partial implemented. A rough timeline of things to come:
 
-## Current Goals: Technical Preview Two
-
-* Do a design pass on the public pages, get the navigation to stick page to page.
-* The ability to customize page slugs.
-* The ability to host static page content off the root urls.
-* An RSS feed for recent content.
-
-## Technical Preview Three
+## Current Goals: Technical Preview Three
 
 * The ability to import the current MikeZornek.com blog archive.
 * The ability to upload images and other assets to be used by blog articles.
+* The ability to host static page content off the root urls.
+
 
 ## Running Locally
 
