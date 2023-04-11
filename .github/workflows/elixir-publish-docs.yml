@@ -34,15 +34,10 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Run EcDoc
         run: mix docs
-      # - name: Build with Jekyll
-      #   uses: actions/jekyll-build-pages@v1
-      #   with:
-      #     source: ./
-      #     destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
+          # Upload generated `doc` folder.
           path: './doc'
 
   # Deployment job
