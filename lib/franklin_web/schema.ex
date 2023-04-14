@@ -1,4 +1,6 @@
 defmodule FranklinWeb.Schema do
+  # FIXME: We don't skip parentheses consistently here.
+
   use Absinthe.Schema
   import_types(Absinthe.Type.Custom)
   import_types(FranklinWeb.Schema.ContentTypes)
@@ -19,6 +21,19 @@ defmodule FranklinWeb.Schema do
   end
 
   mutation do
+    @desc "Given valid user credentials, returns a JWT token"
+    field :login, :session do
+      arg(:email, non_null(:string))
+      arg(:password, non_null(:string))
+      # arg :role, non_null(:role)
+      resolve(&Resolvers.Accounts.login/3)
+      # middleware fn res, _ ->
+      #   with %{value: %{user: user}} <- res do
+      #     %{res | context: Map.put(res.context, :current_user, user)}
+      #   end
+      # end
+    end
+
     @desc "Generate a presigned url for uploading a file to S3."
     field :generate_upload_url, :upload_url do
       arg(:filename, non_null(:string))
@@ -50,5 +65,15 @@ defmodule FranklinWeb.Schema do
   object :input_error do
     field(:details, non_null(:string))
     field(:message, non_null(:string))
+  end
+
+  object :session do
+    field(:token, non_null(:string))
+    field(:user, non_null(:user))
+  end
+
+  object :user do
+    field(:id, non_null(:id))
+    field(:email, non_null(:string))
   end
 end
