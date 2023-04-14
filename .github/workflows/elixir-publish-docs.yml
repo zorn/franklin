@@ -28,8 +28,8 @@ jobs:
       - name: Setup Elixir Project
         uses: ./.github/actions/elixir-setup
         with:
-          elixir-version: 1.14.3
-          otp-version: 25.2.1
+          elixir-version: 1.14.4
+          otp-version: 25.3
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Run ExDoc
