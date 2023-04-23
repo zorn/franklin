@@ -3,6 +3,7 @@ defmodule FranklinWeb.Resolvers.Accounts do
   alias Franklin.Accounts.User
 
   # FIXME: Move this secret out of the codebase.
+  # https://github.com/zorn/franklin/issues/270
   @user_salt "BfKdyzDoplaUL48rGdb0YMNwA9ewxZGECkwdubiA568ujL5QjD8WL5N5dV1L4ZU"
 
   def login(_, %{email: email, password: password}, _) do
