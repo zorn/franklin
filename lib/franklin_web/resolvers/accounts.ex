@@ -14,8 +14,6 @@ defmodule FranklinWeb.Resolvers.Accounts do
       %User{id: id} = user ->
         payload = %{user_id: id}
         token = Phoenix.Token.sign(FranklinWeb.Endpoint, @user_salt, payload)
-
-        dbg(user)
         {:ok, %{token: token, user: user}}
     end
   end

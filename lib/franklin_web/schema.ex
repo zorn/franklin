@@ -1,6 +1,4 @@
 defmodule FranklinWeb.Schema do
-  # FIXME: We don't skip parentheses consistently here.
-
   use Absinthe.Schema
   import_types(Absinthe.Type.Custom)
   import_types(FranklinWeb.Schema.ContentTypes)
@@ -25,13 +23,7 @@ defmodule FranklinWeb.Schema do
     field :login, :session do
       arg(:email, non_null(:string))
       arg(:password, non_null(:string))
-      # arg :role, non_null(:role)
       resolve(&Resolvers.Accounts.login/3)
-      # middleware fn res, _ ->
-      #   with %{value: %{user: user}} <- res do
-      #     %{res | context: Map.put(res.context, :current_user, user)}
-      #   end
-      # end
     end
 
     @desc "Generate a presigned url for uploading a file to S3."
