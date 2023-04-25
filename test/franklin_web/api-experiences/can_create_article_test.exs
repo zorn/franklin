@@ -9,6 +9,7 @@ defmodule FranklinWeb.ApiExperiences.CanCreateArticleTest do
       slug: slug
     } = required_new_article_attributes()
 
+    conn = auth_user(conn, Franklin.AccountsFixtures.user_fixture())
     ~M{conn, title, body, published_at, slug}
   end
 
@@ -76,5 +77,10 @@ defmodule FranklinWeb.ApiExperiences.CanCreateArticleTest do
                }
              ]
            } = response
+  end
+
+  defp auth_user(conn, user) do
+    token = FranklinWeb.Authentication.sign(%{user_id: user.id})
+    put_req_header(conn, "authorization", "Bearer #{token}")
   end
 end

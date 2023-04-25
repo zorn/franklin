@@ -1,6 +1,17 @@
 defmodule Franklin.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+
+  @type id :: Ecto.UUID.t()
+
+  @type t :: %__MODULE__{
+          id: id(),
+          email: String.t(),
+          password: String.t() | nil,
+          hashed_password: String.t(),
+          confirmed_at: DateTime.t() | nil
+        }
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
