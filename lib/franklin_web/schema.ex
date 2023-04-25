@@ -4,31 +4,42 @@ defmodule FranklinWeb.Schema do
   import_types(FranklinWeb.Schema.ContentTypes)
 
   alias FranklinWeb.Resolvers
+  alias FranklinWeb.Schema.Middleware.Authorize, as: AuthorizeMiddleware
 
   query do
     @desc "Get a list of the articles."
     field :articles, list_of(:article) do
+      middleware(AuthorizeMiddleware, :authenticated_user)
       resolve(&Resolvers.Content.list_articles/3)
     end
 
     @desc "Get an article by its id value."
     field :article, :article do
       arg(:id, :id)
+      middleware(AuthorizeMiddleware, :authenticated_user)
       resolve(&Resolvers.Content.fetch_article/3)
     end
   end
 
   mutation do
+    @desc "Given valid user credentials, returns a JWT token"
+    field :login, :session do
+      arg(:email, non_null(:string))
+      arg(:password, non_null(:string))
+      resolve(&Resolvers.Accounts.login/3)
+    end
+
     @desc "Generate a presigned url for uploading a file to S3."
     field :generate_upload_url, :upload_url do
       arg(:filename, non_null(:string))
+      middleware(AuthorizeMiddleware, :authenticated_user)
       resolve(&Resolvers.Content.generate_upload_url/3)
     end
 
     @desc "Create a new article."
     field :create_article, :create_article_payload do
       arg(:input, non_null(:create_article_input))
-
+      middleware(AuthorizeMiddleware, :authenticated_user)
       resolve(&Resolvers.Content.create_article/3)
     end
   end
@@ -50,5 +61,15 @@ defmodule FranklinWeb.Schema do
   object :input_error do
     field(:details, non_null(:string))
     field(:message, non_null(:string))
+  end
+
+  object :session do
+    field(:token, non_null(:string))
+    field(:user, non_null(:user))
+  end
+
+  object :user do
+    field(:id, non_null(:id))
+    field(:email, non_null(:string))
   end
 end

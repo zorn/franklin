@@ -23,6 +23,7 @@ defmodule FranklinWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug FranklinWeb.Context
   end
 
   scope "/" do
