@@ -4,6 +4,8 @@ defmodule FranklinWeb.ApiExperiences.CanGetArticleTest do
   setup %{conn: conn} do
     published_article = create_article!(%{published_at: DateTime.utc_now()})
     unpublished_article = create_article!(%{published_at: nil})
+    conn = auth_user(conn, Franklin.AccountsFixtures.user_fixture())
+
     ~M{conn, published_article, unpublished_article}
   end
 
@@ -63,5 +65,10 @@ defmodule FranklinWeb.ApiExperiences.CanGetArticleTest do
                }
              ]
            }
+  end
+
+  defp auth_user(conn, user) do
+    token = FranklinWeb.Authentication.sign(%{user_id: user.id})
+    put_req_header(conn, "authorization", "Bearer #{token}")
   end
 end
