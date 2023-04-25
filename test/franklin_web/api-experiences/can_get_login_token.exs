@@ -39,7 +39,6 @@ defmodule FranklinWeb.ApiExperiences.CanGetLoginTokenTest do
 
     assert_is_uuid(id)
     assert_looks_like_token(token)
-    # TODO: validate that the token can be used for a subsequent request.
   end
 
   test "returns an error for invalid user credentials", ~M{conn} do
