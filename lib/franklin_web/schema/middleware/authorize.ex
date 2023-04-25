@@ -7,9 +7,10 @@ defmodule FranklinWeb.Schema.Middleware.Authorize do
   @behaviour Absinthe.Middleware
 
   def call(resolution, _) do
-    with %{current_user: _current_user} <- resolution.context do
-      resolution
-    else
+    case resolution.context do
+      %{current_user: _current_user} ->
+        resolution
+
       _ ->
         Absinthe.Resolution.put_result(resolution, {:error, "unauthorized"})
     end
