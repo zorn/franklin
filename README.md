@@ -2,6 +2,8 @@
 
 Franklin is a custom blog application that will (in the future) power MikeZornek.com.
 
+**UPDATE:** Franklin developmnet has been [haulted](https://mikezornek.com/posts/2023/5/side-project-launch-cold-feet/) in favor of other personal projects. 
+
 Franklin is written in [Elixir], [Phoenix], and [LiveView] and is an intentionally over-engineered blog application. It uses an event-sourced / CQRS core (via [commanded]) along side modern component-based UI presentation. It aims to make even the simple things overly complex in the spirit of personal education towards these architecture decisions.
 
 [Elixir]: https://elixir-lang.org/
